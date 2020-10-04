@@ -18,8 +18,8 @@ const UserSettings: React.FunctionComponent<Props> = (props: Props) => {
   const userSettingFormik = useFormik({
     initialValues: {
       emailAddress: user?.data?.emailAddress || '',
-      currentPassword:'',
-      newPassword:'',
+      currentPassword: '',
+      newPassword: '',
       confirmPassword: ''
     },
     validationSchema: Yup.object({
@@ -101,14 +101,14 @@ const UserSettings: React.FunctionComponent<Props> = (props: Props) => {
           </div>
         </div>
         <div className="uk-card-footer uk-text-center">
-                    <button disabled={isLoading} type="submit" className="uk-button uk-button-primary ">
-                      {
-                        isLoading &&
-                        <img className="login-button-padding" src="tail-spin.svg" />
-                      }
-                      <span>update password</span>
-                    </button>
-                  </div>
+          <button disabled={isLoading} type="submit" className="uk-button uk-button-primary ">
+            {
+              isLoading &&
+              <img className="login-button-padding" src="tail-spin.svg" />
+            }
+            <span>update password</span>
+          </button>
+        </div>
       </div>
     </form>
   )

@@ -8195,8 +8195,65 @@ iframe.uk-cover {
 .login-error-message {
   text-align: center;
   font-size: 14px;
+  animation: cssAnimation 0s 2s forwards;
+}
+@keyframes cssAnimation {
+  to   { visibility: hidden; }
 }
 
 .login-register-active-button {
   background-color: gainsboro !important;
+}
+
+.admin-search-header {
+  width: 100% !important;
+}
+
+.quick-edit-admin {
+  margin-bottom: 10px;
+}
+
+.extended-component-notification {
+  margin-top: 10px;
+}
+
+#product-upload{
+  cursor: pointer; 
+}
+#product-upload > .upload-icon-margin {
+  margin-right: 10px;
+  
+}
+
+#product-upload > input[type="file"] {
+  display: none;  
+}
+
+.uk-placeholder {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px dashed #E5E5E5;
+    background: #fafafa;
+    color: #666;
+}
+
+.uk-thumbnail {
+   display: inline-block;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 4px;
+    border: 1px solid #E5E5E5;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+
+.product-uploader-container:hover  .uk-overlay-primary {
+  visibility: visible;
+}
+.product-uploader-container > div{
+  padding: 0 !important;
+  visibility: hidden;
 }

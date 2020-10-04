@@ -15,7 +15,9 @@
     "@types/yup": "^0.29.3",
     "axios": "^0.19.2",
     "formik": "^2.1.4",
+    "history": "^4.10.1",
     "react": "^16.13.1",
+    "react-data-table-component": "^6.11.0",
     "react-dom": "^16.13.1",
     "react-redux": "7.2.0",
     "react-router-dom": "^5.2.0",
@@ -23,6 +25,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "rm": "^0.1.8",
+    "styled-components": "^5.1.1",
     "typescript": "3.9.5",
     "yup": "^0.29.1"
   },
