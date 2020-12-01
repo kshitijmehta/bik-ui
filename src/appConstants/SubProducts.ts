@@ -1,10 +1,12 @@
 enum SubProducts {
-  COLOUR= 1,
-  SIZE = 2,
-  SUB_PRODUCT = 3,
-  PRODUCT = 4,
-  COUPONS = 5,
-  USERS = 6 
+  ORDERS= 1,
+  COLOUR= 2,
+  SIZE = 3,
+  SUB_PRODUCT = 4,
+  PRODUCT = 5,
+  COUPONS = 6,
+  USERS = 7,
+  SHIPPER = 8 
 }
 
 const SubCategories: Record<string, number> = {
@@ -14,7 +16,14 @@ const SubCategories: Record<string, number> = {
   'Handicraft': 4
 }
 
+/**
+ * Allow return for 
+ * Footwear and HomeDecore
+ */
+const AllowReturn = ['2','3'];
+
 export {
   SubProducts,
-  SubCategories
+  SubCategories,
+  AllowReturn
 }

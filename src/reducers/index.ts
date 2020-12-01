@@ -9,6 +9,18 @@ import { sizeReducer, Size, SizeAction } from './Size';
 import { SubCategory, subCategoryReducer, SubCategoryAction } from './SubCategory';
 import { Coupon, couponReducer, CouponAction } from './Coupon';
 import { Product, productReducer, ProductAction } from './Product';
+import { ProductCount, productCountReducer, ProductCountAction } from './ProductCount';
+import { Cart, cartReducer, CartAction } from './Cart';
+import { Checkout, checkoutReducer, CheckoutAction } from './Checkout';
+import { UserLocation, userLocationReducer, UserLocationAction } from './UserLocation';
+import { CustomerOrders, customerOrdersReducer, CustomerOrderAction } from './Order';
+import { Shipper, shipperReducer, ShipperAction } from './Shipper';
+import { Shipment, shipmentReducer, ShipmentAction } from './Shipment';
+import { relatedProductReducer, RelatedProduct, RelatedProductAction } from './RelatedProducts';
+import { TrendingProduct, trendingProductReducer, TrendingProductAction } from './TrendingProducts';
+import { LatestProduct, latestProductReducer, LatestProductAction } from './LatestProducts';
+import { searchReducer, SearchAction, Search } from './Search';
+import { CustomerShippment, customerShippmentReducer, CustomerShippmentAction } from './CustomerShippment';
 
 
 export type AppState = {
@@ -18,8 +30,20 @@ export type AppState = {
   colour: Colour;
   size: Size;
   subCategory: SubCategory;
-  coupon: Coupon,
-  product: Product
+  coupon: Coupon;
+  product: Product;
+  productCount: ProductCount;
+  cart: Cart;
+  checkout: Checkout;
+  userLocation: UserLocation;
+  customerOrders: CustomerOrders;
+  shipper: Shipper;
+  shipment: Shipment;
+  relatedProduct: RelatedProduct;
+  trendingProduct: TrendingProduct;
+  latestProduct: LatestProduct;
+  search: Search;
+  customerShippment: CustomerShippment
 }
 
 const reducers = {
@@ -31,6 +55,18 @@ const reducers = {
   subCategory: subCategoryReducer,
   coupon: couponReducer,
   product: productReducer,
+  productCount: productCountReducer,
+  cart: cartReducer,
+  checkout: checkoutReducer,
+  userLocation: userLocationReducer,
+  customerOrders: customerOrdersReducer,
+  shipper: shipperReducer,
+  shipment: shipmentReducer,
+  relatedProduct: relatedProductReducer,
+  trendingProduct: trendingProductReducer,
+  latestProduct: latestProductReducer,
+  search: searchReducer,
+  customerShippment: customerShippmentReducer,
 };
 
 interface AppActions {
@@ -39,7 +75,19 @@ interface AppActions {
   size: SizeAction;
   subcategory: SubCategoryAction;
   coupon: CouponAction;
-  product: ProductAction
+  product: ProductAction;
+  productCount: ProductCountAction;
+  cart: CartAction;
+  checkout: CheckoutAction;
+  userLocation: UserLocationAction;
+  customerOrders: CustomerOrderAction;
+  shipper: ShipperAction;
+  shipment: ShipmentAction;
+  relatedProduct: RelatedProductAction;
+  trendingProduct: TrendingProductAction;
+  latestProduct: LatestProductAction;
+  search: SearchAction;
+  customerShippment: CustomerShippmentAction;
 }
 
 declare global {
@@ -65,3 +113,14 @@ export * from './Size';
 export * from './SubCategory';
 export * from './Coupon';
 export * from './Product';
+export * from './ProductCount';
+export * from './Cart';
+export * from './Checkout';
+export * from './UserLocation';
+export * from './Order';
+export * from './Shipper';
+export * from './Shipment';
+export * from './RelatedProducts';
+export * from './TrendingProducts';
+export * from './LatestProducts';
+export * from './CustomerShippment';

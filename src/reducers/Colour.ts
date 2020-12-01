@@ -27,7 +27,7 @@ const initialState = {
   _isSuccess: false,
   message: '',
   data: {}
-} as Colour
+} as Colour;
 
 enum Actions {
   LOADING_COLOUR = 'LOADING_COLOUR',
@@ -36,7 +36,7 @@ enum Actions {
   DEFAULT_COLOUR = 'DEFAULT_COLOUR',
   SET_COLOUR = 'SET_COLOUR',
   UPDATE_COLOUR_SUCCESS = 'UPDATE_COLOUR_SUCCESS'
-}
+};
 
 const loadingColour = () => ({
   type: Actions.LOADING_COLOUR
@@ -65,7 +65,7 @@ const updateColourSuccess = (data: ProductColor[], message: string) => ({
   type: Actions.UPDATE_COLOUR_SUCCESS,
   data,
   message
-})
+});
 
 const colourReducer = (state = initialState, action: ColourAction): Colour => {
   switch (action.type) {
