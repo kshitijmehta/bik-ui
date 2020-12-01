@@ -57,9 +57,10 @@ const defaultCoupon = () => ({
   type: Actions.DEFAULT_COUPON
 });
 
-const setCoupon = (data: ProductCoupon[]) => ({
+const setCoupon = (data: ProductCoupon[], message?: string) => ({
   type: Actions.SET_COUPON,
-  data
+  data,
+  message
 });
 
 const updateCouponSuccess = (data: ProductCoupon[], message: string) => ({
@@ -98,7 +99,8 @@ const couponReducer = (state = initialState, action: CouponAction): Coupon => {
         _isError: true,
         _isLoading: false,
         _isSuccess: false,
-        message: action.message
+        message: action.message,
+        data: []
       }
     case Actions.SET_COUPON:
       return {
@@ -169,7 +171,7 @@ const saveCoupon = (coupon: ProductCoupon) => async (dispatch: Dispatch<CouponAc
     const res = response as CouponResponse
     dispatch(errorCoupon(res.message || ''));
   }
-}
+};
 
 const getCoupon = () => async (dispatch: Dispatch<CouponAction>) => {
   dispatch(loadingCoupon());
@@ -182,7 +184,7 @@ const getCoupon = () => async (dispatch: Dispatch<CouponAction>) => {
     const res = response as CouponResponse;
     dispatch(errorCoupon(res.message || ''))
   }
-}
+};
 
 const updateCoupon = (coupon: ProductCoupon, isDelete= false) => async (dispatch: Dispatch<CouponAction>) => {
   dispatch(loadingCoupon());
@@ -206,12 +208,29 @@ const updateCoupon = (coupon: ProductCoupon, isDelete= false) => async (dispatch
     dispatch(errorCoupon(res.message || ''));
   }
 
-}
+};
+
+const validateCoupon = (coupon: string) => async(dispatch: Dispatch<CouponAction>) => {
+  dispatch(loadingCoupon());
+  const response = await api.get('/validatecoupon?couponCode='+coupon);
+  if(response.status === HttpStatusCode.OK){
+    const res = response.data;
+    if(res.data){
+      dispatch(setCoupon([res.data], res.message || ''));
+    } else {
+      dispatch(errorCoupon(res.message || ''));
+    }
+  } else {
+    const res = response as CouponResponse
+    dispatch(errorCoupon(res.message || ''));
+  }
+};
 
 export {
   couponReducer,
   saveCoupon,
   defaultCoupon,
   getCoupon,
-  updateCoupon
+  updateCoupon,
+  validateCoupon
 }

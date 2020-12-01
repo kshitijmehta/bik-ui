@@ -138,6 +138,19 @@ const userRegister = (registerationData: Login) => async (dispatch: Dispatch<Act
   }
 }
 
+const forgetPassword = (loginDetails: Login) => async (dispatch: Dispatch<Action>) => {
+  dispatch(loadingRegister());
+  const response = await api.post('/forgetpassword', loginDetails);
+
+  if (response.status === HttpStatusCode.OK) {
+    const res = response.data as UserLoginResponse;
+    dispatch(successRegister(res.message));
+  } else{
+    const res = response as UserLoginResponse;
+    dispatch(errorRegister(res.message));
+  }
+}
+
 
 export {
   userLogin,
@@ -149,5 +162,6 @@ export {
   successLogin,
   successRegister,
   defaultLoginRegister,
-  userRegister
+  userRegister,
+  forgetPassword
 }

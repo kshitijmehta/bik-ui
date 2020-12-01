@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import { Login } from 'types'
+import { Login, CustomerCart } from 'types'
 import { CountryCodes } from 'appConstants';
 import { useDispatch, useSelector, } from 'react-redux';
-import { userLogin, AppState, defaultLoginRegister, userRegister } from 'reducers';
+import { userLogin, AppState, defaultLoginRegister, userRegister, getUser, getCart, forgetPassword, addUpdateCart } from 'reducers';
 import { Redirect } from 'react-router-dom';
 
 
@@ -15,7 +15,7 @@ const UserLogin: React.FunctionComponent = () => {
   const isLoading = useSelector<AppState, boolean>(state => state.userLogin._isLoading);
   const isError = useSelector<AppState, boolean>(state => state.userLogin._isError);
   const _isSuccess = useSelector<AppState, boolean>(state => state.userLogin._isSuccess);
-  const responseMessage = useSelector<AppState, string|undefined>(state => state.userLogin.message);
+  const responseMessage = useSelector<AppState, string | undefined>(state => state.userLogin.message);
   const [loginRedirect, setLoginRedirect] = useState(false)
 
   const loginFormik = useFormik({
@@ -24,14 +24,18 @@ const UserLogin: React.FunctionComponent = () => {
       password: '',
       mobile: '+91-',
       isRegistration: false,
+      forgetPassword: false,
       countryCode: ''
     },
     validationSchema: Yup.object({
       email: Yup.string()
         .required('Required')
         .email('Invalid email address'),
-      password: Yup.string()
-        .required('Required'),
+      password: Yup.string().when('forgetPassword',{
+        is: false,
+        then: Yup.string()
+        .required('Required')
+      }),
       mobile: Yup.string().when('isRegistration', {
         is: true,
         then: Yup.string().required('Required')
@@ -40,10 +44,14 @@ const UserLogin: React.FunctionComponent = () => {
       })
     }),
     onSubmit: (values: Login) => {
-      if(!loginFormik.values.isRegistration) {
-        dispatch(userLogin({email: values.email, password: values.password}));
+      if (!loginFormik.values.isRegistration) {
+        if(loginFormik.values.forgetPassword){
+          dispatch(forgetPassword(values));
+        } else {
+          dispatch(userLogin({ email: values.email, password: values.password }));
+        }
       } else {
-        dispatch(userRegister({email: values.email, password: values.password, mobile: values.mobile}));
+        dispatch(userRegister({ email: values.email, password: values.password, mobile: values.mobile }));
       }
     },
   });
@@ -55,24 +63,53 @@ const UserLogin: React.FunctionComponent = () => {
   const toggleLoginRegister = (isRegistration: boolean): void => {
     loginFormik.resetForm();
     loginFormik.setFieldValue('isRegistration', isRegistration);
+    loginFormik.setFieldValue('forgetPassword', false);
     dispatch(defaultLoginRegister());
   }
 
+  const onForgetPassword = () => {
+    loginFormik.setFieldValue('forgetPassword', true);
+  };
+
+  const addToDBCartAfterLogin = () => {
+    const cartData = JSON.parse(localStorage.getItem("basicKart-loggedOutCart") || '[]');
+    cartData.forEach((cart: CustomerCart) => {
+      dispatch(addUpdateCart({
+        productDetailId: cart.productDetailId,
+        productQuantity: cart.productQuantity,
+        currencyType: cart.currencyType,
+        cartId: '0',
+        productImage: cart.productImage,
+        productImagePath: cart.productImagePath,
+        productName: cart.productName,
+        subcategory: cart.subcategory,
+        productPrice: '0',
+        productId: cart.productId,
+      },true))
+    });
+    localStorage.setItem('basicKart-loggedOutCart','[]');
+  }
+
   useEffect(() => {
-    if(loginFormik.values.isRegistration) {
+    if (loginFormik.values.isRegistration) {
       loginFormik.setFieldValue('isRegistration', false);
-      loginFormik.setFieldValue('email','');
-      loginFormik.setFieldValue('password','');
+      loginFormik.setFieldValue('email', '');
+      loginFormik.setFieldValue('password', '');
       loginFormik.touched.password = false;
       loginFormik.touched.email = false;
     } else {
-      if(_isSuccess){
-         setLoginRedirect(true);
+      if (_isSuccess) {
+        if(!loginFormik.values.forgetPassword){
+          setLoginRedirect(true);
+          dispatch(getUser());
+          dispatch(getCart());
+          addToDBCartAfterLogin();
+        }
       }
     }
-  },[_isSuccess])
+  }, [_isSuccess])
 
-  if(loginRedirect) {
+  if (loginRedirect) {
     return <Redirect to="/userinformation" />
   }
 
@@ -89,13 +126,13 @@ const UserLogin: React.FunctionComponent = () => {
                       <div>
                         <div className="uk-grid-small uk-flex-center" uk-grid="true">
                           <div>
-                            <a className={'uk-button uk-button-default uk-button-small ' + (!loginFormik.values.isRegistration? 'login-register-active-button uk-active' : '')} onClick={(): void => toggleLoginRegister(false)}>
+                            <a className={'uk-button uk-button-default uk-button-small ' + (!loginFormik.values.isRegistration ? 'login-register-active-button uk-active' : '')} onClick={(): void => toggleLoginRegister(false)}>
                               <span className="uk-margin-xsmall-right" uk-icon="icon: sign-in; ratio: .75;"></span>
                               <span>Login</span>
                             </a>
                           </div>
                           <div>
-                            <a className={'uk-button uk-button-default uk-button-small ' + (loginFormik.values.isRegistration? 'login-register-active-button uk-active' : '')} onClick={(): void => toggleLoginRegister(true)}>
+                            <a className={'uk-button uk-button-default uk-button-small ' + (loginFormik.values.isRegistration ? 'login-register-active-button uk-active' : '')} onClick={(): void => toggleLoginRegister(true)}>
                               <span className="uk-margin-xsmall-right" uk-icon="icon: pencil; ratio: .75;"></span>
                               <span>Register</span>
                             </a>
@@ -106,14 +143,14 @@ const UserLogin: React.FunctionComponent = () => {
                   </div>
                   <div>
                     {
-                      isError && 
+                      isError &&
                       <div className="login-error-message">
                         <span className="uk-notification-message-danger"> {responseMessage} </span>
                       </div>
                     }
                     {
-                      _isSuccess && 
-                      <div className="login-error-message">
+                      _isSuccess &&
+                      <div className="forget-password-message">
                         <span className="uk-notification-message-success"> {responseMessage} </span>
                       </div>
                     }
@@ -170,30 +207,41 @@ const UserLogin: React.FunctionComponent = () => {
                                     </div>
                                   </fieldset>
                                 }
-                                <fieldset className="uk-fieldset">
-                                  <div className="uk-grid-small uk-child-width-1-1 uk-child-width-1-1@s" uk-grid="true">
-                                    <div>
-                                      <label>
-                                        <div className="uk-form-label">Password</div>
-                                        <input className="uk-input" type="password" id="password"
-                                          {...loginFormik.getFieldProps('password')} />
-                                        {
-                                          loginFormik.touched.password && loginFormik.errors.password ? (
-                                            <span className="uk-text-danger">{loginFormik.errors.password}</span>
-                                          ) : ''
-                                        }
-                                      </label>
+                                {
+                                  !loginFormik.values.forgetPassword &&
+                                  <fieldset className="uk-fieldset">
+                                    <div className="uk-grid-small uk-child-width-1-1 uk-child-width-1-1@s" uk-grid="true">
+                                      <div>
+                                        <label>
+                                          <div className="uk-form-label">Password</div>
+                                          <input className="uk-input" type="password" id="password"
+                                            {...loginFormik.getFieldProps('password')} />
+                                          {
+                                            loginFormik.touched.password && loginFormik.errors.password ? (
+                                              <span className="uk-text-danger">{loginFormik.errors.password}</span>
+                                            ) : ''
+                                          }
+                                        </label>
+                                      </div>
                                     </div>
-                                  </div>
-                                </fieldset>
+                                  </fieldset>
+                                }
+
                               </div>
+                              {
+                                !loginFormik.values.isRegistration &&
+                                <div className="uk-text-right uk-margin-xsmall-top">
+                                  <a className="uk-text-danger" onClick={() => onForgetPassword()}> Forget Password ?</a>
+                                </div>
+                              }
+
                               <div className="uk-card-footer uk-text-center top-border-none">
-                                <button disabled={isLoading} type="submit" className="uk-button uk-button-primary ">
-                                  { 
-                                    isLoading && 
-                                    <img className="login-button-padding" src="tail-spin.svg"/>
+                                <button id="loginbtn" disabled={isLoading} type="submit" className="uk-button uk-button-primary ">
+                                  {
+                                    isLoading &&
+                                    <img className="login-button-padding" src="tail-spin.svg" />
                                   }
-                                   <span>Submit</span> 
+                                  <span>Submit</span>
                                 </button>
                               </div>
                             </div>

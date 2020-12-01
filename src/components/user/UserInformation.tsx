@@ -10,6 +10,7 @@ import { CountryCodes } from 'appConstants';
 
 interface Props {
   user?: UserInfo;
+  fromCart? : boolean
 };
 
 
@@ -47,7 +48,7 @@ const UserInformation: React.FunctionComponent<Props> = (props: Props) => {
     }),
 
     onSubmit: (value: User) => {
-      dispatch(saveUser(value));
+      dispatch(saveUser({...value, discount: userData?.data?.discount}));
     },
 
     enableReinitialize: true
@@ -56,7 +57,9 @@ const UserInformation: React.FunctionComponent<Props> = (props: Props) => {
   return (
     <form onSubmit={userInformationFormik.handleSubmit} className="uk-width-1-1 uk-width-expand@m">
       <div className="uk-card uk-card-default uk-card-small tm-ignore-container">
-        <header className="uk-card-header"><h1 className="uk-h2">Personal Info</h1></header>
+        {
+          !props.fromCart && <header className="uk-card-header"><h1 className="uk-h2">Personal Information</h1></header>
+        }
         <div className="uk-card-body">
           <div className="uk-form-stacked">
             <div className="uk-grid-medium uk-child-width-1-1" uk-grid="true">
@@ -65,7 +68,7 @@ const UserInformation: React.FunctionComponent<Props> = (props: Props) => {
                 <div className="uk-grid-small uk-child-width-1-1 uk-child-width-1-2@s" uk-grid="true">
                   <div>
                     <label>
-                      <div className="uk-form-label">First Name</div>
+                      <div className="uk-form-label">First Name <span className="uk-text-danger">*</span></div>
                       <input className="uk-input" type="text" id="firstName"
                         {...userInformationFormik.getFieldProps("firstName")} />
                       {
@@ -77,7 +80,7 @@ const UserInformation: React.FunctionComponent<Props> = (props: Props) => {
                   </div>
                   <div>
                     <label>
-                      <div className="uk-form-label">Last Name</div>
+                      <div className="uk-form-label">Last Name <span className="uk-text-danger">*</span></div>
                       <input className="uk-input" type="text" id="lastName"
                         {...userInformationFormik.getFieldProps("lastName")} />
                     </label>
@@ -86,7 +89,7 @@ const UserInformation: React.FunctionComponent<Props> = (props: Props) => {
                 <div className="uk-grid-small uk-child-width-1-1 uk-child-width-1-3@s" uk-grid="true">
                   <div>
                     <label>
-                      <div className="uk-form-label">Phone Number</div>
+                      <div className="uk-form-label">Phone Number <span className="uk-text-danger">*</span></div>
                       <input className="uk-input" type="tel" id="mobile"
                         {...userInformationFormik.getFieldProps('mobile')} />
                       {
@@ -122,7 +125,7 @@ const UserInformation: React.FunctionComponent<Props> = (props: Props) => {
                 <div className="uk-grid-small uk-child-width-1-1 uk-child-width-1-2@s" uk-grid="true">
                   <div>
                     <label>
-                      <div className="uk-form-label">Country</div>
+                      <div className="uk-form-label">Country <span className="uk-text-danger">*</span></div>
                       <select className="uk-select" id="country"
                         {...userInformationFormik.getFieldProps('country')}>
                         {
@@ -140,7 +143,7 @@ const UserInformation: React.FunctionComponent<Props> = (props: Props) => {
                   </div>
                   <div>
                     <label>
-                      <div className="uk-form-label">State</div>
+                      <div className="uk-form-label">State <span className="uk-text-danger">*</span></div>
                       <input className="uk-input" type="text" id="state"
                         {...userInformationFormik.getFieldProps('state')} />
                       {
@@ -154,7 +157,7 @@ const UserInformation: React.FunctionComponent<Props> = (props: Props) => {
                 <div className="uk-grid-small uk-child-width-1-1 uk-child-width-1-2@s" uk-grid="true">
                   <div>
                     <label>
-                      <div className="uk-form-label">City</div>
+                      <div className="uk-form-label">City <span className="uk-text-danger">*</span></div>
                       <input className="uk-input" type="text" id="city"
                         {...userInformationFormik.getFieldProps('city')} />
                       {
@@ -180,7 +183,7 @@ const UserInformation: React.FunctionComponent<Props> = (props: Props) => {
                 <div className="uk-grid-small" uk-grid="true">
                   <div className="uk-width-1-1">
                     <label>
-                      <div className="uk-form-label">Flat, House no., Building, Company, Apartment</div>
+                      <div className="uk-form-label">Flat, House no., Building, Company, Apartment  <span className="uk-text-danger">*</span></div>
                       <input className="uk-input" type="text" id="addressLineOne"
                         {...userInformationFormik.getFieldProps('addressLineOne')} />
                       {
@@ -217,7 +220,7 @@ const UserInformation: React.FunctionComponent<Props> = (props: Props) => {
           <button disabled={isLoading} type="submit" className="uk-button uk-button-primary ">
             {
               isLoading &&
-              <img className="login-button-padding" src="tail-spin.svg" />
+              <img className="login-button-padding" src="/tail-spin.svg" />
             }
             <span>Save</span>
           </button>

@@ -2,34 +2,22 @@ import React, { useState } from 'react';
 
 interface Props {
   toggelDetails: Function;
+  showSettings: boolean;
+  showPersonal: boolean;
+  showOrders: boolean;
 }
 
 const UserNav: React.FunctionComponent<Props> = (props: Props)=> {
-  const [isPersonalInfo, setIsPersonalInfo] = useState(true);
+
   return (
     <div className="uk-width-1-1 uk-width-1-4@m tm-aside-column">
       <div className="uk-card uk-card-default uk-card-small tm-ignore-container" uk-sticky="offset: 90; bottom: true; media: @m;">
         <div className="uk-card-header">
           <div className="uk-grid-small uk-child-width-1-1" uk-grid="true">
-            <section>
-              <div className="uk-width-1-3 uk-width-1-4@s uk-width-1-2@m uk-margin-auto uk-visible-toggle uk-position-relative uk-border-circle uk-overflow-hidden uk-light">
-                <img className="uk-width-1-1" src="/thomas.svg" />
-                <a className="uk-link-reset uk-overlay-primary uk-position-cover uk-hidden-hover" href="#">
-                  <div className="uk-position-center"><span uk-icon="icon: camera; ratio: 1.25;"></span></div>
-                </a>
-              </div>
-            </section>
-            <div className="uk-text-center">
-              <div className="uk-h4 uk-margin-remove">Tarun Batra</div>
-              <div className="uk-text-meta">Joined June 6, 2018</div>
-            </div>
             <div>
               <div className="uk-grid-small uk-flex-center" uk-grid="true">
                 <div>
-                  <a className="uk-button uk-button-default uk-button-small" onClick={(): void => {props.toggelDetails('settings'); setIsPersonalInfo(false)}}><span className="uk-margin-xsmall-right" uk-icon="icon: cog; ratio: .75;"></span><span>Settings</span></a>
-                </div>
-                <div>
-                  <button className="uk-button uk-button-default uk-button-small" title="Log out"><span uk-icon="icon: sign-out; ratio: .75;"></span></button>
+                  <a className="uk-button uk-button-default uk-button-small"><span className="uk-margin-xsmall-right" uk-icon="icon: cog; ratio: .75;"></span><span>Quick Links</span></a>
                 </div>
               </div>
             </div>
@@ -37,12 +25,15 @@ const UserNav: React.FunctionComponent<Props> = (props: Props)=> {
         </div>
         <div>
           <nav>
-            <ul className="uk-nav uk-nav-default tm-nav">
-              <li className={!isPersonalInfo ? 'uk-active' : ''}>
-                <a onClick={(): void => {props.toggelDetails('settings'); setIsPersonalInfo(false)}}>Orders <span>(2)</span></a>
+            <ul className="uk-nav uk-nav-default tm-nav quick-links">
+              <li className={props.showPersonal ? 'uk-active' : ''}>
+                <a onClick={(): void => {props.toggelDetails('personal')}}>Personal Information</a>
               </li>
-              <li className={isPersonalInfo ? 'uk-active' : ''}>
-                <a onClick={(): void => {props.toggelDetails('personal'); setIsPersonalInfo(true)}}>Personal Info</a>
+              <li className={props.showOrders ? 'uk-active' : ''}>
+                <a onClick={(): void => {props.toggelDetails('orders')}}>Orders</a>
+              </li>
+              <li className={props.showSettings ? 'uk-active' : ''}>
+                <a onClick={(): void => {props.toggelDetails('settings')}}>Settings</a>
               </li>
             </ul>
           </nav>

@@ -15,6 +15,7 @@ interface User {
   readonly pincode?: string;
   readonly country?: string;
   readonly addressId?: string;
+  readonly userId?: string;
 }
 
 interface UserSettings {
