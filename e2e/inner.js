@@ -51,8 +51,8 @@ var insert = async(id, imageone, imagetwo,imagethree,imagefour,imagefive,fileNam
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.setViewport({ width: 1366, height: 768});
-  await page.goto('http://localhost:3000/login');
-  console.log('hererere')
+  await page.goto('https://basickart.com/login');
+  console.log('login page')
   var functionToInject = function(){
     const input1 = document.getElementById('email');
     var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
@@ -74,15 +74,16 @@ var insert = async(id, imageone, imagetwo,imagethree,imagefour,imagefive,fileNam
   await page.$eval('#loginbtn', el => el.click());
     
   await page.waitForSelector('#firstName');
-  console.log('there')
+  
   await page.goto('http://localhost:3000/admin/product/'+id);
-console.log('where')
+  console.log('product page')
   const selector = '#name';
   await page.waitForFunction(
     selector => document.querySelector(selector).value.length > 0,
     {},
     selector
 );
+console.log('attaching image')
   const elementHandle = await page.$("input[type=file]");
   if(!fs.existsSync(id)){
     fs.mkdirSync(id);
@@ -128,22 +129,12 @@ console.log('where')
   fs.writeFileSync('./'+id+'/'+fileName+'-5'+'.jpg', fileData);
     await elementHandle.uploadFile('./'+id+'/'+fileName+'-5'+'.jpg');
   }
-  // if(imagetwo){
-  //   await elementHandle.uploadFile(imagetwo.replace('?dl=0','?raw=1'));
-  // }
-  // if(imagethree){
-  //   await elementHandle.uploadFile(imagethree.replace('?dl=0','?raw=1'));
-  // }
-  // if(imagefour){
-  //   await elementHandle.uploadFile(imagefour.replace('?dl=0','?raw=1'));
-  // }
-  // if(imagefive){
-  //   await elementHandle.uploadFile(imagefive.replace('?dl=0','?raw=1'));
-  // }
+  
   const [button] = await page.$x('//*[@id="root"]/main/section/div/div/form/div/div[2]/button/span');
   if (button) {
       await button.click();
   };
+  console.log('done')
   await page.waitFor(5000);
   await page.screenshot({path: id+'.png'});
   await browser.close();
