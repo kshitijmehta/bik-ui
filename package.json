@@ -71,6 +71,5 @@
     "jest-puppeteer": "^4.4.0",
     "puppeteer": "^5.5.0",
     "redux-devtools-extension": "^2.13.8"
-  },
-  "proxy": "https://api.basickart.com/v1/"
+  }
 }
