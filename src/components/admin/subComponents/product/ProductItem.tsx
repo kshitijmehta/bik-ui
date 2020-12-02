@@ -295,7 +295,7 @@ const ProductItem: React.FunctionComponent = () => {
                       >
                         {/* {...productItemFormik.getFieldProps('productCategoryId')} */}
                         <option key='0' value={0}>Select</option>
-                        <option key='1' value={1}>Bindi</option>
+                        <option key='1' value={1}>Lingerie</option>
                         <option key='2' value={2}>Footwear</option>
                         <option key='3' value={3}>HomeDecore</option>
                         <option key='4' value={4}>Handicraft</option>

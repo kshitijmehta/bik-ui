@@ -42,6 +42,7 @@ const makeRequest = async (config: AxiosRequestConfig) => {
     return response;
   } catch (error) {
     if(error.response.status === 401 || error.response.status === 422){
+      window.localStorage.removeItem('biktoken')
       window.location.href = '/login';
       return {
         message: error.response.data.message || 'Auth expired',
