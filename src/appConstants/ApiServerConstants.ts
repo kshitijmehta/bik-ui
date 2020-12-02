@@ -1,4 +1,4 @@
-const apiServerHost = 'http://192.168.29.7:5000/';
+const apiServerHost = 'https://api.basickart.com/';
 
 const serverImagePath = apiServerHost + 'images/'
 
