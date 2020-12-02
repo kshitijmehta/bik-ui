@@ -3,14 +3,10 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { HttpRequest } from 'appConstants';
 
 axios.create({
-  baseURL: 'v1',
+  baseURL: 'https://api.basickart.com/v1',
   headers: {
     'Accept': 'application/json;charset=UTF-8',
     'Authorization': ''
-  },
-  proxy: {
-    host : 'localhost',
-    port: 5000
   }
 });
 
