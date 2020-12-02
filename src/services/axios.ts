@@ -41,7 +41,7 @@ const makeRequest = async (config: AxiosRequestConfig) => {
     const response = await axios.request(config);
     return response;
   } catch (error) {
-    if(error.response.status === 401 || error.response.status === 422){
+    if(error.response.status === 401 || error.response.status === 422 || error.response.status === 404){
       window.localStorage.removeItem('biktoken')
       window.location.href = '/login';
       return {
