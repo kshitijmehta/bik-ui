@@ -1,14 +1,7 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import{ AxiosRequestConfig } from 'axios';
 
 import { HttpRequest } from 'appConstants';
-
-axios.create({
-  baseURL: 'https://api.basickart.com/v1',
-  headers: {
-    'Accept': 'application/json;charset=UTF-8',
-    'Authorization': ''
-  }
-});
+import axios from './axiosBase';
 
 const setAuthToken = (): void => {
   axios.defaults.headers['Authorization'] = 'Bearer ' + window.localStorage.getItem('biktoken');
