@@ -16,7 +16,7 @@ var stylecode = [];
 var proceedImage = [];
 // const emitter = new events.EventEmitter()
 
-fs.createReadStream('C:/Users/kshti/Desktop/db/flat.csv')
+fs.createReadStream('C:/Users/kshti/Desktop/db/wedges2.csv')
   .pipe(csv())
   .on('data', (row) => {
     // console.log(row);
