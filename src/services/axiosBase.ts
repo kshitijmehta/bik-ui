@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 export default axios.create({
-  baseURL: 'https://basickart.com/v1',
+  // baseURL: 'http://192.168.29.7:5000/v1',
   headers: {
     'Accept': 'application/json;charset=UTF-8',
     'Authorization': ''
