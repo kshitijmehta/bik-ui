@@ -12,7 +12,7 @@ enum SubProducts {
 const SubCategories: Record<string, number> = {
   'Lingerie': 1,
   'Footwear': 2,
-  'HomeDecore': 3,
+  'Bindi': 3,
   'Handicraft': 4
 }
 

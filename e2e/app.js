@@ -10,21 +10,21 @@ var prodId = [];
 var proceedImage = [];
 // const emitter = new events.EventEmitter()
 
-fs.createReadStream('C:/Users/kshti/Desktop/db/tikal-bindi.csv')
+fs.createReadStream('C:/Users/kshti/Desktop/db/bind_image.csv')
   .pipe(csv())
   .on('data', (row) => {
     // console.log(row.prod_id, row.prod_name);
-    prodName.push(row.prod_name)
+    prodName.push(row.image)
     prodId.push(row.prod_id)
   })
   .on('end', async () => {
     console.log('-----------');
     for(var index =0 ;index<prodName.length; index++) {
-      const count = proceedImage.filter((name) => {
-        return name == prodName[index]
-      }).length;
-      console.log(prodId[index], prodName[index]+'_'+count+'.jpg')
-      await insert(prodId[index], prodName[index]+'_'+count+'.jpg')
+      // const count = proceedImage.filter((name) => {
+      //   return name == prodName[index]
+      // }).length;
+      // console.log(prodId[index], prodName[index]+'.jpg')
+      await insert(prodId[index], prodName[index]+'.jpg')
       proceedImage.push(prodName[index])
     }
     // prodId.map(async (id, index) => {
@@ -39,10 +39,11 @@ fs.createReadStream('C:/Users/kshti/Desktop/db/tikal-bindi.csv')
 
   });
 var insert = async(id, imageName) => {
+  console.log(id,imageName)
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.setViewport({ width: 1366, height: 768});
-  await page.goto('http://localhost:3000/login');
+  await page.goto('https://basickart.com/login');
   console.log('hererere')
   var functionToInject = function(){
     const input1 = document.getElementById('email');
@@ -66,7 +67,7 @@ var insert = async(id, imageName) => {
     
   await page.waitForSelector('#firstName');
   console.log('there')
-  await page.goto('http://localhost:3000/admin/product/'+id);
+  await page.goto('https://basickart.com/admin/product/'+id);
 console.log('where')
   const selector = '#name';
   await page.waitForFunction(
@@ -75,8 +76,8 @@ console.log('where')
     selector
 );
   const elementHandle = await page.$("input[type=file]");
-  await elementHandle.uploadFile('C:/Users/kshti/OneDrive/Desktop/bik/images/tilak/tilak/'+imageName);
-  const [button] = await page.$x('//*[@id="root"]/main/section/div/div/form/div/div[2]/button/span');
+  await elementHandle.uploadFile('C:/Users/kshti/Desktop/db/bindi/bindi/'+imageName);
+  const [button] = await page.$x('//*[@id="root"]/main/section/div/div/form/div/div[2]/button');
   if (button) {
       await button.click();
   };

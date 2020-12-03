@@ -4,11 +4,11 @@ import { SubCategory, Size } from "reducers";
 const getSubCategoryFromId = (id: Number) => {
   switch (id) {
     case 1:
-      return "Bindi";
+      return "Lingerie";
     case 2:
       return "Footwear";
     case 3:
-      return "HomeDecore";
+      return "Bindi";
     case 4:
       return "Handicraft";
   }

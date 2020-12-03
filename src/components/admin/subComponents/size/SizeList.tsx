@@ -40,8 +40,8 @@ const SizeList: React.FunctionComponent = () => {
       productType={SubProducts.SIZE}
       ExpandableComponent={ExpandableComponent}
       stateData={stateData}
-      searchPlaceholder="Search Size Value" 
-      expandableRows = {true}/>
+      searchPlaceholder="Search Size Value"
+      expandableRows={true} />
   )
 }
 
@@ -75,9 +75,9 @@ const ExpandableComponent: React.FunctionComponent<any> = ({ data }) => {
               <div className="uk-form-label">Product Category</div>
               <select className="uk-select" id="productCategory"
                 {...sizeQuickViewFormik.getFieldProps('productCategory')}>
-                <option key='1' value={1}>Bindi</option>
+                <option key='1' value={1}>Lingerie</option>
                 <option key='2' value={2}>Footwear</option>
-                <option key='3' value={3}>HomeDecore</option>
+                <option key='3' value={3}>Bindi</option>
                 <option key='4' value={4}>Handicraft</option>
               </select>
               {
@@ -126,7 +126,7 @@ const ExpandableComponent: React.FunctionComponent<any> = ({ data }) => {
         </div>
         <div className="extended-component-notification">
           {sizeQuickViewFormik.isSubmitting && <NotificationContainer {...sizeActionStatus} />}
-          </div>
+        </div>
       </fieldset>
     </form>
   )

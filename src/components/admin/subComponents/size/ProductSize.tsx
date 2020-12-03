@@ -46,9 +46,9 @@ const ProductSize: React.FunctionComponent = () => {
                       <div className="uk-form-label">Product Category</div>
                       <select className="uk-select" id="productCategory"
                         {...sizeFormik.getFieldProps('productCategory')}>
-                          <option key='1' value={1}>Bindi</option>
+                          <option key='1' value={1}>Lingerie</option>
                           <option key='2' value={2}>Footwear</option>
-                          <option key='3' value={3}>HomeDecore</option>
+                          <option key='3' value={3}>Bindi</option>
                           <option key='4' value={4}>Handicraft</option>
                         </select>
                       {

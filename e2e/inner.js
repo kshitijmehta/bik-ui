@@ -16,7 +16,7 @@ var stylecode = [];
 var proceedImage = [];
 // const emitter = new events.EventEmitter()
 
-fs.createReadStream('C:/Users/kshti/Desktop/db/bra.csv')
+fs.createReadStream('C:/Users/kshti/Desktop/db/flat.csv')
   .pipe(csv())
   .on('data', (row) => {
     // console.log(row);
@@ -30,24 +30,17 @@ fs.createReadStream('C:/Users/kshti/Desktop/db/bra.csv')
   })
   .on('end', async () => {
     console.log('-----------');
+    console.log(stylecode)
     for(var index =0 ;index<prodId.length; index++) {
       await insert(prodId[index],modelOne[index],
         modelTwo[index],modelThree[index],
         modelFour[index],modelFive[index], stylecode[index])
     }
-    // prodId.map(async (id, index) => {
-    //   const count = proceedImage.filter((name) => {
-    //     return name == prodName[index]
-    //   }).length;
-    //   console.log(id, prodName[index]+'_'+count+'.jpg')
-    //   await test(id, prodName[index]+'_'+count+'.jpg')
-    //   proceedImage.push(prodName[index])
-    // })
     console.log('-----------')
 
   });
 var insert = async(id, imageone, imagetwo,imagethree,imagefour,imagefive,fileName) => {
-  console.log(id, [imageone, imagetwo,imagethree,imagefour,imagefive,fileName].length)
+  console.log(id, imageone, imagetwo,imagethree,imagefour,imagefive,fileName)
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.setViewport({ width: 1366, height: 768});
@@ -75,7 +68,7 @@ var insert = async(id, imageone, imagetwo,imagethree,imagefour,imagefive,fileNam
     
   await page.waitForSelector('#firstName');
   
-  await page.goto('http://localhost:3000/admin/product/'+id);
+  await page.goto('https://basickart.com/admin/product/'+id);
   console.log('product page')
   const selector = '#name';
   await page.waitForFunction(
@@ -130,12 +123,12 @@ console.log('attaching image')
     await elementHandle.uploadFile('./'+id+'/'+fileName+'-5'+'.jpg');
   }
   
-  const [button] = await page.$x('//*[@id="root"]/main/section/div/div/form/div/div[2]/button/span');
+  const [button] = await page.$x('//*[@id="root"]/main/section/div/div/form/div/div[2]/button');
   if (button) {
       await button.click();
   };
   console.log('done')
   await page.waitFor(5000);
-  await page.screenshot({path: id+'.png'});
+  // await page.screenshot({path: id+'.png', fullPage: true});
   await browser.close();
 }
