@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { getSubCategory, AppState, SubCategory, getActiveProductCount, Cart, getCart, getUser, getUserLocation, getCustomerProducts, UserLocation, setLoggedCart } from 'reducers';
+import { getSubCategory, AppState, SubCategory, getActiveProductCount, Cart, getCart, getUser, getUserLocation, getCustomerProducts, UserLocation, setLoggedCart, defaultUser } from 'reducers';
 import { SubCategories, pageSize } from 'appConstants';
 import { filterSubcategories } from 'services';
 import { ProductSubCategory, Search } from 'types';
@@ -75,7 +75,7 @@ const Navigation: React.FunctionComponent = () => {
   const navigateTo = (event: React.SyntheticEvent ,categoryPath: string, subcategoryPath?: string) => {
     event.preventDefault();
     history.push('/product/'+ categoryPath.toLowerCase() + (subcategoryPath ? '/'+ subcategoryPath.toLowerCase() : ''));
-  }
+  };
   const getCategoryAndSubCategory = () => {
     return Object.keys(SubCategories).map((key: string, index: number) => {
       return (
@@ -98,8 +98,13 @@ const Navigation: React.FunctionComponent = () => {
         </li>
       )
     });
-  }
+  };
 
+  const logout = () => {
+    dispatch(defaultUser());
+    window.localStorage.removeItem('biktoken');
+    history.push('/');
+  };
   return (
     <header>
       <div className="uk-navbar-container tm-navbar-container" uk-sticky="cls-active: tm-navbar-container-fixed">
@@ -114,7 +119,11 @@ const Navigation: React.FunctionComponent = () => {
                 }
                 <li><a href="about.html">About</a></li>
                 <li><a href="contacts.html">Contacts</a></li>
-                <li><a onClick={()=>history.push('/admin')}>Admin</a></li>
+                {
+                  userData.data?.isAdmin && 
+                  <li><a onClick={()=>history.push('/admin')}>Admin</a></li>
+                }
+               
               </ul>
             </nav>
           </div>
@@ -140,12 +149,17 @@ const Navigation: React.FunctionComponent = () => {
             <div className="uk-padding-small uk-margin-remove" uk-dropdown="pos: bottom-right; offset: -10; delay-hide: 200;" style={{ minWidth: '150px' }}>
               <ul className="uk-nav uk-dropdown-nav">
                 <li>
-                  <a onClick={() => history.push('/userinformation/orders')}>Orders</a>
+                  <a onClick={() => userData.data?.userId ?  history.push('/userinformation/orders') : history.push('/login')}>Orders</a>
                 </li>
-                <li><a onClick={()=>history.push('/userinformation/default')}>Personal</a></li>
-                <li><a onClick={()=>history.push('/userinformation/settings')}>Settings</a></li>
+                <li><a onClick={()=> userData.data?.userId ? history.push('/userinformation/default') : history.push('/login')}>Personal</a></li>
+                <li><a onClick={()=> userData.data?.userId ? history.push('/userinformation/settings'): history.push('/login')}>Settings</a></li>
                 <li className="uk-nav-divider"></li>
-                <li><a href="#">Log out</a></li>
+                {
+                   userData.data?.userId ? 
+                   <li><a onClick={()=> logout()}>Log out</a></li> :
+                   <li><a onClick={()=>history.push('/login')}>Login</a></li>
+                }
+                
               </ul>
             </div>
             <a className="uk-navbar-item uk-link-muted tm-navbar-button" href="#" uk-toggle="target: #cart-offcanvas">

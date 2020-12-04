@@ -203,7 +203,7 @@ const cartReducer = (state = initialState, action: CartAction): Cart => {
         oglo = originalStatelo.map((product) => {
           if (action.data && product.cartId === action.data[0].cartId) {
             product.productQuantity = (Number(action.data[0].productQuantity) + Number(product.productQuantity)).toString();
-            product.totalPrice = action.data[0].totalPrice;
+            product.totalPrice = ((Number(product.productQuantity)) * Number(action.data[0].productPrice)).toString();
             product.cartId = action.data[0].cartId;
             newProductlo = false;
             return product;

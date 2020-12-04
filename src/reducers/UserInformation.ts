@@ -24,7 +24,9 @@ export interface UserInformation {
 
 /* Initial State */
 const initialState  = {
-  data: {},
+  data: {
+    isAdmin: false,
+  },
   allUsers :[],
   _isError: false,
   _isLoading: false,
@@ -40,7 +42,8 @@ enum Actions {
   LOADING_USER = "LOADING_USER",
   ERROR_USER = "ERROR_USER",
   SET_ALL_USER = 'SET_ALL_USER',
-  UPDATE_USER_DISCOUNT = 'UPDATE_USER_DISCOUNT'
+  UPDATE_USER_DISCOUNT = 'UPDATE_USER_DISCOUNT',
+  DEFAULT_USER = 'DEFAULT_USER'
 }
 
 const setUser = (user: User) => ({
@@ -55,6 +58,10 @@ const setAllUser = (user: User[]) => ({
 
 const loadingUser = () => ({
   type: Actions.LOADING_USER
+});
+
+const defaultUser = () => ({
+  type: Actions.DEFAULT_USER
 });
 
 const errorUser = (message: string) => ({
@@ -88,6 +95,11 @@ const userInformationReducer = (state = initialState, action: UserInformationAct
         _isLoading: false,
         _isSuccess: true,
         message: action.message
+      };
+    case Actions.DEFAULT_USER:
+      return {
+        ...state,
+        ...initialState
       };
     case Actions.SET_ALL_USER:
       return {
@@ -188,5 +200,6 @@ export {
   saveUser,
   getAllUser,
   setUser,
-  updateUserDiscount
+  updateUserDiscount,
+  defaultUser
 };

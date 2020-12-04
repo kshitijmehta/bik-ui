@@ -16,6 +16,7 @@ interface User {
   readonly country?: string;
   readonly addressId?: string;
   readonly userId?: string;
+  readonly isAdmin?: boolean;
 }
 
 interface UserSettings {

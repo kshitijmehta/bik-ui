@@ -110,7 +110,7 @@ const UserLogin: React.FunctionComponent = () => {
   }, [_isSuccess])
 
   if (loginRedirect) {
-    return <Redirect to="/userinformation" />
+    return <Redirect to="/" />
   }
 
   return (
