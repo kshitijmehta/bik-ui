@@ -151,7 +151,7 @@ const CustomerProductFilter: React.FunctionComponent<Props> = (props: Props) => 
               <button className="uk-offcanvas-close" type="button" uk-close="true"></button>
             </div>
           </header>
-          <div className="uk-margin-remove uk-flex-1 uk-overflow-auto" uk-accordion="multiple: true; targets: &gt; .js-accordion-section" style={{ flexBasis: "auto" }}>
+          <div className="uk-margin-remove uk-flex-1" uk-accordion="multiple: true; targets: &gt; .js-accordion-section" style={{ flexBasis: "auto" }}>
             <section className="uk-card-body uk-open js-accordion-section">
               <h4 className="uk-accordion-title uk-margin-remove">Prices</h4>
               <div className="uk-accordion-content">
