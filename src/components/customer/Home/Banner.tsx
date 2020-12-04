@@ -6,17 +6,17 @@ const Banner: React.FunctionComponent = () => {
       <ul className="uk-slideshow-items">
         <li style={{ backgroundColor: "#0b0a12" }}>
           <a href="#">
-            <figure className="uk-container uk-height-1-1"><img src="/banner.jpg" alt="New Macbook" width="1200" height="500" uk-cover="true" /></figure>
+            <figure className="uk-container uk-height-1-1"><img src="/banner_first.jpg" alt="New Macbook" width="1200" height="500" uk-cover="true" /></figure>
           </a>
         </li>
         <li style={{ backgroundColor: "#0b0a12" }}>
           <a href="#">
-            <figure className="uk-container uk-height-1-1"><img src="/banner_2.jpg" alt="New Macbook" width="1200" height="500" uk-cover="true" /></figure>
+            <figure className="uk-container uk-height-1-1"><img src="/banner_two.jpg" alt="New Macbook" width="1200" height="500" uk-cover="true" /></figure>
           </a>
         </li>
         <li style={{ backgroundColor: "#ce071e;" }}>
           <a href="#">
-            <figure className="uk-container uk-height-1-1"><img src="/banner_3.jpg" alt="iPhone" width="1200" height="500" uk-cover="true" /></figure>
+            <figure className="uk-container uk-height-1-1"><img src="/banner_three.jpg" alt="iPhone" width="1200" height="500" uk-cover="true" /></figure>
           </a>
         </li>
       </ul>
