@@ -8522,3 +8522,15 @@ width: 100%;
 .asd{
   min-width: 700px;
 }
+
+@media (max-width:639px) {
+  .size-chart-width {
+    width: 300px !important;
+  }
+}
+
+@media (min-width:640px) {
+  .size-chart-width {
+    width: 780px !important;
+  }
+}

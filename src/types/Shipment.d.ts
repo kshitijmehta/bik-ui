@@ -7,6 +7,9 @@ interface OrderUpdateAdmin {
   returnStatus?: string,
   paymentReturned?: string,
   orderDetailId?: string,
+  orderNumber?: string,
+  customerEmail?: string,
+  customerName?:string,
 }
 
 export {

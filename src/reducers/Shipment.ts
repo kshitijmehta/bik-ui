@@ -87,7 +87,7 @@ const shipmentReducer = (state= initialState, action: ShipmentAction): Shipment 
 
 /** Thunk */
 
-const updateOrderAdmin = (orderUpdate: OrderUpdateAdmin) => async(dispatch: Dispatch<ShipmentAction>) => {
+const updateOrderAdmin = (orderUpdate: OrderUpdateAdmin, sendTrackingEmail: boolean) => async(dispatch: Dispatch<ShipmentAction>) => {
   dispatch(loadingShipment(orderUpdate));
   const response = await api.post('/shipment',{
     deliveryDate: orderUpdate.deliveryDate,
@@ -97,7 +97,11 @@ const updateOrderAdmin = (orderUpdate: OrderUpdateAdmin) => async(dispatch: Disp
     shipmentId: orderUpdate.shipmentId,
     shipper: orderUpdate.shipper?.toString(),
     shippingDate: orderUpdate.shippingDate,
-    trackingNumber: orderUpdate.trackingNumber?.toString() || ''
+    trackingNumber: orderUpdate.trackingNumber?.toString() || '',
+    customerEmail: orderUpdate.customerEmail,
+    orderNumber: orderUpdate.orderNumber,
+    customerName: orderUpdate.customerName,
+    sendTrackingEmail
   } as OrderUpdateAdmin);
   if(response.status === HttpStatusCode.OK){
     const res = response.data as ShipmentResponse;

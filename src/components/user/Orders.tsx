@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { CustomerOrders, getCustomerOrders, customerProductReturn, defaulOrderReturn } from 'reducers/Order';
 import { useSelector, useDispatch } from 'react-redux';
-import { AppState, UserLocation, getShippers } from 'reducers';
+import { AppState, UserLocation, getShippers, UserInformation } from 'reducers';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { pageSize, serverImagePath, AllowReturn } from 'appConstants';
 import { Order, OrderItems, OrderShipper } from 'types';
@@ -16,12 +16,15 @@ const Orders: React.FunctionComponent = () => {
   const [selectedReason, setSelectedReason] = useState('');
   const [showOrderDetailIndex, setShowOrderDetailIndex] = useState<number[]>([]);
   const [returnOrderDetailId, setReturnOrderDetailId] = useState('');
+  const [returnOrderNumber, setReturnOrderNumber] = useState('');
+  const [returnProductName, setReturnProductName] = useState('');
   const [showReturnError, setShowReturnError] = useState(false);
   const returnModalRef = useRef<HTMLDivElement>(null);
   const returnButtonRef = useRef<HTMLButtonElement>(null);
   const orders = useSelector<AppState, CustomerOrders>(state => state.customerOrders || []);
   const userLocation = useSelector<AppState, UserLocation>(state => state.userLocation);
   const shipperData = useSelector<AppState, OrderShipper[]>(state => state.shipper.data || []);
+  const userData = useSelector<AppState, UserInformation>(state => state.user);
 
   useEffect(() => {
     dispatch(getCustomerOrders(orders.data?.length || 0, pageSize));
@@ -64,7 +67,7 @@ const Orders: React.FunctionComponent = () => {
   }
 
   const checkReturnEligibilty = (deliveryDate: string, categoryId: string) => {
-    if(AllowReturn.indexOf(categoryId) > -1 ){
+    if(AllowReturn.indexOf(categoryId.toString()) > -1 ){
       const dateDifference = (new Date()).getTime() - (new Date(deliveryDate)).getTime();
       const differenceInDays = dateDifference / (1000 * 3600 * 24);
       return Math.ceil(differenceInDays) <= 30;
@@ -72,11 +75,12 @@ const Orders: React.FunctionComponent = () => {
     return false;
   };
 
-  const returnOrder = (orderDetailId?: string, reason?: string) => {
+  const returnOrder = (orderDetailId?: string, reason?: string,
+    orderNumber?: string, productName?: string) => {
     if(selectedReason || reason){
       setShowReturnError(false);
       dispatch(customerProductReturn(Number(orderDetailId) || Number(returnOrderDetailId), 
-        reason||selectedReason));
+        reason||selectedReason,orderNumber || returnOrderNumber,productName || returnProductName, userData.data?.firstName));
     } else {
       setShowReturnError(true);
     }
@@ -167,7 +171,14 @@ const Orders: React.FunctionComponent = () => {
                                       <li>Delivery Date: <span>{order.orderItems[0].shipmentDetails?.deliveryDate}</span></li>
                                       {
                                         checkReturnEligibilty(order.orderItems[0].shipmentDetails?.deliveryDate, order.orderItems[0].categoryId) &&
-                                        <li><button className="uk-button uk-button-primary uk-button-small" uk-toggle="target: #return-modal" onClick={() => { setSelectedReason('');  dispatch(defaulOrderReturn()); setReturnOrderDetailId(order.orderItems[0].orderDetailId) }}>Return</button></li>
+                                        <li><button className="uk-button uk-button-primary uk-button-small" uk-toggle="target: #return-modal" 
+                                        onClick={() => {
+                                          setSelectedReason('');
+                                          dispatch(defaulOrderReturn());
+                                          setReturnOrderDetailId(order.orderItems[0].orderDetailId);
+                                          setReturnProductName(order.orderItems[0].productName);
+                                          setReturnOrderNumber(order.orderNumber);
+                                        }}>Return</button></li>
                                       }
                                     </ul>
                                     :
@@ -179,15 +190,19 @@ const Orders: React.FunctionComponent = () => {
                                           disabled={orders._isLoading}
                                           {...(order.orderItems[0].shipmentDetails?.shippingDate && 'uk-toggle="target: #return-modal"')}
                                           onClick={() => { 
-                                            debugger
                                             if(order.orderItems[0].shipmentDetails?.shippingDate){
                                               setSelectedReason('');
                                               dispatch(defaulOrderReturn())
-                                              setReturnOrderDetailId(order.orderItems[0].orderDetailId)
+                                              setReturnOrderDetailId(order.orderItems[0].orderDetailId);
+                                              setReturnProductName(order.orderItems[0].productName);
+                                              setReturnOrderNumber(order.orderNumber);
                                             } else {
                                               setSelectedReason('Order Canceled before shipping');
-                                               setReturnOrderDetailId(order.orderItems[0].orderDetailId)
-                                               returnOrder(order.orderItems[0].orderDetailId,'Order Canceled before shipping');
+                                               setReturnOrderDetailId(order.orderItems[0].orderDetailId);
+                                               setReturnProductName(order.orderItems[0].productName);
+                                               setReturnOrderNumber(order.orderNumber);
+                                               returnOrder(order.orderItems[0].orderDetailId,
+                                                'Order Canceled before shipping',order.orderNumber,order.orderItems[0].productName);
                                             }
                                             
                                         }}>
@@ -253,7 +268,14 @@ const Orders: React.FunctionComponent = () => {
                                                   <li>Delivery Date: <span>{orderItem.shipmentDetails?.deliveryDate}</span></li>
                                                   {
                                                     checkReturnEligibilty(orderItem.shipmentDetails?.deliveryDate, order.orderItems[0].categoryId) &&
-                                                    <li><button className="uk-button uk-button-primary uk-button-small" uk-toggle="target: #return-modal" onClick={() => { setSelectedReason('');  dispatch(defaulOrderReturn()) ;setReturnOrderDetailId(orderItem.orderDetailId) }}>Return</button></li>
+                                                    <li><button className="uk-button uk-button-primary uk-button-small" uk-toggle="target: #return-modal"
+                                                    onClick={() => { 
+                                                      setSelectedReason('');
+                                                      dispatch(defaulOrderReturn());
+                                                      setReturnOrderDetailId(orderItem.orderDetailId);
+                                                      setReturnProductName(orderItem.productName);
+                                                      setReturnOrderNumber(order.orderNumber);
+                                                    }}>Return</button></li>
                                                   }
                                                 </ul>
                                                 :
@@ -269,11 +291,16 @@ const Orders: React.FunctionComponent = () => {
                                                         if(orderItem.shipmentDetails?.shippingDate){
                                                           setSelectedReason('');
                                                           setReturnOrderDetailId(orderItem.orderDetailId);
+                                                          setReturnProductName(orderItem.productName);
+                                                          setReturnOrderNumber(order.orderNumber);
                                                           dispatch(defaulOrderReturn())
                                                         } else {
                                                           setSelectedReason('Order Canceled before shipping');
-                                                          setReturnOrderDetailId(orderItem.orderDetailId)
-                                                          returnOrder(orderItem.orderDetailId,'Order Canceled before shipping');
+                                                          setReturnOrderDetailId(orderItem.orderDetailId);
+                                                          setReturnProductName(orderItem.productName);
+                                                          setReturnOrderNumber(order.orderNumber);
+                                                          returnOrder(orderItem.orderDetailId,'Order Canceled before shipping',
+                                                          order.orderNumber,orderItem.productName);
                                                         }
                                                       }
                                                     }>

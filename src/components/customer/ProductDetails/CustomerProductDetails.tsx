@@ -129,7 +129,7 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
   };
 
   const addToCart = () => {
-    if(!userData.data?.userId){
+    if (!userData.data?.userId) {
       const cartData = {
         productDetailId: selectedProductDetailId,
         productQuantity: selectedQuantity,
@@ -139,12 +139,12 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
         productImagePath: imagePath,
         productName: name,
         subcategory: productCategoryName,
-        productPrice: showINRUSD(userLocation.data || 'IN', {priceINR: pINR, priceUSD: pUSD}),
+        productPrice: showINRUSD(userLocation.data || 'IN', { priceINR: pINR, priceUSD: pUSD }),
         productId: productId,
       } as CustomerCart;
-  
+
       dispatch(addUpdateCart(cartData, false))
-    }else{
+    } else {
       const cartData = {
         productDetailId: selectedProductDetailId,
         productQuantity: selectedQuantity,
@@ -157,7 +157,7 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
         productPrice: '0',
         productId: productId,
       } as CustomerCart;
-  
+
       dispatch(addUpdateCart(cartData, true))
     }
   }
@@ -174,7 +174,7 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
               <ul className="uk-breadcrumb uk-flex-center uk-margin-remove">
                 <li><a onClick={() => history.push('/')}>Home</a></li>
                 <li><span>Product</span></li>
-                <li><a onClick={()=> history.push('/product/'+props.productCategoryName)}>{props.productCategoryName}</a></li>
+                <li><a onClick={() => history.push('/product/' + props.productCategoryName)}>{props.productCategoryName}</a></li>
               </ul>
               <h1 className="uk-margin-small-top uk-margin-remove-bottom">{props.name}</h1>
             </div>
@@ -228,9 +228,9 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
                                 <div>
                                   {
                                     userData.data?.discount && userData.data?.discount !== '0' &&
-                                    <del className="uk-text-meta">{getCurrencyIcon(userLocation.data || 'IN')} {showINRUSD(userLocation.data || 'IN', {priceINR: pINR, priceUSD: pUSD})}</del>
+                                    <del className="uk-text-meta">{getCurrencyIcon(userLocation.data || 'IN')} {showINRUSD(userLocation.data || 'IN', { priceINR: pINR, priceUSD: pUSD })}</del>
                                   }
-                                  <div className="tm-product-price">{getCurrencyIcon(userLocation.data || 'IN')} {calculateUserDiscount(userData.data?.discount || '0', showINRUSD(userLocation.data || 'IN', {priceINR: pINR, priceUSD: pUSD}) )}</div>
+                                  <div className="tm-product-price">{getCurrencyIcon(userLocation.data || 'IN')} {calculateUserDiscount(userData.data?.discount || '0', showINRUSD(userLocation.data || 'IN', { priceINR: pINR, priceUSD: pUSD }))}</div>
                                 </div>
                                 <div>
                                   <div className="uk-grid-small uk-child-width-1-2" uk-grid="true">
@@ -278,6 +278,13 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
                                     </div>
                                   </div>
                                 </div>
+                                <div>
+                                  {
+                                    props.productCategoryName.toLowerCase() === 'footwear' && 
+                                    <a uk-toggle="target: #product-size-model" className="uk-margin-xsmall-right uk-notification-message-danger"><span uk-icon="file-text"></span> Size Chart </a>
+                                  }
+                                  
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -286,19 +293,12 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
                               <div className="uk-grid-small uk-child-width-1-1 uk-text-small" uk-grid="true">
                                 <div>
                                   <div className="uk-grid-collapse" uk-grid="true">
-                                    <span className="uk-margin-xsmall-right" uk-icon="cart"></span>
+                                    {/* <span className="uk-margin-xsmall-right" uk-icon="chevron-right"></span> */}
                                     <div>
-                                      <div className="uk-text-bolder">Delivery</div>
-                                      <div className="uk-text-xsmall uk-text-muted">In stock, free, tomorrow</div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div>
-                                  <div className="uk-grid-collapse" uk-grid="true">
-                                    <span className="uk-margin-xsmall-right" uk-icon="location"></span>
-                                    <div>
-                                      <div className="uk-text-bolder">Pick up from store</div>
-                                      <div className="uk-text-xsmall uk-text-muted">In stock, free, tomorrow</div>
+                                      <div className="uk-text-bolder">Product Details</div>
+                                      <div className="uk-text-small uk-text-muted">
+                                        {props.description}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -307,7 +307,7 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
                           </div>
                         </div>
                       </div>
-                      <div className="uk-width-1-1 tm-product-description" id="description">
+                      {/* <div className="uk-width-1-1 tm-product-description" id="description">
                         <header>
                           <nav className="tm-product-nav" uk-sticky="offset: 60; bottom: #description; cls-active: tm-product-nav-fixed;">
                             <ul className="uk-subnav uk-subnav-pill js-product-switcher" uk-switcher="connect: .js-tabs">
@@ -329,20 +329,34 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
                             </section>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
-              {
-                relatedProducts.length > 0 &&
-                <QuickProductList productList={relatedProducts}/>
-              }
-              
+                {
+                  relatedProducts.length > 0 &&
+                  <QuickProductList productList={relatedProducts} />
+                }
+
               </div>
             </div>
           </div>
         </div>
       </section>
+      <div id="product-size-model" uk-modal="true">
+        <div className="uk-modal-dialog uk-modal-body uk-margin-auto-vertical size-chart-width">
+          <button className="uk-modal-close-default" type="button" uk-close="true"></button>
+          {
+            props.productCategoryName.toLowerCase() === 'footwear' &&
+            <>
+              <img className="uk-visible@s" src="/footwear_size_chart.jpg" alt="footwear-size-chart" />
+              <img className="uk-hidden@s" src="/footwear_size_chart_mobile_1.jpg" alt="footwear-size-chart" />
+              <img className="uk-hidden@s" src="/footwear_size_chart_mobile_2.jpg" alt="footwear-size-chart" />
+            </>
+          }
+
+        </div>
+      </div>
     </main>
   )
 }

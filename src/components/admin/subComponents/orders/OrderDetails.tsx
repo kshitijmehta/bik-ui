@@ -12,13 +12,15 @@ const OrderDetails: React.FunctionComponent = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   // const [productItemCount, setProductItemCount] = useState(0);
-  const [adminShipmentData, setAdminShipmentData] = useState<OrderUpdateAdmin[]>([])
+  const [adminShipmentData, setAdminShipmentData] = useState<OrderUpdateAdmin[]>([]);
+  const [orginalTrackingLink, setOrginalTrackingLink] = useState<string[]>([]);
   const stateData = useSelector<AppState, Order>(state => state.customerOrders.singleData || {} as Order);
   const shippers = useSelector<AppState, Shipper>(state => state.shipper || {} as Shipper);
   const shipmentStatus = useSelector<AppState, Shipment>(state => state.shipment);
   useEffect(() => {
     if (stateData && stateData.orderItems) {
       let tempShipmentData: OrderUpdateAdmin[] = [];
+      let tempTrackingLink: string[] = [];
       stateData.orderItems.forEach(orderItems => {
         tempShipmentData.push(
           {
@@ -31,8 +33,10 @@ const OrderDetails: React.FunctionComponent = () => {
             shippingDate: orderItems.shipmentDetails?.shippingDate,
             trackingNumber: orderItems.shipmentDetails?.trackingNumber
           } as OrderUpdateAdmin);
+        tempTrackingLink.push(orderItems.shipmentDetails?.trackingNumber || '')
       });
-      setAdminShipmentData(tempShipmentData)
+      setAdminShipmentData(tempShipmentData);
+      setOrginalTrackingLink(tempTrackingLink);
     }
   }, [stateData]);
 
@@ -49,8 +53,18 @@ const OrderDetails: React.FunctionComponent = () => {
   };
 
   const updateOrderStatus = (index: number) => {
-    console.log(adminShipmentData[index])
-    dispatch(updateOrderAdmin(adminShipmentData[index]))
+    const isTrackingChanged = adminShipmentData[index].trackingNumber !== orginalTrackingLink[index];
+    if(isTrackingChanged){
+      let orginalTrackingLinkCopy = [...orginalTrackingLink];
+      orginalTrackingLinkCopy[index] = adminShipmentData[index].trackingNumber || '';
+      setOrginalTrackingLink(orginalTrackingLinkCopy);
+    }
+    dispatch(updateOrderAdmin(
+      {...adminShipmentData[index], 
+        orderNumber: stateData.orderNumber,
+        customerEmail: stateData.userDetails?.emailAddress,
+        customerName: stateData.userDetails?.firstName
+      }, isTrackingChanged))
   }
   return (
     <form className="uk-width-1-1 uk-width-expand@m">

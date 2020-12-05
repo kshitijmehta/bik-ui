@@ -198,11 +198,15 @@ const getAdminOrders = (userId=0) => async(dispatch: Dispatch<CustomerOrderActio
   }
 };
 
-const customerProductReturn = (orderDetailsId: number, returnReason: string) => async(dispatch: Dispatch<CustomerOrderAction>) => {
+const customerProductReturn = (orderDetailsId: number, returnReason: string,
+  orderNumber?: string, productName?: string, userName?: string) => async(dispatch: Dispatch<CustomerOrderAction>) => {
   dispatch(loadingOrder());
   const response = await api.post('/customerproductreturn',{
     orderDetailsId,
-    returnReason
+    returnReason,
+    orderNumber,
+    productName,
+    userName
   });
   if(response.status === HttpStatusCode.OK){
     const res = response.data as CustomerOrderResponse;
