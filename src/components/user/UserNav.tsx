@@ -10,8 +10,8 @@ interface Props {
 const UserNav: React.FunctionComponent<Props> = (props: Props)=> {
 
   return (
-    <div className="uk-width-1-1 uk-width-1-4@m tm-aside-column">
-      <div className="uk-card uk-card-default uk-card-small tm-ignore-container" uk-sticky="offset: 90; bottom: true; media: @m;">
+    <div className="uk-width-1-1 uk-width-1-4@m tm-aside-column user-nave-sticky">
+      <div className="uk-card uk-card-default uk-card-small tm-ignore-container" uk-sticky="offset: 50; bottom: true; width-element: true">
         <div className="uk-card-header">
           <div className="uk-grid-small uk-child-width-1-1" uk-grid="true">
             <div>

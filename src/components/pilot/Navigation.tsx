@@ -111,14 +111,14 @@ const Navigation: React.FunctionComponent = () => {
         <div className="uk-container" uk-navbar="true">
           <div className="uk-navbar-left">
             <button className="uk-navbar-toggle uk-hidden@m" uk-toggle="target: #nav-offcanvas" uk-navbar-toggle-icon="true"></button>
-            <a className="uk-navbar-item uk-logo" onClick={() => history.push('/')}><img src="/logo.png" width="108" alt="Logo" /></a>
+            <a className="uk-navbar-item uk-logo" onClick={() => history.push('/')}><img src="/logo.png" width="67" alt="Logo" /></a>
             <nav className="uk-visible@m">
               <ul className="uk-navbar-nav">
                 {
                   getCategoryAndSubCategory()
                 }
-                <li><a href="about.html">About</a></li>
-                <li><a href="contacts.html">Contacts</a></li>
+                <li><a href="#">About</a></li>
+                <li><a onClick={()=> history.push('/contactus')}>Contact</a></li>
                 {
                   userData.data?.isAdmin && 
                   <li><a onClick={()=>history.push('/admin')}>Admin</a></li>
@@ -145,7 +145,7 @@ const Navigation: React.FunctionComponent = () => {
                 </div>
               </div>
             </div>
-            <a className="uk-navbar-item uk-link-muted tm-navbar-button" onClick={() => history.push('/userinformation/orders')} uk-icon="user"></a>
+            <a className="uk-navbar-item uk-link-muted tm-navbar-button"  uk-icon="user"></a>
             <div className="uk-padding-small uk-margin-remove" uk-dropdown="pos: bottom-right; offset: -10; delay-hide: 200;" style={{ minWidth: '150px' }}>
               <ul className="uk-nav uk-dropdown-nav">
                 <li>

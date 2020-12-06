@@ -119,8 +119,8 @@ const UserLogin: React.FunctionComponent = () => {
         <section className="uk-section uk-section-small">
           <div className="uk-container">
             <div className="uk-grid-medium justify-content-center " uk-grid="true">
-              <div className="uk-width-1-1 uk-width-1-3@m tm-aside-column">
-                <div className="uk-card uk-card-default uk-card-small tm-ignore-container" uk-sticky="offset: 90; bottom: true; media: @m;">
+              <div className="uk-width-1-1 uk-width-1-3@m tm-aside-column user-nave-sticky">
+                <div className="uk-card uk-card-default uk-card-small tm-ignore-container" uk-sticky="offset: 80; bottom: true;">
                   <div className="uk-card-header">
                     <div className="uk-grid-small uk-child-width-1-1" uk-grid="true">
                       <div>

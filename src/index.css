@@ -1374,20 +1374,20 @@ select.uk-form-width-xsmall {
 }
 
 .uk-button-primary {
-  background-color: #1e87f0;
+  background-color: #ff4dc4;
   color: #fff;
   border: 1px solid transparent
 }
 
 .uk-button-primary:focus,
 .uk-button-primary:hover {
-  background-color: #0f7ae5;
+  background-color: #e372ab;
   color: #fff
 }
 
 .uk-button-primary.uk-active,
 .uk-button-primary:active {
-  background-color: #0e6dcd;
+  background-color: #ff4dc4;
   color: #fff
 }
 
@@ -2187,7 +2187,7 @@ select.uk-form-width-xsmall {
   padding: 0 5px;
   border-radius: 500px;
   vertical-align: middle;
-  background: #1e87f0;
+  background: #ff4dc4;
   color: #fff;
   font-size: .875rem;
   display: -webkit-inline-box;
@@ -4981,7 +4981,7 @@ iframe.uk-cover {
 }
 
 .uk-background-primary {
-  background-color: #1e87f0
+  background-color: #ff4dc4
 }
 
 .uk-background-secondary {
@@ -7104,7 +7104,7 @@ iframe.uk-cover {
 }
 
 .uk-background-primary-lighten {
-  background-color: #d8eafc
+  background-color: #fcd8f1
 }
 
 .uk-margin-xsmall {
@@ -7677,7 +7677,7 @@ iframe.uk-cover {
 .tm-checkbox:checked+label::before,
 .tm-radio:checked+label::before {
   border-color: transparent;
-  background-color: #1e87f0
+  background-color: #ff4dc4
 }
 
 .tm-checkbox+label::after,
@@ -7875,7 +7875,7 @@ iframe.uk-cover {
 }
 
 .tm-choose.uk-active {
-  border-color: #1e87f0
+  border-color: #ff4dc4
 }
 
 .tm-choose:not(.uk-active):focus,
@@ -7913,7 +7913,7 @@ iframe.uk-cover {
 
 .tm-choose.uk-active::before {
   border-color: transparent;
-  background-color: #1e87f0
+  background-color: #ff4dc4
 }
 
 .tm-choose::after {
@@ -8362,13 +8362,13 @@ iframe.uk-cover {
 .ph-picture {
   width: 100%;
   height: 120px;
-  background-color: #d8eafc;
+  background-color: #fcd8f1;
   margin-bottom: 15px;
 }
 .ph-picture-big {
   width: 100%;
   height: 450px;
-  background-color: #d8eafc;
+  background-color: #fcd8f1;
   margin-bottom: 15px;
 }
 @-webkit-keyframes phAnimation {
@@ -8532,5 +8532,20 @@ width: 100%;
 @media (min-width:640px) {
   .size-chart-width {
     width: 780px !important;
+  }
+}
+
+.colour-default {
+  color: #ff4dc4 !important;
+}
+
+@media (min-width:640px) {
+  .cart-scroll-for-non-mobile {
+      overflow: auto;
+  }
+}
+@media (max-width:639px) {
+  .user-nave-sticky > .uk-sticky-fixed{
+    max-width: 93% !important;
   }
 }

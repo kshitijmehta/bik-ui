@@ -8,7 +8,7 @@ const LoadingProductArticle: React.FunctionComponent<Props> = (props: Props) => 
     <article key={props.keyIndex} className="tm-product-card">
       <div className="tm-product-card-media">
         <div className="tm-ratio tm-ratio-4-3">
-          <a className="tm-media-box" href="bindi-product.html">
+          <a className="tm-media-box">
             <figure className="tm-media-box-wrap">
               <div className="ph-item">
                 <div className="ph-picture"></div>

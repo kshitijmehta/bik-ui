@@ -252,7 +252,7 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
                                     </div>
                                     <div>
                                       <label>
-                                        <div className="uk-form-label">Quantity {selectedSize !== '0' && <span className="uk-text-meta uk-text-primary">(Max {maxQuantity})</span>}</div>
+                                        <div className="uk-form-label">Quantity {selectedSize !== '0' && <span className="uk-notification-message-danger uk-text-meta">(Max {maxQuantity})</span>}</div>
                                         <div>
                                           <div className="uk-inline">
                                             {Number(selectedQuantity) === 1 && <a className="uk-form-icon"></a>}

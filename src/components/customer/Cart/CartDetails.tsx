@@ -48,7 +48,7 @@ const CartDetails: React.FunctionComponent = () => {
     }
   }, [cart.data]);
   const deleteCart = (cartItem: CustomerCart) => {
-    dispatch(deleteCartItem(cartItem));
+    dispatch(deleteCartItem(cartItem,true));
   };
 
   const checkForAvailableQuantity = (cartData: CustomerCart[]) => {
@@ -198,7 +198,7 @@ const CartDetails: React.FunctionComponent = () => {
                               }} />
                           </div>
                         </div>
-                        <div className="uk-form-label"><span className="uk-text-meta uk-text-primary">(Max {cartItem.availableQuantity})</span></div>
+                        <div className="uk-form-label"><span className="uk-text-meta uk-text-primary colour-default">(Max {cartItem.availableQuantity})</span></div>
                       </label>
                     </div>
 

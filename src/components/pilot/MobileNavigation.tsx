@@ -63,8 +63,8 @@ const MobileNavigation: React.FunctionComponent = () => {
                 </ul>
               </li> */}
               {getCategoryAndSubCategory()}
-              <li><a href="about.html">About</a></li>
-              <li><a href="contacts.html">Contacts</a></li>
+              <li><a href="#">About</a></li>
+              <li><a onClick={()=> history.push('/contactus')}>Contact</a></li>
             </ul>
           </nav>
           <nav className="uk-card-body">

@@ -48,7 +48,8 @@ enum Actions {
   UPDATE_CART_LOGGED_OUT = 'UPDATE_CART_LOGGED_OUT',
   DELETE_CART_PRODUCT = 'DELETE_CART_PRODUCT',
   CART_QUANTITY_FINE = 'CART_QUANTITY_FINE',
-  CART_GET_UPDATED_QUANTITY = 'CART_GET_UPDATED_QUANTITY'
+  CART_GET_UPDATED_QUANTITY = 'CART_GET_UPDATED_QUANTITY',
+  DELETE_CART_PRODUCT_LOGGED_OUT = 'DELETE_CART_PRODUCT_LOGGED_OUT',
 };
 
 const loadingCart = () => ({
@@ -111,6 +112,10 @@ const cartGetUpdatedQuantity = () => ({
   type: Actions.CART_GET_UPDATED_QUANTITY
 });
 
+const deleteCartLoggedOut = (data: CustomerCart[]) =>({
+  type: Actions.DELETE_CART_PRODUCT_LOGGED_OUT,
+  data,
+})
 
 const cartReducer = (state = initialState, action: CartAction): Cart => {
   debugger;
@@ -234,6 +239,18 @@ const cartReducer = (state = initialState, action: CartAction): Cart => {
         message: action.message,
         data: action.data
       }
+    case Actions.DELETE_CART_PRODUCT_LOGGED_OUT:
+      const res = state.data?.filter(({ cartId }) => action.data && cartId !== action.data[0].cartId)
+      localStorage.setItem("basicKart-loggedOutCart", JSON.stringify(res));
+      return {
+        ...state,
+        _isSuccess: true,
+        _isError: false,
+        _isLoading: false,
+        _quantityUpdate: false,
+        message: action.message,
+        data: res
+      }
     case Actions.DELETE_CART_PRODUCT:
       return {
         ...state,
@@ -333,23 +350,28 @@ const getCart = () => async (dispatch: Dispatch<CartAction>) => {
   }
 };
 
-const deleteCartItem = (cart: CustomerCart) => async (dispatch: Dispatch<CartAction>) => {
+const deleteCartItem = (cart: CustomerCart, isLoggedIn?: boolean) => async (dispatch: Dispatch<CartAction>) => {
   dispatch(loadingCart());
 
-  const response = await api.post('/cart', {
-    orderdetail_id: cart.cartId,
-    product_detail_id: cart.productDetailId.toString(),
-    order_quantity: cart.productQuantity,
-    price_id: '1',
-    delete_flag: true
-  });
-  if (response.status === HttpStatusCode.OK) {
-    const res = response.data as CartResponse;
-    dispatch(deleteCartProduct([cart], res.message || ''));
-  } else {
-    const res = response as CartResponse;
-    dispatch(errorCart(res.message || ''))
+  if(!isLoggedIn){
+    dispatch(deleteCartLoggedOut([cart]));
+  }else {
+    const response = await api.post('/cart', {
+      orderdetail_id: cart.cartId,
+      product_detail_id: cart.productDetailId.toString(),
+      order_quantity: cart.productQuantity,
+      price_id: '1',
+      delete_flag: true
+    });
+    if (response.status === HttpStatusCode.OK) {
+      const res = response.data as CartResponse;
+      dispatch(deleteCartProduct([cart], res.message || ''));
+    } else {
+      const res = response as CartResponse;
+      dispatch(errorCart(res.message || ''))
+    }
   }
+  
 };
 
 const updateCartQuantity = (orderDetailId: string) => async (dispatch: Dispatch<CartAction>) => {

@@ -32,44 +32,6 @@ const CustomerProductDetailsConstainer: React.FunctionComponent = () => {
     sizeId, size, colourId, imageNames, imagePaths, productDetailId,
   } = useSelector<AppState, ProductItem>(state => state.product.singleData || {} as ProductItem);
   const cart = useSelector<AppState, Cart>(state => state.cart);
-  const getFileNameAndPathLarge = (fileName?: string, filePath?: string) => {
-    if (fileName && filePath && fileName.length > 0 && filePath.length > 0) {
-      const fileNames = fileName.split(', ');
-      const filePaths = filePath.split(', ');
-
-      return filePaths.map((path: string, index: number) => {
-        return <li key={index}>
-          <a className="uk-card-body tm-media-box tm-media-box-zoom" href={serverImagePath + path}>
-            <figure className="tm-media-box-wrap"><img src={serverImagePath + path} alt={fileNames[index]} /></figure>
-          </a>
-        </li>
-      })
-    }
-  };
-
-  const getFileNameAndPathSmall = (fileName?: string, filePath?: string) => {
-    if (fileName && filePath && fileName.length > 0 && filePath.length > 0) {
-      const fileNames = fileName.split(', ');
-      const filePaths = filePath.split(', ');
-      return (
-        <ul className="tm-slider-items uk-slider-items uk-child-width-1-4 uk-grid uk-grid-small">
-          {
-            filePaths.map((path: string, index: number) => {
-              return <li uk-slideshow-item={index} tabIndex={-1} key={index}>
-                <div className="tm-ratio tm-ratio-1-1">
-                  <a className="tm-media-box tm-media-box-frame" href="#">
-                    <figure className="tm-media-box-wrap">
-                      <img src={serverImagePath + path} alt={fileNames[index]} />
-                    </figure>
-                  </a>
-                </div>
-              </li>
-            })
-          }
-        </ul>
-      )
-    }
-  };
 
   useEffect(()=>{
       if (imageNames && imagePaths && imageNames.length > 0 && imagePaths.length > 0) {

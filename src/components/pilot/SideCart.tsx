@@ -51,7 +51,7 @@ const SideCart: React.FunctionComponent<Props> = (props: Props) => {
   }, [cartData, userData.data,couponData])
 
   const deleteCart = (cartItem: CustomerCart) => {
-    dispatch(deleteCartItem(cartItem));
+    dispatch(deleteCartItem(cartItem, false));
   };
 
   return (
@@ -64,7 +64,7 @@ const SideCart: React.FunctionComponent<Props> = (props: Props) => {
               <button className="uk-offcanvas-close" type="button" uk-close="true"></button>
             </div>
           </header>
-          <div className="uk-card-body uk-overflow-auto">
+          <div className="uk-card-body cart-scroll-for-non-mobile">
             <ul className="uk-list uk-list-divider">
               {
                 cartData.map((cart: CustomerCart, index: number) => {
@@ -88,11 +88,16 @@ const SideCart: React.FunctionComponent<Props> = (props: Props) => {
                               <div className="uk-text-meta uk-text-xsmall">{cart.productQuantity} × {getCurrencyIcon(userLocation.data || 'IN')} {cart.productPrice}</div>
                             </div>
                           </div>
-                          {/* <div>
-                            <a className="uk-icon-link uk-text-danger uk-invisible-hover"
+                          {
+                            !userData.data?.userId && 
+                            <div>
+                              <a className="uk-icon-link uk-text-danger uk-invisible-hover"
                               uk-icon="icon: close; ratio: .75"
                               uk-tooltip="Remove"
-                              onClick={() => { deleteCart(cart) }}></a></div> */}
+                              onClick={() => { deleteCart(cart)}}></a>
+                            </div>
+                          }
+                          
                         </div>
                       </article>
                     </li>
