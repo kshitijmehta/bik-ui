@@ -1,18 +1,23 @@
 import { SubCategories } from 'appConstants';
-import React from 'react';
+import React, { RefObject } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { AppState, SubCategory } from 'reducers';
 import { filterSubcategories } from 'services';
 import { ProductSubCategory } from 'types';
 
-const MobileNavigation: React.FunctionComponent = () => {
+interface Props{
+  mobileNavigationRef: RefObject<HTMLButtonElement>
+}
+
+const MobileNavigation: React.FunctionComponent<Props> = (props: Props) => {
 
   const history = useHistory();
   const subCategories = useSelector<AppState, SubCategory>(state => state.subCategory);
   const navigateTo = (event: React.SyntheticEvent, categoryPath: string, subcategoryPath?: string) => {
     event.preventDefault();
     history.push('/product/' + categoryPath.toLowerCase() + (subcategoryPath ? '/' + subcategoryPath.toLowerCase() : ''));
+    props.mobileNavigationRef.current?.click();
   }
 
   const getCategoryAndSubCategory = () => {
@@ -64,17 +69,17 @@ const MobileNavigation: React.FunctionComponent = () => {
               </li> */}
               {getCategoryAndSubCategory()}
               <li><a href="#">About</a></li>
-              <li><a onClick={()=> history.push('/contactus')}>Contact</a></li>
+              <li><a onClick={()=> {history.push('/contactus'); props.mobileNavigationRef.current?.click()}}>Contact</a></li>
             </ul>
           </nav>
-          <nav className="uk-card-body">
+          {/* <nav className="uk-card-body">
             <ul className="uk-iconnav uk-flex-center">
               <li><a href="#" title="Facebook" uk-icon="facebook"></a></li>
               <li><a href="#" title="Twitter" uk-icon="twitter"></a></li>
               <li><a href="#" title="YouTube" uk-icon="youtube"></a></li>
               <li><a href="#" title="Instagram" uk-icon="instagram"></a></li>
             </ul>
-          </nav>
+          </nav> */}
         </div>
       </aside>
     </div>

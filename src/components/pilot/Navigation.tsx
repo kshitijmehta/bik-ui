@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -6,7 +6,7 @@ import { getSubCategory, AppState, SubCategory, getActiveProductCount, Cart, get
 import { SubCategories, pageSize } from 'appConstants';
 import { filterSubcategories } from 'services';
 import { ProductSubCategory, Search } from 'types';
-import { SideCart } from '.';
+import { MobileNavigation, SideCart } from '.';
 import { setSearch } from 'reducers/Search';
 
 
@@ -19,6 +19,13 @@ const Navigation: React.FunctionComponent = () => {
   const [enteredSearchText, setEnteredSearchText] = useState('');
   const [cartCountCssFlag, setCartCountCssFlag] = useState(false);
   const userData = useSelector((state: AppState) => state.user);
+  const subCategories = useSelector<AppState, SubCategory>(state => state.subCategory);
+  const cart = useSelector<AppState, Cart>(state => state.cart);
+  const search = useSelector<AppState, Search>(state => state.search.data || {} as Search);
+  const userLocation = useSelector<AppState, UserLocation>(state => state.userLocation);
+  const sideCartRef = useRef<HTMLAnchorElement>(null);
+  const mobileNavigationRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     dispatch(getSubCategory());
     dispatch(getActiveProductCount());
@@ -31,11 +38,6 @@ const Navigation: React.FunctionComponent = () => {
       dispatch(setLoggedCart(JSON.parse(localStorage.getItem("basicKart-loggedOutCart") || '[]')))
     }
   }, []);
-
-  const subCategories = useSelector<AppState, SubCategory>(state => state.subCategory);
-  const cart = useSelector<AppState, Cart>(state => state.cart);
-  const search = useSelector<AppState, Search>(state => state.search.data || {} as Search);
-  const userLocation = useSelector<AppState, UserLocation>(state => state.userLocation);
 
   useEffect(() => {
     setCartCount(cart.data?.length || 0);
@@ -107,10 +109,11 @@ const Navigation: React.FunctionComponent = () => {
   };
   return (
     <header>
+      <MobileNavigation mobileNavigationRef={mobileNavigationRef}/>
       <div className="uk-navbar-container tm-navbar-container" uk-sticky="cls-active: tm-navbar-container-fixed">
         <div className="uk-container" uk-navbar="true">
           <div className="uk-navbar-left">
-            <button className="uk-navbar-toggle uk-hidden@m" uk-toggle="target: #nav-offcanvas" uk-navbar-toggle-icon="true"></button>
+            <button ref={mobileNavigationRef} className="uk-navbar-toggle uk-hidden@m" uk-toggle="target: #nav-offcanvas" uk-navbar-toggle-icon="true"></button>
             <a className="uk-navbar-item uk-logo" onClick={() => history.push('/')}><img src="/logo.png" width="67" alt="Logo" /></a>
             <nav className="uk-visible@m">
               <ul className="uk-navbar-nav">
@@ -162,7 +165,7 @@ const Navigation: React.FunctionComponent = () => {
                 
               </ul>
             </div>
-            <a className="uk-navbar-item uk-link-muted tm-navbar-button" href="#" uk-toggle="target: #cart-offcanvas">
+            <a ref={sideCartRef} className="uk-navbar-item uk-link-muted tm-navbar-button" href="#" uk-toggle="target: #cart-offcanvas">
               <span uk-icon="cart"></span>
               {
                 cartCount > 0 &&
@@ -173,6 +176,7 @@ const Navigation: React.FunctionComponent = () => {
         </div>
       </div>
       <SideCart
+      sideCartRef={sideCartRef}
       cartData={cart.data || []}/>
     </header>
   )

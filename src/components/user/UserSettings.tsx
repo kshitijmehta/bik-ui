@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import { UserSetting, saveUserSettings } from 'reducers';
 import { useDispatch } from 'react-redux';
 import { UserSettings as UserSettingType } from 'types';
+import { NotificationContainer } from 'components/shared';
 
 
 interface Props {
@@ -101,10 +102,14 @@ const UserSettings: React.FunctionComponent<Props> = (props: Props) => {
           </div>
         </div>
         <div className="uk-card-footer uk-text-center">
+        {
+            props.user &&
+            <NotificationContainer {...props.user}/>
+          }
           <button disabled={isLoading} type="submit" className="uk-button uk-button-primary ">
             {
               isLoading &&
-              <img className="login-button-padding" src="tail-spin.svg" />
+              <img className="login-button-padding" src="/tail-spin.svg" />
             }
             <span>update password</span>
           </button>

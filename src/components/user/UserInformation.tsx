@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { UserInformation as UserInfo, saveUser } from 'reducers';
 import { useFormik } from 'formik';
 import { CountryCodes } from 'appConstants';
+import { NotificationContainer } from 'components/shared';
 
 
 interface Props {
@@ -217,6 +218,11 @@ const UserInformation: React.FunctionComponent<Props> = (props: Props) => {
           </div>
         </div>
         <div className="uk-card-footer uk-text-center">
+          {
+            props.user &&
+            <NotificationContainer {...props.user}/>
+          }
+          
           <button disabled={isLoading} type="submit" className="uk-button uk-button-primary ">
             {
               isLoading &&

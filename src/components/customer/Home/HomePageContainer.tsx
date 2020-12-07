@@ -4,6 +4,7 @@ import { getTrendingProduct, getLatestProduct, AppState } from 'reducers';
 import { SubBanner } from './SubBanner';
 import { Banner } from './Banner';
 import { TrendingLatestContainer } from './trendingLatest';
+import { PromoBanner } from './PromoBanner';
 
 
 const HomePageContainer: React.FunctionComponent = () => {

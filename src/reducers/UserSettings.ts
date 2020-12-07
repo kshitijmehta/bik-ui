@@ -7,12 +7,15 @@ import { HttpStatusCode } from 'appConstants';
 /* Interface*/
 export interface UserSettingsAction extends Action {
   readonly data?: UserSettings;
+  readonly message?: string;
 }
 
 export interface UserSetting {
   readonly data?: UserSettings;
   _isLoading: boolean;
   _isError: boolean;
+  _isSuccess: boolean;
+  message?: string;
 }
 
 const initialState = {
@@ -20,7 +23,9 @@ const initialState = {
     emailAddress : '',
   },
   _isLoading: false,
-  _isError: false
+  _isError: false,
+  _isSuccess: false,
+  message: '',
 } as UserSetting
 
 /* Actions */
@@ -31,17 +36,19 @@ enum Actions {
   ERROR_USER_SETTINGS = "ERROR_USER_SETTINGS"
 }
 
-const setUserSetting = (userSettings: UserSettings) => ({
+const setUserSetting = (userSettings: UserSettings, message?: string) => ({
   type: Actions.SET_USER_SETTINGS,
-  data: userSettings
+  data: userSettings,
+  message
 });
 
 const loadingUserSettings = () => ({
   type: Actions.LOADING_USER_SETTINGS
 });
 
-const errorUserSettings = () => ({
-  type: Actions.ERROR_USER_SETTINGS
+const errorUserSettings = (message?: string) => ({
+  type: Actions.ERROR_USER_SETTINGS,
+  message
 });
 
 const userSettingsReducer = (state = initialState, action: UserSettingsAction) => {
@@ -52,18 +59,23 @@ const userSettingsReducer = (state = initialState, action: UserSettingsAction) =
         data: action.data,
         _isLoading: false,
         _isError: false,
+        _isSuccess: true,
+        message: action.message
       };
     case Actions.LOADING_USER_SETTINGS:
       return{
         ...state,
         _isLoading: true,
-        _isError: false
+        _isError: false,
+        _isSuccess: false,
       };
     case Actions.ERROR_USER_SETTINGS:
       return{
         ...state,
         _isLoading: false,
-        _isError: true
+        _isError: true,
+        _isSuccess: false,
+        message: action.message
       };
     default:
       return state
@@ -80,7 +92,7 @@ const getUserSettings = () => async (disptach: Dispatch<UserSettingsAction>) => 
   if (response.status === HttpStatusCode.OK) {
     disptach(setUserSetting(response.data.data as UserSettings));
   } else {
-    disptach(errorUserSettings());
+    disptach(errorUserSettings(response.data.message|| ''));
   }
 };
 
@@ -91,9 +103,9 @@ const saveUserSettings = (data: UserSettings) => async (disptach: Dispatch<UserS
   const response =  await api.post('/passwordchange', data);
 
   if (response.status === HttpStatusCode.OK) {
-    disptach(setUserSetting({emailAddress : data.emailAddress, currentPassword: '', newPassword: ''} as UserSettings));
+    disptach(setUserSetting({emailAddress : data.emailAddress, currentPassword: '', newPassword: ''} as UserSettings,response.data.message|| ''));
   } else {
-    disptach(errorUserSettings());
+    disptach(errorUserSettings((response as any).message|| ''));
   }
 };
 

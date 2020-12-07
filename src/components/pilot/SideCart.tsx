@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { RefObject, useEffect, useState } from 'react';
 import { CustomerCart, ProductCoupon } from 'types';
 import { serverImagePath } from 'appConstants';
 import { useHistory } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { getCurrencyIcon, calculateUserDiscount, calculateUserDiscountPrice } fr
 
 interface Props {
   cartData: CustomerCart[];
+  sideCartRef: RefObject<HTMLAnchorElement>
 }
 
 const SideCart: React.FunctionComponent<Props> = (props: Props) => {
@@ -22,7 +23,8 @@ const SideCart: React.FunctionComponent<Props> = (props: Props) => {
   const couponData = useSelector<AppState, ProductCoupon[]>(state => state.coupon.data || []);
   const userData = useSelector((state: AppState) => state.user);
   const {
-    cartData
+    cartData,
+    sideCartRef
   } = props;
 
   useEffect(() => {
@@ -74,14 +76,14 @@ const SideCart: React.FunctionComponent<Props> = (props: Props) => {
                         <div className="uk-grid-small" uk-grid="true">
                           <div className="uk-width-1-4">
                             <div className="tm-ratio tm-ratio-4-3">
-                              <a className="tm-media-box" onClick={() => history.push('/productDetails/' + cart.productId)}>
+                              <a className="tm-media-box" onClick={() => {history.push('/productDetails/' + cart.productId); sideCartRef.current?.click()}}>
                                 <figure className="tm-media-box-wrap"><img src={serverImagePath + cart.productImagePath} alt={cart.productImage} /></figure>
                               </a>
                             </div>
                           </div>
                           <div className="uk-width-expand">
                             <div className="uk-text-meta uk-text-xsmall">{cart.subcategory}</div>
-                            <a className="uk-link-heading uk-text-small" onClick={() => history.push('/productDetails/' + cart.productId)}>{cart.productName}</a>
+                            <a className="uk-link-heading uk-text-small" onClick={() => {history.push('/productDetails/' + cart.productId); sideCartRef.current?.click()}}>{cart.productName}</a>
                             <div className="uk-margin-xsmall uk-grid-small uk-flex-middle" uk-grid="true">
                               <div className="uk-text-bolder uk-text-small">{getCurrencyIcon(userLocation.data || 'IN')} {cart.totalPrice}</div>
                               {/* <del className="uk-text-bolder uk-text-small uk-text-meta">123</del> */}
@@ -172,7 +174,8 @@ const SideCart: React.FunctionComponent<Props> = (props: Props) => {
              <div></div>
               <div >
                 <button className="uk-button  uk-button-primary uk-button-default uk-margin-small uk-width-1-1"
-                  onClick={() => { userData.data?.userId ? history.push('/cart') :  history.push('/login')}}
+                  onClick={() => { 
+                    userData.data?.userId ? history.push('/cart') :  history.push('/login'); sideCartRef.current?.click();}}
                   disabled={mainTotal === 0}
                 >
                   Continue

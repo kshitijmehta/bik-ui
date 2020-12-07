@@ -46,9 +46,10 @@ enum Actions {
   DEFAULT_USER = 'DEFAULT_USER'
 }
 
-const setUser = (user: User) => ({
+const setUser = (user: User,message?: string) => ({
   type: Actions.SET_USER,
-  data: user
+  data: user,
+  message
 });
 
 const setAllUser = (user: User[]) => ({
@@ -129,7 +130,7 @@ const userInformationReducer = (state = initialState, action: UserInformationAct
         ...state,
         _isLoading: false,
         _isError: true,
-        _isSuccess: true,
+        _isSuccess: false,
         message: action.message
       };
     default:
@@ -155,13 +156,12 @@ const saveUser = (data: User) =>  async (disptach: Dispatch<UserInformationActio
   disptach(loadingUser());
   
   const response =  await api.post('/userinfo', data);
-
   if (response.status === HttpStatusCode.OK) {
     const res = response.data.data as User;
     disptach(setUser({
       ...data,
       addressId : res
-    } as User));
+    } as User, response.data.message));
   } else {
     disptach(errorUser('Some error occured, try again.'));
   }

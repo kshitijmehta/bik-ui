@@ -208,6 +208,11 @@ const CheckoutPrice: React.FunctionComponent<Props> = (props: Props) => {
     }
   }, [checkout._isError])
 
+  useEffect(()=>{
+    if(props.paymentMode !== 'cod'){
+      setShowCodContainer(false)
+    }
+  },[props.paymentMode])
   const successRazorPay = (razorpayPaymentId: string, razorpayOrderId: string, razorpaySignature: string) => {
     dispatch(saveRazorPayOrder({
       razorpayPaymentId,
@@ -351,7 +356,7 @@ const CheckoutPrice: React.FunctionComponent<Props> = (props: Props) => {
           }
 
           {
-            showCodContainer &&
+            showCodContainer && props.paymentMode==='cod' &&
             <CashOnDeliveryPayment showOtpContainer={showCodContainer} setEnteredOTP={setEnteredOTP} />
           }
           <section className="uk-card-body">
@@ -382,7 +387,7 @@ const CheckoutPrice: React.FunctionComponent<Props> = (props: Props) => {
             {
               noAddressError && 
               <div className="login-error-message">
-                    <span className="uk-notification-message-danger"> Please add conatct and shipping information </span>
+                    <span className="uk-notification-message-danger"> Please add contact and shipping information </span>
               </div>
             }
             {

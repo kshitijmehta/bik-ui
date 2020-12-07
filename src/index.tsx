@@ -8,7 +8,7 @@ import './index.css';
 import { UserContainer } from 'components/user';
 import { UserLogin } from 'components/login'
 import { MainFooter } from 'components/footer';
-import { MobileNavigation, Navigation } from 'components/pilot';
+import { Navigation } from 'components/pilot';
 import { MainContainer } from 'components/admin/MainContainer';
 import { CustomerContainer } from 'components/customer';
 
@@ -29,7 +29,6 @@ const app = (
       <Router history={createBrowserHistory()}>
       <ScrollToTop />
         <Navigation />
-        <MobileNavigation/>
           <Switch>
           <Route path="/" exact>
               <HomePageContainer />
