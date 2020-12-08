@@ -54,7 +54,7 @@ const createProductCountList = (activeProducts: ActiveProductCount[]) => {
           name: product.colourName,
           [product.sizeId] : {
             name: product.sizeName,
-            quantity: product.count
+            quantity: 1
           }
         }
       }
@@ -64,17 +64,18 @@ const createProductCountList = (activeProducts: ActiveProductCount[]) => {
           name: product.colourName,
           [product.sizeId] : {
             name: product.sizeName,
-            quantity: product.count
+            quantity: 1
           }
         }
       } else {
         productCountList[product.subcategoryId][product.colourId][product.sizeId] = {
           name: product.sizeName,
-          quantity: product.count
+          quantity: 1
         }
       }
     }
   });
+  console.log(productCountList)
   return productCountList;
 };
 
