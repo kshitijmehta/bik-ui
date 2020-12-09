@@ -43,21 +43,31 @@ const CustomerProductFilter: React.FunctionComponent<Props> = (props: Props) => 
     const activeProducts = props.activeProductCount.data
     if(activeProducts){
       const selectedColour = filterColourId.length > 0 ? filterColourId : productColour.data && productColour.data.length> 0 ?  productColour.data.map(({colourId}) => Number(colourId)) : [];
-      const selectedSize = filterSizeId.length > 0 ? filterSizeId : productSize.data && productSize.data.length > 0 ? productSize.data.map(({sizeId}) => Number(sizeId)) : [];
-      
-      const activeSubCat = activeProducts[id];
-      if(activeSubCat){
-        selectedColour.forEach((colour) => {
-          const activeColour = activeSubCat[colour];
-          if(activeColour){
-            selectedSize.forEach((size) => {
-              const activeSize = activeColour[size];
-              if(activeSize) {
-                count+= activeSize.quantity;
+      const selectedSize = filterSizeId.length > 0 ? filterSizeId  : [];
+      const selectedSubCat = activeProducts[id];
+      if(selectedSubCat){
+        if (selectedSize.length === 0) {
+            selectedColour.forEach((colour) => {
+              if(selectedSubCat[colour]){
+                count += selectedSubCat[colour].count
               }
             })
-          }
-        })
+        } else {
+            selectedColour.forEach((colour) => {
+              let localCount = 0;
+              for(var i =0; i< selectedSize.length; i++){
+                if(selectedSubCat[colour] && selectedSubCat[colour].size && selectedSubCat[colour].size[selectedSize[i]]){
+                  if(selectedSubCat[colour].size[selectedSize[i]] === selectedSubCat[colour].count){
+                    localCount = selectedSubCat[colour].count;
+                    break;
+                  }else{
+                    localCount +=selectedSubCat[colour].size[selectedSize[i]];
+                  }
+                }
+              }
+              count+=localCount;
+            })
+        }
       }
     }
     return count

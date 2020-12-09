@@ -1,4 +1,4 @@
-import { ProductSubCategory, ActiveProductCount, ProductSubcategoryProperty, ProductItem, OrderItems } from "types";
+import { ProductSubCategory, ActiveProductCount, ProductSubcategoryProperty, ProductItem, OrderItems, ProductCountList, ActiveProductCountNew } from "types";
 import { SubCategory, Size } from "reducers";
 
 const getSubCategoryFromId = (id: Number) => {
@@ -44,6 +44,45 @@ const showINRUSD = (userLocation: string, price : {priceINR: string, priceUSD: s
   return userLocation === 'IN' ? price.priceINR : price.priceUSD;
 }
 
+const sizeCheck = (sizeObj : { [key: string]: number},sizeArray: string[])=> {
+  let resultSize = {} as { [key: string]: number};
+  sizeArray.forEach((size: string)=>{
+    if(sizeObj[size]){
+      resultSize[size] = sizeObj[size] + 1
+    }
+  });
+  return resultSize;
+}
+
+const createActiveProductCountList = (activeProducts: ActiveProductCountNew[]) => {
+  let resultList = {} as ProductCountList;
+  activeProducts.forEach((product: ActiveProductCountNew) => {
+    if(!resultList[product.subcategoryId]){
+      resultList[product.subcategoryId] = {
+        [product.colourId] : {
+          name: product.colourName,
+          count: 1,
+          size : product.sizeId.reduce((a,b)=> (a[b]=1,a),{} as {[key: string]: number})
+        },
+        name: product.subcategoryName
+      }
+    } else {
+      if(!resultList[product.subcategoryId][product.colourId]){
+        resultList[product.subcategoryId][product.colourId] ={
+          name: product.colourName,
+          count: 1,
+          size : product.sizeId.reduce((a,b)=> (a[b]=1,a),{} as {[key: string]: number})
+        }
+      } else {
+        resultList[product.subcategoryId][product.colourId].count += 1;
+        resultList[product.subcategoryId][product.colourId].size = 
+          sizeCheck(resultList[product.subcategoryId][product.colourId].size,product.sizeId)
+      }
+    }
+  });
+  return resultList;
+}
+
 const createProductCountList = (activeProducts: ActiveProductCount[]) => {
   let productCountList = {} as ProductSubcategoryProperty;
   activeProducts.forEach((product: ActiveProductCount) => {
@@ -54,7 +93,7 @@ const createProductCountList = (activeProducts: ActiveProductCount[]) => {
           name: product.colourName,
           [product.sizeId] : {
             name: product.sizeName,
-            quantity: 1
+            quantity: product.count
           }
         }
       }
@@ -64,13 +103,13 @@ const createProductCountList = (activeProducts: ActiveProductCount[]) => {
           name: product.colourName,
           [product.sizeId] : {
             name: product.sizeName,
-            quantity: 1
+            quantity: product.count
           }
         }
       } else {
         productCountList[product.subcategoryId][product.colourId][product.sizeId] = {
           name: product.sizeName,
-          quantity: 1
+          quantity: product.count
         }
       }
     }
@@ -152,5 +191,6 @@ export {
   showINRUSD,
   countHighlightProducts,
   getIconForAdminOrder,
-  getPaypalTransactionId
+  getPaypalTransactionId,
+  createActiveProductCountList
 }

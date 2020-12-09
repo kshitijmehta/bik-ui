@@ -1,16 +1,16 @@
 import { Dispatch, Action } from 'redux';
-import { ActiveProductCount, ProductSubcategoryProperty } from 'types';
-import { api, createProductCountList } from 'services';
+import { ActiveProductCount, ActiveProductCountNew, ProductCountList } from 'types';
+import { api, createActiveProductCountList, createProductCountList } from 'services';
 import { HttpStatusCode } from "appConstants";
 
 export interface ProductCountAction extends Action {
   readonly message?: string;
-  readonly data?: ProductSubcategoryProperty;
+  readonly data?: ProductCountList;
 };
 
 export interface ProductCountResponse {
   readonly message?: string;
-  readonly data?: ActiveProductCount[];
+  readonly data?: ActiveProductCountNew[];
 };
 
 export interface ProductCount {
@@ -18,7 +18,7 @@ export interface ProductCount {
   readonly _isError: boolean;
   readonly _isSuccess: boolean;
   readonly message?: string;
-  readonly data?: ProductSubcategoryProperty;
+  readonly data?: ProductCountList;
 };
 
 const initialState = {
@@ -44,7 +44,7 @@ const errorProductCount = (message: string) => ({
   message
 });
 
-const setProductCount = (data: ProductSubcategoryProperty) => ({
+const setProductCount = (data: ProductCountList) => ({
   type: Actions.SET_PRODUCT_COUNT,
   data
 });
@@ -89,7 +89,7 @@ const getActiveProductCount = () => async(dispatch: Dispatch<ProductCountAction>
   const response = await api.get('/productcount');
   if(response.status === HttpStatusCode.OK){
     const res = response.data as ProductCountResponse;
-    dispatch(setProductCount(createProductCountList(res.data||[])));
+    dispatch(setProductCount(createActiveProductCountList(res.data||[])));
   } else {
     const res = response as ProductCountResponse;
     dispatch(errorProductCount(res.message || ''))
