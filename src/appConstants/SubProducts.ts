@@ -13,7 +13,7 @@ const SubCategories: Record<string, number> = {
   'Lingerie': 1,
   'Footwear': 2,
   'Bindi': 3,
-  'Home Essential': 4
+  'Home Essential': 8
 }
 
 /**

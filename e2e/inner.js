@@ -16,17 +16,17 @@ var stylecode = [];
 var proceedImage = [];
 // const emitter = new events.EventEmitter()
 
-fs.createReadStream('C:/Users/kshti/Desktop/db/wedges2.csv')
+fs.createReadStream('C:/Users/kshti/Desktop/db/home_essentials.csv')
   .pipe(csv())
   .on('data', (row) => {
     // console.log(row);
-    modelOne.push(row.modelone)
-    modelTwo.push(row.modeltwo)
-    modelThree.push(row.modelthree)
-    modelFour.push(row.modelfour)
-    modelFive.push(row.modelfive)
+    modelOne.push(row.model)
+    modelTwo.push(row.model2)
+    modelThree.push(row.model3)
+    // modelFour.push(row.modelfour)
+    // modelFive.push(row.modelfive)
     prodId.push(row.prod_id)
-    stylecode.push(row.stylecode)
+    stylecode.push(row.productname)
   })
   .on('end', async () => {
     console.log('-----------');
