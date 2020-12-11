@@ -16,22 +16,23 @@ var stylecode = [];
 var proceedImage = [];
 // const emitter = new events.EventEmitter()
 
-fs.createReadStream('C:/Users/kshti/Desktop/db/home_essentials.csv')
+fs.createReadStream('C:/Users/kshti/Desktop/db/bellies_final_csv.csv')
   .pipe(csv())
   .on('data', (row) => {
     // console.log(row);
     modelOne.push(row.model)
     modelTwo.push(row.model2)
     modelThree.push(row.model3)
-    // modelFour.push(row.modelfour)
-    // modelFive.push(row.modelfive)
+    modelFour.push(row.model4)
+    modelFive.push(row.model5)
     prodId.push(row.prod_id)
-    stylecode.push(row.productname)
+   stylecode.push(row.stylecode)
   })
   .on('end', async () => {
     console.log('-----------');
     console.log(stylecode)
     for(var index =0 ;index<prodId.length; index++) {
+      if(index === 0 || prodId[index-1] != prodId[index])
       await insert(prodId[index],modelOne[index],
         modelTwo[index],modelThree[index],
         modelFour[index],modelFive[index], stylecode[index])
@@ -41,7 +42,9 @@ fs.createReadStream('C:/Users/kshti/Desktop/db/home_essentials.csv')
   });
 var insert = async(id, imageone, imagetwo,imagethree,imagefour,imagefive,fileName) => {
   console.log(id, imageone, imagetwo,imagethree,imagefour,imagefive,fileName)
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({args: [
+    '--incognito',
+  ],});
   const page = await browser.newPage();
   await page.setViewport({ width: 1366, height: 768});
   await page.goto('https://basickart.com/login');
@@ -66,10 +69,14 @@ var insert = async(id, imageone, imagetwo,imagethree,imagefour,imagefive,fileNam
   await page.evaluate(functionToInject2);
   await page.$eval('#loginbtn', el => el.click());
     
-  await page.waitForSelector('#firstName');
-  
+  // await page.waitForSelector('.uk-container uk-height-1-1');
+  await page.$x('//*[@id="root"]/main/section[1]/ul/li[1]/a/figure/img')
+  await page.waitFor(5000);
+  // await page.screenshot({path: id+'.png', fullPage: true})
+  console.log('https://basickart.com/admin/product/'+id)
   await page.goto('https://basickart.com/admin/product/'+id);
   console.log('product page')
+  // await page.screenshot({path: id+'1.png', fullPage: true})
   const selector = '#name';
   await page.waitForFunction(
     selector => document.querySelector(selector).value.length > 0,
@@ -81,54 +88,60 @@ console.log('attaching image')
   if(!fs.existsSync(id)){
     fs.mkdirSync(id);
   }
-  
-  if(imageone){
-    const fileData = await request({
-      uri: imageone.replace('?dl=0','?raw=1'),
-      encoding: null
-  });
-  fs.writeFileSync('./'+id+'/'+fileName+'-1'+'.jpg', fileData);
-    await elementHandle.uploadFile('./'+id+'/'+fileName+'-1'+'.jpg');
+  try{
+
+    if(imageone){
+      const fileData = await request({
+        uri: imageone.replace('?dl=0','?raw=1'),
+        encoding: null
+    });
+    fs.writeFileSync('./'+id+'/'+fileName+'-1'+'.jpg', fileData);
+      await elementHandle.uploadFile('./'+id+'/'+fileName+'-1'+'.jpg');
+    }
+    if(imagetwo){
+      const fileData = await request({
+        uri: imagetwo.replace('?dl=0','?raw=1'),
+        encoding: null
+    });
+    fs.writeFileSync('./'+id+'/'+fileName+'-2'+'.jpg', fileData);
+      await elementHandle.uploadFile('./'+id+'/'+fileName+'-2'+'.jpg');
+    }
+    if(imagethree){
+      const fileData = await request({
+        uri: imagethree.replace('?dl=0','?raw=1'),
+        encoding: null
+    });
+    fs.writeFileSync('./'+id+'/'+fileName+'-3'+'.jpg', fileData);
+      await elementHandle.uploadFile('./'+id+'/'+fileName+'-3'+'.jpg');
+    }
+    if(imagefour){
+      const fileData = await request({
+        uri: imagefour.replace('?dl=0','?raw=1'),
+        encoding: null
+    });
+    fs.writeFileSync('./'+id+'/'+fileName+'-4'+'.jpg', fileData);
+      await elementHandle.uploadFile('./'+id+'/'+fileName+'-4'+'.jpg');
+    }
+    if(imagefive){
+      const fileData = await request({
+        uri: imagefive.replace('?dl=0','?raw=1'),
+        encoding: null
+    });
+    fs.writeFileSync('./'+id+'/'+fileName+'-5'+'.jpg', fileData);
+      await elementHandle.uploadFile('./'+id+'/'+fileName+'-5'+'.jpg');
+    }
+    
+    const [button] = await page.$x('//*[@id="root"]/main/section/div/div/form/div/div[2]/button');
+    if (button) {
+        await button.click();
+    };
+    console.log('done')
+    await page.waitFor(5000);
+    // await page.screenshot({path: id+'.png', fullPage: true});
+    await browser.close();
   }
-  if(imagetwo){
-    const fileData = await request({
-      uri: imagetwo.replace('?dl=0','?raw=1'),
-      encoding: null
-  });
-  fs.writeFileSync('./'+id+'/'+fileName+'-2'+'.jpg', fileData);
-    await elementHandle.uploadFile('./'+id+'/'+fileName+'-2'+'.jpg');
+  catch(e){
+    console.log(e)
+    console.log(id)
   }
-  if(imagethree){
-    const fileData = await request({
-      uri: imagethree.replace('?dl=0','?raw=1'),
-      encoding: null
-  });
-  fs.writeFileSync('./'+id+'/'+fileName+'-3'+'.jpg', fileData);
-    await elementHandle.uploadFile('./'+id+'/'+fileName+'-3'+'.jpg');
-  }
-  if(imagefour){
-    const fileData = await request({
-      uri: imagefour.replace('?dl=0','?raw=1'),
-      encoding: null
-  });
-  fs.writeFileSync('./'+id+'/'+fileName+'-4'+'.jpg', fileData);
-    await elementHandle.uploadFile('./'+id+'/'+fileName+'-4'+'.jpg');
-  }
-  if(imagefive){
-    const fileData = await request({
-      uri: imagefive.replace('?dl=0','?raw=1'),
-      encoding: null
-  });
-  fs.writeFileSync('./'+id+'/'+fileName+'-5'+'.jpg', fileData);
-    await elementHandle.uploadFile('./'+id+'/'+fileName+'-5'+'.jpg');
-  }
-  
-  const [button] = await page.$x('//*[@id="root"]/main/section/div/div/form/div/div[2]/button');
-  if (button) {
-      await button.click();
-  };
-  console.log('done')
-  await page.waitFor(5000);
-  // await page.screenshot({path: id+'.png', fullPage: true});
-  await browser.close();
 }

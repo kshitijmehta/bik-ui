@@ -170,7 +170,7 @@ const CustomerProductList: React.FunctionComponent<Props> = (props: Props) => {
                         return (
                           <article className="tm-product-card" key={index}>
                             <div className="tm-product-card-media">
-                              <div className="tm-ratio tm-ratio-4-3">
+                              <div className="tm-ratio tm-ratio-1-1">
                                 <a className="tm-media-box" onClick={()=> history.push('/productDetails/'+ product.productId)}>
                                   
                                   <figure className="tm-media-box-wrap"><img src={serverImagePath + product.imagePaths} alt={product.imageNames}/></figure>
