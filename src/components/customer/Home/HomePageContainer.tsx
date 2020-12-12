@@ -5,6 +5,7 @@ import { SubBanner } from './SubBanner';
 import { Banner } from './Banner';
 import { TrendingLatestContainer } from './trendingLatest';
 import { PromoBanner } from './PromoBanner';
+import { FooterBanner } from '.';
 
 
 const HomePageContainer: React.FunctionComponent = () => {
@@ -20,7 +21,9 @@ const HomePageContainer: React.FunctionComponent = () => {
     <main>
       <Banner/>
       <SubBanner/>
+      <PromoBanner/>
       <TrendingLatestContainer/>
+      <FooterBanner/>
     </main>
   )
 }

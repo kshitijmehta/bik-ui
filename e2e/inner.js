@@ -16,7 +16,7 @@ var stylecode = [];
 var proceedImage = [];
 // const emitter = new events.EventEmitter()
 
-fs.createReadStream('C:/Users/kshti/Desktop/db/bellies_final_csv.csv')
+fs.createReadStream('C:/Users/kshti/Desktop/db/Bellies,heels,flats-Final-Flats_csv.csv')
   .pipe(csv())
   .on('data', (row) => {
     // console.log(row);
@@ -85,8 +85,8 @@ var insert = async(id, imageone, imagetwo,imagethree,imagefour,imagefive,fileNam
 );
 console.log('attaching image')
   const elementHandle = await page.$("input[type=file]");
-  if(!fs.existsSync(id)){
-    fs.mkdirSync(id);
+  if(!fs.existsSync('./images/'+id)){
+    fs.mkdirSync('./images/'+id);
   }
   try{
 
@@ -95,40 +95,40 @@ console.log('attaching image')
         uri: imageone.replace('?dl=0','?raw=1'),
         encoding: null
     });
-    fs.writeFileSync('./'+id+'/'+fileName+'-1'+'.jpg', fileData);
-      await elementHandle.uploadFile('./'+id+'/'+fileName+'-1'+'.jpg');
+    fs.writeFileSync('./images/'+id+'/'+fileName+'-1'+'.jpg', fileData);
+      await elementHandle.uploadFile('./images/'+id+'/'+fileName+'-1'+'.jpg');
     }
     if(imagetwo){
       const fileData = await request({
         uri: imagetwo.replace('?dl=0','?raw=1'),
         encoding: null
     });
-    fs.writeFileSync('./'+id+'/'+fileName+'-2'+'.jpg', fileData);
-      await elementHandle.uploadFile('./'+id+'/'+fileName+'-2'+'.jpg');
+    fs.writeFileSync('./images/'+id+'/'+fileName+'-2'+'.jpg', fileData);
+      await elementHandle.uploadFile('./images/'+id+'/'+fileName+'-2'+'.jpg');
     }
     if(imagethree){
       const fileData = await request({
         uri: imagethree.replace('?dl=0','?raw=1'),
         encoding: null
     });
-    fs.writeFileSync('./'+id+'/'+fileName+'-3'+'.jpg', fileData);
-      await elementHandle.uploadFile('./'+id+'/'+fileName+'-3'+'.jpg');
+    fs.writeFileSync('./images/'+id+'/'+fileName+'-3'+'.jpg', fileData);
+      await elementHandle.uploadFile('./images/'+id+'/'+fileName+'-3'+'.jpg');
     }
     if(imagefour){
       const fileData = await request({
         uri: imagefour.replace('?dl=0','?raw=1'),
         encoding: null
     });
-    fs.writeFileSync('./'+id+'/'+fileName+'-4'+'.jpg', fileData);
-      await elementHandle.uploadFile('./'+id+'/'+fileName+'-4'+'.jpg');
+    fs.writeFileSync('./images/'+id+'/'+fileName+'-4'+'.jpg', fileData);
+      await elementHandle.uploadFile('./images/'+id+'/'+fileName+'-4'+'.jpg');
     }
     if(imagefive){
       const fileData = await request({
         uri: imagefive.replace('?dl=0','?raw=1'),
         encoding: null
     });
-    fs.writeFileSync('./'+id+'/'+fileName+'-5'+'.jpg', fileData);
-      await elementHandle.uploadFile('./'+id+'/'+fileName+'-5'+'.jpg');
+    fs.writeFileSync('./images/'+id+'/'+fileName+'-5'+'.jpg', fileData);
+      await elementHandle.uploadFile('./images/'+id+'/'+fileName+'-5'+'.jpg');
     }
     
     const [button] = await page.$x('//*[@id="root"]/main/section/div/div/form/div/div[2]/button');

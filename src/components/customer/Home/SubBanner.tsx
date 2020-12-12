@@ -6,8 +6,10 @@ const SubBanner: React.FunctionComponent = () => {
 
   return (
     <section className="uk-section uk-section-default uk-section-small">
-      <div className="uk-container">
-        <div className="uk-grid-small uk-child-width-1-2 uk-child-width-1-3@s uk-child-width-1-5@m" uk-grid="true">
+      <figure><img src="/long-banner_1.jpg" alt="footwear" /></figure>
+      {/* <div className="uk-container">
+        <div className="uk-grid-small uk-child-width-1-1" uk-grid="true">
+        <figure><img src="/long-banner.jpg" alt="footwear" /></figure>
           <div>
             <a onClick={()=>history.push('/product/bindi')} className="uk-link-muted uk-text-center uk-display-block uk-padding-small uk-box-shadow-hover-large">
               <div className="tm-ratio tm-ratio-4-3">
@@ -69,7 +71,7 @@ const SubBanner: React.FunctionComponent = () => {
             </a>
           </div>
         </div>
-      </div>
+      </div> */}
     </section>
   )
 }
