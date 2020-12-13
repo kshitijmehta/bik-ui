@@ -5,15 +5,13 @@ import { AppState, defaultPreSelectedFitler, PreSelectedFilters } from 'reducers
 
 const ScrollToTopComponent: React.FunctionComponent = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
   useEffect(() => {
-        /**
-     * Removing PreSelectedFilter
-     * if route other than 
-     * productDetails
-     */
-
     // scrolling to top
     const unlisten = history.listen(() => {
+      if(window.location.pathname.indexOf('product') === -1){
+        dispatch(defaultPreSelectedFitler());
+      }
       window.scrollTo(0, 0);
     });
     return () => {
