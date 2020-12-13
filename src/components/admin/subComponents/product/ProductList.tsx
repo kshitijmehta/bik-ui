@@ -168,7 +168,7 @@ const ExpandableComponent: React.FunctionComponent<any> = ({ data }) => {
                 {
                   productActionStatus._isLoading &&
                   <img className="login-button-padding" src="tail-spin.svg" />
-                }<span> {console.log(productQuickViewFormik.isSubmitting)}</span>
+                }
                 <span>Save</span>
               </button>
             </label>

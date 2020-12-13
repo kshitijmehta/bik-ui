@@ -102,7 +102,7 @@ const TrendingLatestProducts: React.FunctionComponent<Props> = (props: Props) =>
               </div>
             </article>
           )
-        }) : Array(4).fill(1).map((value, index) => <LoadingProductArticle keyIndex={index}/>)
+        }) : Array(4).fill(1).map((value, index) => <LoadingProductArticle key={index} keyIndex={index}/>)
       }
     </div>
   )

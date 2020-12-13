@@ -8555,3 +8555,11 @@ width: 100%;
     padding-left: 0px !important;
   }
 }
+
+.visibility-none {
+  visibility: hidden;
+}
+
+.product-list-filter-bg{
+  background-color: white;
+}

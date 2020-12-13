@@ -15,7 +15,6 @@ interface Props{
 const UserList: React.FunctionComponent<Props> = (props: Props) => {
   const dispatch = useDispatch();
   const stateData = useSelector<AppState, User[]>(state => state.user.allUsers || []);
-  console.log(stateData)
   const productColumns = [
     {
       name: 'Email',
@@ -41,7 +40,7 @@ const UserList: React.FunctionComponent<Props> = (props: Props) => {
       name: 'View Details',
       sortable: false,
       cell: (row:  User) => {
-        return <button type="submit" className="uk-button-small uk-button-primary" onClick={() => {debugger;dispatch(setUser(row));props.addEditToggle(true)}}>
+        return <button type="submit" className="uk-button-small uk-button-primary" onClick={() => {dispatch(setUser(row));props.addEditToggle(true)}}>
           <span>View</span>
         </button>
       }

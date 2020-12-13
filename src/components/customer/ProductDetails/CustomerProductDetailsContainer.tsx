@@ -23,6 +23,7 @@ const CustomerProductDetailsConstainer: React.FunctionComponent = () => {
 
   useEffect(() => {
     dispatch(getProduct(Number(queryProductId)));
+    setSmallSlider(undefined);
   }, [queryProductId]);
 
   const {

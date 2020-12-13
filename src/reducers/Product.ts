@@ -137,7 +137,6 @@ const productReducer = (state = initialState, action: ProductAction): Product =>
         _hasMoreProducts: action._hasMoreProducts,
       }
     case Actions.SET_CUSTOMER_PRODUCT:
-      debugger
         return {
           ...state,
           _isSuccess: false,

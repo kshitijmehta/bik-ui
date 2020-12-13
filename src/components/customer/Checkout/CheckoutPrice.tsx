@@ -179,7 +179,11 @@ const CheckoutPrice: React.FunctionComponent<Props> = (props: Props) => {
   useEffect(() => {
     if (checkout._isPaymentSucceess &&
       (props.paymentMode === 'online' || props.paymentMode === 'cod')) {
-      setPaymentMessage('Payment is successful !!');
+        if(props.paymentMode === 'cod'){
+          setPaymentMessage('Order placed !!');
+        }else{
+          setPaymentMessage('Payment is successful !!');
+        }
       setPaymentSuccess(true);
       setPaymentError(false);
       dispatch(getCart());

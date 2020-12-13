@@ -173,8 +173,8 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
             <div className="uk-text-center">
               <ul className="uk-breadcrumb uk-flex-center uk-margin-remove">
                 <li><a onClick={() => history.push('/')}>Home</a></li>
-                <li><span>Product</span></li>
                 <li><a onClick={() => history.push('/product/' + props.productCategoryName)}>{props.productCategoryName}</a></li>
+                <li className="visibility-none"></li>
               </ul>
               <h1 className="uk-margin-small-top uk-margin-remove-bottom">{props.name}</h1>
             </div>

@@ -118,7 +118,6 @@ const deleteCartLoggedOut = (data: CustomerCart[]) =>({
 })
 
 const cartReducer = (state = initialState, action: CartAction): Cart => {
-  debugger;
   switch (action.type) {
     case Actions.LOADING_CART:
       return {
@@ -158,7 +157,6 @@ const cartReducer = (state = initialState, action: CartAction): Cart => {
         data: action.data
       }
     case Actions.SET_LOGGED_CART:
-      debugger;
       return {
         ...state,
         _isSuccess: true,

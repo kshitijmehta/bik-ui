@@ -5,7 +5,6 @@ import { User } from 'types';
 
 const UserDetails: React.FunctionComponent = () => {
   const userData = useSelector<AppState, User>(state => state.user.data || {} as User);
-  console.log(userData)
   return (
     <div className="uk-width-1-1 uk-width-expand@m">
       <div className="uk-card uk-card-default uk-card-small tm-ignore-container">

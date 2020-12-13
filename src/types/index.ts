@@ -14,3 +14,4 @@ export * from './Shipper';
 export * from './Shipment';
 export * from './Search';
 export * from './CustomerShippment';
+export * from './SelectedFilters';

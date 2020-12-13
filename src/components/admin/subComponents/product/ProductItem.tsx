@@ -246,8 +246,6 @@ const ProductItem: React.FunctionComponent = () => {
       setSizeColourQuantity(currentItem);
   }
 
-// console.log(sizeColourQuantity)
-  // if(Object.keys(sizeColourQuantity).length > 0){console.log(sizeColourQuantity)}
   return (
     <form onSubmit={productItemFormik.handleSubmit} className="uk-width-1-1 uk-width-expand@m">
       <div className="uk-card uk-card-default uk-card-small tm-ignore-container">

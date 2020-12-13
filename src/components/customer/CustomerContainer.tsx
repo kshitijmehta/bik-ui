@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { CustomerProductFilter } from '.';
-import { AppState, ProductCount, getActiveProductCount } from 'reducers';
+import { AppState, ProductCount, getActiveProductCount, defaultPreSelectedFitler, PreSelectedFilters, setPreSelectedFilter } from 'reducers';
 import { SubCategory, getSubCategory } from 'reducers/SubCategory';
 import { ProductSubCategory, ProductSize, ProductColor, Search } from 'types';
 import { filterSubcategories } from 'services';
@@ -12,6 +12,7 @@ import { CustomerProductList } from './CustomerProductList';
 import { setDefaulState } from 'reducers/Product';
 import { getSize, Size } from 'reducers/Size';
 import { getColour, Colour } from 'reducers/Colour';
+import queryString from 'query-string';
 
 
 
@@ -31,13 +32,19 @@ const CustomerContainer: React.FunctionComponent = () => {
   const productSize = useSelector<AppState, ProductSize[]>(state => state.size.data || []);
   const productColour = useSelector<AppState, ProductColor[]>(state => state.colour.data || []);
   const search = useSelector<AppState, Search>(state => state.search.data || {} as Search);
-
+  const preSelectedFilter = useSelector<AppState, PreSelectedFilters>(state => state.preSelectedFilters);
+  let querySearch = useLocation().search; 
   useEffect(() => {
     dispatch(getSubCategory());
     dispatch(getSize());
     dispatch(getColour());
   }, []);
 
+  // useEffect(() => {
+  //   return () => {
+  //     dispatch(defaultPreSelectedFitler());
+  //   }
+  // })
 
   useEffect(() => {
     dispatch(setDefaulState());
@@ -51,7 +58,18 @@ const CustomerContainer: React.FunctionComponent = () => {
       }
       setcategoryId(subCateId)
     }
-    if (!filterOn) {
+    if(preSelectedFilter.data?.subcategoryname.toString() !=="" &&product.toString().toLowerCase() !== preSelectedFilter.data?.subcategoryname.toLowerCase()){
+      setColourId([])
+      setSizeId([])
+      setStartPrice('')
+      setEndPrice('')
+      // dispatch(defaultPreSelectedFitler());
+      // dispatch(setPreSelectedFilter('subcategoryname',product));
+    }
+
+    const queryPramas = querySearch.split('?')[1];
+    const filterPrams = queryString.parse(queryPramas);
+    if (!filterOn && preSelectedFilter.data?.subcategoryId.length === 0 && !filterPrams['subCategoryId']?.toString()) {
       setSubCategoryId([]);
     }
 

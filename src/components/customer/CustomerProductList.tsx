@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from "react-infinite-scroll-component";
+import queryString from 'query-string';
 
 import { getCustomerProducts, Product, setDefaulState } from 'reducers/Product';
-import { AppState, SubCategory, Size, Colour, addUpdateCart, Cart, UserLocation } from 'reducers';
+import { AppState, SubCategory, Size, Colour, addUpdateCart, Cart, UserLocation, PreSelectedFilters, setPreSelectedFilter } from 'reducers';
 import { serverImagePath, pageSize } from 'appConstants';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { ProductItem, CustomerCart, Search } from 'types';
 import { calculateUserDiscount, getCurrencyIcon, showINRUSD } from 'services';
 import { LoadingProductArticle } from 'components/shared';
@@ -24,6 +25,7 @@ interface Props {
 const CustomerProductList: React.FunctionComponent<Props> = (props: Props) => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const {product,filterOn} = useParams();
   const [hasMoreProducts, setHasMoreProducts] = useState(false);
 
   const subCategories = useSelector<AppState, SubCategory>(state => state.subCategory);
@@ -33,6 +35,8 @@ const CustomerProductList: React.FunctionComponent<Props> = (props: Props) => {
   const userLocation = useSelector<AppState, UserLocation>(state => state.userLocation);
   const userData = useSelector((state: AppState) => state.user);
   const search = useSelector<AppState, Search>(state => state.search.data || {} as Search);
+  const preSelectedFilter = useSelector<AppState, PreSelectedFilters>(state => state.preSelectedFilters);
+
 
   // useEffect(() => {
   //   if (props.categoryId !== 0) {
@@ -45,7 +49,12 @@ const CustomerProductList: React.FunctionComponent<Props> = (props: Props) => {
   useEffect(() => {
     if(!products._isLoading && props.categoryId.length >0  && !subCategories._isLoading && !productSize._isLoading && !productColour._isLoading){
       dispatch(setDefaulState());
-      dispatch(getCustomerProducts(0, pageSize, props.categoryId, props.subCategoryId || [], props.colourId || [], props.sizeId || [], props.startPrice || '', props.endPrice||'', userLocation.data || 'IN',search.searchText || '' , true));
+      dispatch(getCustomerProducts(0, pageSize, props.categoryId, props.subCategoryId || [], 
+        props.colourId || [], props.sizeId || [], props.startPrice || '', props.endPrice||'', 
+        userLocation.data || 'IN',
+        search.searchText || queryString.parse(window.location.search.split('?')[1])['searchText']?.toString() || '' 
+        , true));
+
       dispatch(setSearch({
         categoryId: props.categoryId,
         colourId: props.colourId || [],
@@ -54,9 +63,41 @@ const CustomerProductList: React.FunctionComponent<Props> = (props: Props) => {
         sizeId: props.sizeId || [],
         startPrice: props.startPrice || '',
         subCategoryId: props.subCategoryId || [],
-        searchText: search.searchText || ''
+        searchText: search.searchText || 
+        queryString.parse(window.location.search.split('?')[1])['searchText']?.toString() || ''
       }));
     }
+    if(props.colourId?.toString() || props.sizeId?.toString() || props.subCategoryId?.toString() 
+        || props.startPrice || props.endPrice || search.searchText || queryString.parse(window.location.search.split('?')[1])['searchText']?.toString()) {
+          let searchArray = [];
+           if(props.colourId?.toString()){
+             searchArray.push("colourId="+props.colourId.toString())
+           }
+           if(props.sizeId?.toString()){
+            searchArray.push("sizeId="+props.sizeId.toString())
+          } 
+          if(props.subCategoryId?.toString()){
+            searchArray.push("subCategoryId="+props.subCategoryId.toString())
+          } 
+          if(props.startPrice?.toString()){
+            searchArray.push("startPrice="+props.startPrice.toString())
+          } 
+          if(props.endPrice?.toString()){
+            searchArray.push("endPrice="+props.endPrice.toString())
+          } 
+          if(search.searchText?.toString() || queryString.parse(window.location.search.split('?')[1])['searchText']?.toString() ){
+            searchArray.push("searchText="+(search.searchText?.toString() || queryString.parse(window.location.search.split('?')[1])['searchText']?.toString() ))
+          }
+
+        history.push({
+          pathname: '/product/'+ product + `${filterOn ? "/"+filterOn: ""}`,
+          search: '?' + `${searchArray.length === 1 ? searchArray[0] :  searchArray.join('&')}`
+        })
+      }else{
+        history.push({
+          pathname: '/product/'+ product + `${filterOn ? "/"+filterOn: ""}`
+        })
+      }
   },[props.sizeId,props.categoryId,props.colourId,props.subCategoryId,props.startPrice,props.endPrice, subCategories._isLoading, productSize._isLoading, productColour._isLoading])
 
   useEffect(()=> {
@@ -138,10 +179,10 @@ const CustomerProductList: React.FunctionComponent<Props> = (props: Props) => {
         <div>
           <div className="uk-card uk-card-default uk-card-small tm-ignore-container">
             <div className="uk-grid-collapse uk-child-width-1-1" id="products" uk-grid="true">
-              <div className="uk-card-header uk-hidden@m">
+              <div className="uk-card-header uk-hidden@m product-list-filter-bg"  uk-sticky="offset: 60;bottom: #offset">
                 <div className="uk-grid-small uk-flex-middle uk-flex-center" uk-grid="true">
                   <div className="uk-width-1-1 uk-width-auto@s uk-flex uk-flex-center uk-flex-middle">
-                    <button className="uk-button uk-button-default uk-button-small uk-hidden@m" uk-toggle="target: #filters">
+                    <button className="uk-button uk-button-default uk-button-small uk-hidden@m"  uk-toggle="target: #filters">
                       <span className="uk-margin-xsmall-right" uk-icon="icon: settings; ratio: .75;"></span>Filters
                     </button>
                   </div>

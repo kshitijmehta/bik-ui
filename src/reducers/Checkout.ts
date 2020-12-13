@@ -110,7 +110,6 @@ const checkoutReducer = (state = initialState, action: CheckoutAction) : Checkou
         message: action.message
       }
     case Actions.ERROR_CHECKOUT:
-      debugger
       return {
         ...state,
         _isError: true,

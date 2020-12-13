@@ -1,13 +1,15 @@
 import React, { Dispatch, SetStateAction, useState, useEffect } from 'react';
 import { ProductSubCategory, ActiveProductCount, ProductColor, ProductSize } from 'types';
-import { ProductCount, AppState, Size, Colour, getCustomerProducts } from 'reducers';
+import { ProductCount, AppState, Size, Colour, getCustomerProducts, setPreSelectedFilter, defaultPreSelectedFitler, PreSelectedFilters, setAllFilters } from 'reducers';
 import { useSelector, useDispatch } from 'react-redux';
 // import { Size } from 'reducers/Size';
 // import { Colour } from 'reducers/Colour';
 import { filterSize } from 'services';
 import { pageSize } from 'appConstants';
 import { setDefaulState } from 'reducers/Product';
-import { useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
+import queryString from 'query-string';
+import { setSearch } from 'reducers/Search';
 // import { getCustomerProducts } from 'reducers/Product';
 
 
@@ -27,7 +29,8 @@ interface Props {
 const CustomerProductFilter: React.FunctionComponent<Props> = (props: Props) => {
 
   const dispatch = useDispatch();
-  const {product} = useParams();
+  const { product } = useParams();
+  const preSelectedFilter = useSelector<AppState, PreSelectedFilters>(state => state.preSelectedFilters);
   const [filterColourId, setFilterColourId] = useState<number[]>([]);
   const [filterSizeId, setFilterSizeId] = useState<number[]>([]);
   const [filterSubCategory, setFilterSubCategory] = useState<number[]>([]);
@@ -87,25 +90,30 @@ const CustomerProductFilter: React.FunctionComponent<Props> = (props: Props) => 
       const updatedColourFilter = toggleAddingRemovingId(filterColourId, colour);
       setFilterColourId([...updatedColourFilter]);
       props.setColourId([...updatedColourFilter]);
+      dispatch(setPreSelectedFilter('coloudId',[...updatedColourFilter]));
     } else if (size != 0){
       const updatedSizeFilter = toggleAddingRemovingId(filterSizeId, size);
       setFilterSizeId([...updatedSizeFilter]);
       props.setSizeId([...updatedSizeFilter]);
+      dispatch(setPreSelectedFilter('sizeId',[...updatedSizeFilter]));
     } else if (subCategory && subCategory != 0){
       const updatedSubCategory = toggleAddingRemovingId(filterSubCategory, subCategory);
       setFilterSubCategory([...updatedSubCategory]);
       props.setSubCategoryId([...updatedSubCategory]);
+      dispatch(setPreSelectedFilter('subcategoryId',[...updatedSubCategory]));
     } else if(startPrice!=='0' && !endPrice){
       setFilterStartPrice(startPrice || '');
       window.clearTimeout(startPriceTimer);
       setStartPriceTimer(window.setTimeout(() => {
         props.setStartPrice(startPrice || '')
+        dispatch(setPreSelectedFilter('startPrice',startPrice|| ''));
       },1000));
     } else if(endPrice || (!endPrice && filterEndPrice)){
       setFilterEndPrice(endPrice || '');
       window.clearTimeout(endPriceTimer);
       setEndPriceTimer(window.setTimeout(() => {
         props.setEndPrice(endPrice || '')
+        dispatch(setPreSelectedFilter('endPrice',endPrice || ''));
       },1000));
     }
   }
@@ -117,12 +125,53 @@ const CustomerProductFilter: React.FunctionComponent<Props> = (props: Props) => 
     props.setSizeId([]);
     setFilterSubCategory([]);
     props.setSubCategoryId([]);
+    dispatch(defaultPreSelectedFitler());
     setFilterStartPrice('');
     props.setStartPrice('');
     setFilterEndPrice('');
-    props.setEndPrice('')
+    props.setEndPrice('');
   }
 
+  const convertQueryParamsToNumber = (query: string | undefined) => {
+    if(query){
+      return query.split(',').map((id) => Number(id));
+    }
+  }
+
+  useEffect(() => {
+    if(preSelectedFilter.data?.subcategoryname.toString() !=="" && product.toString().toLowerCase() !== preSelectedFilter.data?.subcategoryname.toLowerCase()){
+      restFilter();
+      // dispatch(defaultPreSelectedFitler());
+      dispatch(setPreSelectedFilter('subcategoryname',product));
+    }else {
+    const queryPramas = window.location.search.split('?')[1];
+    const filterPrams = queryString.parse(queryPramas);
+    const colourFilter = convertQueryParamsToNumber(filterPrams['colourId']?.toString()) || preSelectedFilter.data?.coloudId || []
+    const sizeFilter = convertQueryParamsToNumber(filterPrams['sizeId']?.toString()) ||preSelectedFilter.data?.sizeId || [];
+    const subCategoryFilter = convertQueryParamsToNumber(filterPrams['subCategoryId']?.toString()) ||preSelectedFilter.data?.subcategoryId || [];
+    const startPriceFilter = filterPrams['startPrice']?.toString() || preSelectedFilter.data?.startPrice || '';
+    const endPriceFilter = filterPrams['endPrice']?.toString() || preSelectedFilter.data?.endPrice || '';
+    setFilterColourId(colourFilter);
+    setFilterSizeId(sizeFilter);
+    setFilterSubCategory(subCategoryFilter);
+    setFilterStartPrice(startPriceFilter);
+    setFilterEndPrice(endPriceFilter);
+    dispatch(setAllFilters({
+      subcategoryId:subCategoryFilter,
+      coloudId:colourFilter,
+      sizeId:sizeFilter,
+      startPrice:startPriceFilter,
+      endPrice:endPriceFilter,
+      subcategoryname: product.toString().toLowerCase(),
+      searchText: filterPrams['searchText']?.toString() || ''
+    }))
+    props.setColourId([...colourFilter]);
+    props.setSizeId([...sizeFilter]);
+    props.setSubCategoryId([...subCategoryFilter]);
+    props.setStartPrice(startPriceFilter);
+    props.setEndPrice(endPriceFilter);
+    }
+  },[product]);
   // useEffect(() => {
   //   console.log('filter on effect')
   //   if(props.filterSelected && props.filterSelected.length > 0){
@@ -138,6 +187,7 @@ const CustomerProductFilter: React.FunctionComponent<Props> = (props: Props) => 
     if(props.filterSelected.length>0){
       // const updatedSubCategory = toggleAddingRemovingId(filterSubCategory, Number(props.filterSelected[0].subCategoryId));
       setFilterSubCategory([Number(props.filterSelected[0].subCategoryId)]);
+      dispatch(setPreSelectedFilter('subcategoryId',[Number(props.filterSelected[0].subCategoryId)]));
       // props.setSubCategoryId([Number(props.filterSelected[0].subCategoryId)]);
     }
   }, [props.filterSelected]);

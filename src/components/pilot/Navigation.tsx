@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { getSubCategory, AppState, SubCategory, getActiveProductCount, Cart, getCart, getUser, getUserLocation, getCustomerProducts, UserLocation, setLoggedCart, defaultUser } from 'reducers';
+import { getSubCategory, AppState, SubCategory, getActiveProductCount, Cart, getCart, getUser, getUserLocation, getCustomerProducts, UserLocation, setLoggedCart, defaultUser, PreSelectedFilters, defaultPreSelectedFitler } from 'reducers';
 import { SubCategories, pageSize } from 'appConstants';
 import { filterSubcategories } from 'services';
 import { ProductSubCategory, Search } from 'types';
@@ -120,7 +120,7 @@ const Navigation: React.FunctionComponent = () => {
                 {
                   getCategoryAndSubCategory()
                 }
-                <li><a href="#">About</a></li>
+                <li><a onClick={()=> history.push('/about')}>About</a></li>
                 <li><a onClick={()=> history.push('/contactus')}>Contact</a></li>
                 {
                   userData.data?.isAdmin && 

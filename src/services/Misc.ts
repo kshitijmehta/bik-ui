@@ -114,7 +114,6 @@ const createProductCountList = (activeProducts: ActiveProductCount[]) => {
       }
     }
   });
-  console.log(productCountList)
   return productCountList;
 };
 

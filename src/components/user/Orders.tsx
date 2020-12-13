@@ -125,7 +125,7 @@ const Orders: React.FunctionComponent = () => {
                               <h3 className="uk-card-title uk-margin-remove-bottom">#{order.orderNumber}</h3>
                               <p className="uk-text-meta uk-margin-remove-top"><time>Ordered on {order.paymentDate.split(' ')[0]}</time></p>
                             </div>
-                            <p className="uk-text-normal uk-margin-remove-top uk-float-right"><time>Amount Paid: {getCurrencyIcon(userLocation.data || 'IN')} {order.totalPrice}</time></p>
+                            <p className="uk-text-normal uk-margin-remove-top uk-float-right"><time>Order Cost: {getCurrencyIcon(userLocation.data || 'IN')} {order.totalPrice}</time></p>
                           </div>
                         </div>
                       </div>
@@ -287,7 +287,6 @@ const Orders: React.FunctionComponent = () => {
                                                     disabled={orders._isLoading}
                                                     {...(orderItem.shipmentDetails?.shippingDate && 'uk-toggle="target: #return-modal"')}
                                                       onClick={() => {
-                                                        debugger
                                                         if(orderItem.shipmentDetails?.shippingDate){
                                                           setSelectedReason('');
                                                           setReturnOrderDetailId(orderItem.orderDetailId);

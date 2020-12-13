@@ -26,12 +26,12 @@ const MainFooter: React.FunctionComponent = () => {
                     <li><a onClick={() => history.push('/product/lingerie')}>Lingerie</a></li>
                     <li><a onClick={() => history.push('/product/footwear')}>Footwear</a></li>
                     <li><a onClick={() => history.push('/product/bindi')}>Bindi</a></li>
-                    <li><a href="#">Home Essential</a></li>
+                    <li><a onClick={() => history.push('/product/home essential')}>Home Essential</a></li>
                   </ul>
                 </div>
                 <div>
                   <ul className="uk-nav uk-nav-default">
-                    <li><a href="#">About</a></li>
+                    <li><a onClick={()=> history.push('/about')}>About</a></li>
                     <li><a onClick={() => history.push('/contactus')}>Contacts</a></li>
                   </ul>
                 </div>

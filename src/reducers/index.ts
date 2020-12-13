@@ -21,6 +21,7 @@ import { TrendingProduct, trendingProductReducer, TrendingProductAction } from '
 import { LatestProduct, latestProductReducer, LatestProductAction } from './LatestProducts';
 import { searchReducer, SearchAction, Search } from './Search';
 import { CustomerShippment, customerShippmentReducer, CustomerShippmentAction } from './CustomerShippment';
+import { PreSelectedFilterActions, PreSelectedFilters, PreSelectedFiltersReducer } from './PreSelectedFilters';
 
 
 export type AppState = {
@@ -43,7 +44,8 @@ export type AppState = {
   trendingProduct: TrendingProduct;
   latestProduct: LatestProduct;
   search: Search;
-  customerShippment: CustomerShippment
+  customerShippment: CustomerShippment;
+  preSelectedFilters: PreSelectedFilters;
 }
 
 const reducers = {
@@ -67,6 +69,7 @@ const reducers = {
   latestProduct: latestProductReducer,
   search: searchReducer,
   customerShippment: customerShippmentReducer,
+  preSelectedFilters: PreSelectedFiltersReducer,
 };
 
 interface AppActions {
@@ -88,6 +91,7 @@ interface AppActions {
   latestProduct: LatestProductAction;
   search: SearchAction;
   customerShippment: CustomerShippmentAction;
+  preSelectedFilters: PreSelectedFilterActions;
 }
 
 declare global {
@@ -124,3 +128,4 @@ export * from './RelatedProducts';
 export * from './TrendingProducts';
 export * from './LatestProducts';
 export * from './CustomerShippment';
+export * from './PreSelectedFilters';
