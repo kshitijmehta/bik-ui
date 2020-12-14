@@ -68,7 +68,7 @@ const MobileNavigation: React.FunctionComponent<Props> = (props: Props) => {
                 </ul>
               </li> */}
               {getCategoryAndSubCategory()}
-              <li><a href="#">About</a></li>
+              <li><a onClick={()=> history.push('/about')}>About</a></li>
               <li><a onClick={()=> {history.push('/contactus'); props.mobileNavigationRef.current?.click()}}>Contact</a></li>
             </ul>
           </nav>

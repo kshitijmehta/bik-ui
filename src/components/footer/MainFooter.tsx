@@ -10,7 +10,7 @@ const MainFooter: React.FunctionComponent = () => {
         <div className="uk-container">
           <div className="uk-grid-medium uk-child-width-1-1 uk-child-width-1-4@m" uk-grid="true">
             <div>
-              <a className="uk-logo" href="index.html"><img src="/logo.png" alt="Logo" width="150" /></a>
+              <a className="uk-logo" onClick={()=> history.push('/')}><img src="/logo.png" alt="Logo" width="150" /></a>
               <p className="uk-text-small"></p>
               {/* <ul className="uk-iconnav">
                 <li><a href="#" title="Facebook" uk-icon="facebook"></a></li>
