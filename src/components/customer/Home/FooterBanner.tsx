@@ -6,7 +6,7 @@ const FooterBanner: React.FunctionComponent = () => {
 
   return (
     <section className="uk-section uk-section-default uk-section-small">
-      <figure><img src="/long-banner-2-1.jpg" alt="footwear" /></figure>
+      <figure className="align-center"><img src="/long-banner-2-1.jpg" alt="footwear" /></figure>
     </section>
   )
 }

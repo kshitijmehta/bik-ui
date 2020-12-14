@@ -6,7 +6,7 @@ const SubBanner: React.FunctionComponent = () => {
 
   return (
     <section className="uk-section uk-section-default uk-section-small">
-      <figure><img src="/long-banner_1.jpg" alt="footwear" /></figure>
+      <figure className="align-center"><img src="/long-banner_1.jpg" alt="footwear" /></figure>
       {/* <div className="uk-container">
         <div className="uk-grid-small uk-child-width-1-1" uk-grid="true">
         <figure><img src="/long-banner.jpg" alt="footwear" /></figure>

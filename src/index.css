@@ -8563,3 +8563,7 @@ width: 100%;
 .product-list-filter-bg{
   background-color: white;
 }
+
+.align-center{
+  text-align: center;
+}
