@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import DataTable, { IDataTableColumn } from 'react-data-table-component';
-import { getColour, getSize, getSubCategory, getCoupon, getProducts, getShippers, getAllUser, AppState } from 'reducers';
+import { getColour, getSize, getSubCategory, getCoupon, getProducts, getShippers, getAllUser, AppState, getAdminOrderDataCsv, setAdminOrderCsvDefault } from 'reducers';
 import { useDispatch, useSelector } from 'react-redux';
-import { ProductColor, ProductSize, ProductCoupon, ProductSubCategory, Order, OrderShipper, User, ProductItem } from 'types';
+import { ProductColor, ProductSize, ProductCoupon, ProductSubCategory, Order, OrderShipper, User, ProductItem, AdminOrderDataCsv } from 'types';
 import { SubProducts } from 'appConstants';
 import { getAdminOrders } from 'reducers/Order';
-import { countHighlightProducts } from 'services';
+import { countHighlightProducts, downloadCSV } from 'services';
 
 interface Props {
   productType: number;
@@ -23,7 +23,9 @@ const AdminProductList: React.FunctionComponent<Props> = (props: Props) => {
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState('');
   const [tabName, setTabName] = useState('');
+  const [isDownloadDone, setIsDownloadDone] = useState(true);
   const productList = useSelector<AppState, ProductItem[]>(state => state.product.data || []);
+  const adminOrderDataCsv = useSelector<AppState, AdminOrderDataCsv[]>(state => state.adminOrderCsv.data || []);
   const [tableData, setTableData] = useState<
     ProductColor[] | ProductSize[] | ProductCoupon[] | ProductSubCategory[] | Order[] | OrderShipper[] | User[]
   >([]);
@@ -98,6 +100,17 @@ const AdminProductList: React.FunctionComponent<Props> = (props: Props) => {
   }, [searchTerm]);
 
 
+  const getOrdersCsvData = () => {
+    setIsDownloadDone(false);
+    dispatch(getAdminOrderDataCsv());
+  }
+  useEffect(() => {
+    if(!isDownloadDone && adminOrderDataCsv.length > 0){
+      downloadCSV(adminOrderDataCsv);
+      setIsDownloadDone(true);
+      dispatch(setAdminOrderCsvDefault())
+    }
+  },[JSON.stringify(adminOrderDataCsv)])
   return (
     <div className="uk-width-1-1 uk-width-expand@m">
       <div className="uk-card uk-card-default uk-card-small tm-ignore-container">
@@ -174,8 +187,14 @@ const AdminProductList: React.FunctionComponent<Props> = (props: Props) => {
                           (!props.expandableRows && props.productType !== SubProducts.ORDERS) &&
                           <div></div>
                         }
-                        <div>
-                          <input className="uk-input uk-form-width-medium uk-form-small uk-float-right" value={searchTerm} onChange={event => setSearchTerm(event.target.value)} type="text" placeholder={props.searchPlaceholder} />
+                        <div className="align-right">
+                          <input className="uk-input uk-form-width-medium uk-form-small" value={searchTerm} onChange={event => setSearchTerm(event.target.value)} type="text" placeholder={props.searchPlaceholder} />
+                          {
+                            props.productType === SubProducts.ORDERS &&
+                            <span className="download-margin" uk-icon="icon: cloud-download"
+                          onClick={()=>getOrdersCsvData()}></span>
+                          }
+                          
                         </div>
                       </div>
                     </div>

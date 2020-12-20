@@ -28,6 +28,8 @@ interface ProductItem {
   readonly latest?: boolean;
   readonly trending?: boolean;
   readonly highlight?: string;
+  readonly listSingleImage?: string;
+  readonly isActive? : boolean;
 }
 
 interface sizeColourQuantityComboObject {

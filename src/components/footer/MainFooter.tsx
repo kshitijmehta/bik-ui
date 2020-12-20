@@ -33,6 +33,7 @@ const MainFooter: React.FunctionComponent = () => {
                   <ul className="uk-nav uk-nav-default">
                     <li><a onClick={()=> history.push('/about')}>About</a></li>
                     <li><a onClick={() => history.push('/contactus')}>Contacts</a></li>
+                    <li><a onClick={() => history.push('/refundpolicy')}>Refund Policy</a></li>
                   </ul>
                 </div>
               </nav>

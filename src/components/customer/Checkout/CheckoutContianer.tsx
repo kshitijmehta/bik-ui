@@ -96,6 +96,33 @@ const CheckoutContainer: React.FunctionComponent = () => {
                         </div>
                       </section>
                     }
+                      <section>
+                        <h2 className="tm-checkout-title">Delivery Time</h2>
+                        <div className="uk-card uk-card-default uk-card-small tm-ignore-container">
+                          <div className="uk-card-body">
+                            <div className="uk-grid-small uk-grid-match uk-child-width-1-1 uk-child-width-1-1@s uk-flex-center" uk-switcher="toggle: &gt; * &gt; .tm-choose" uk-grid="true">
+                              <div> 
+                                {
+                                  userLocation.data !== 'IN' && internationalShipping === "express" && 
+                                  <div className="tm-choose-title">The order will be dispatched in 3 to 5 working days. Delivery time 8 to 10 days after dispatch.</div>
+                                }
+                                  
+                                {
+                                  userLocation.data !== 'IN' && internationalShipping === "standard" && 
+                                  <div className="tm-choose-title">The order will be dispatched in 3 to 5 working days. Delivery time 15 to 20 days after dispatch.</div>
+                                }
+                                {
+                                  userLocation.data === 'IN' &&
+                                  <div className="tm-choose-title">Delivery within 5 to 7 working days.</div>
+                                }
+                                  
+                                  <div className="uk-text-meta">Notice: We are currently seeing increase in delivery time due to COVID-19. Our team is working with our delivery partners to ensure all packages are delivered as fast as possible with highest standards of hygiene.</div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                      </section>
                   </div>
                 </div>
                 <CheckoutPrice paymentMode={paymentMode} shippingType={internationalShipping} setCartTotal={setCartTotal} />

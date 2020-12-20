@@ -26,10 +26,6 @@ We have curated a range of premium products to cast an impression everytime you 
 From women’s bindis,shoes,lingerie to high end home accessories under one roof .
 You don’t have to worry about the latest fashion trends anymore as we update our catalog every week to keep you one step ahead.
                                             </p>
-                    <p>
-                      We are in the market since 1947. The first shop was opened up at the heart of Delhi, Sadar Bazar. Everysince then our production has grown exponentially. Currently we are the biggest supplier of
-                      Traditional wear in India
-                                            </p>
                     <h2 className="uk-text-center">Happy Shopping At Basickart</h2>
                     {/* <ul className="uk-list uk-list-bullet">
                       <li>

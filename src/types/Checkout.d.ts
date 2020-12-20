@@ -16,6 +16,8 @@ interface RazorpayPayment {
   orderNumber: string;
   addressId: string;
   couponId?: number;
+  userName?: string;
+  userAddress?: string;
 };
 
 interface PayPalPayment {
@@ -25,6 +27,8 @@ interface PayPalPayment {
   quantity: number;
   couponId?: number; 
   isStandard: boolean;
+  userName?: string;
+  userAddress?: string;
 };
 
 interface CodPayment {
@@ -32,6 +36,8 @@ interface CodPayment {
   orderId: number;
   addressId: string;
   couponId?: number; 
+  userName?: string;
+  userAddress?: string;
 }
 
 export {

@@ -45,6 +45,15 @@ const PromoBanner: React.FunctionComponent = () => {
               </div>
             </div>
           </div>
+          <div>
+            <div className="uk-card uk-card-hover">
+              <div className="uk-card-media-top">
+                <a onClick={() => history.push('/product/cosmetics')}>
+                  <img src="/cosmetic_promo.jpg" alt="promo-cosmetic" />
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

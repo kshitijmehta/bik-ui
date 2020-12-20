@@ -30,6 +30,8 @@ interface Props {
   imageName: string;
   imagePath: string;
   cartProductQuantity: cartQuantity;
+  isActive: boolean;
+  subCategory: number
 };
 
 const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) => {
@@ -45,7 +47,8 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
     imagePath,
     productCategoryName,
     name,
-    cartProductQuantity
+    cartProductQuantity,
+    isActive
   } = props;
 
   const dispatch = useDispatch();
@@ -64,6 +67,7 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
   const [selectedQuantity, setSelectedQuantity] = useState('1');
   const [selectedProductDetailId, setSelectedProductDetailId] = useState('0');
   const [maxQuantity, setMaxQuantity] = useState('0');
+  const [showInch, setShowInch] = useState(false);
 
   useEffect(() => {
     setPINR(priceINR.split(',')[0]);
@@ -252,17 +256,23 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
                                     </div>
                                     <div>
                                       <label>
-                                        <div className="uk-form-label">Quantity {selectedSize !== '0' && <span className="uk-notification-message-danger uk-text-meta">(Max {maxQuantity})</span>}</div>
+                                        <div className="uk-form-label">Quantity {selectedSize !== '0' && <span className="uk-notification-message-danger uk-text-meta">(Max {isActive ? maxQuantity : 0})</span>}</div>
                                         <div>
                                           <div className="uk-inline">
-                                            {Number(selectedQuantity) === 1 && <a className="uk-form-icon"></a>}
-                                            {Number(selectedQuantity) > 1 && <a className="uk-form-icon" onClick={() => toggleQuantity(false)} uk-icon="icon: minus"></a>}
-                                            {Number(selectedQuantity) < Number(maxQuantity) && <a className="uk-form-icon uk-form-icon-flip" onClick={() => toggleQuantity(true)} uk-icon="icon: plus"></a>}
-                                            {Number(selectedQuantity) === Number(maxQuantity) && <a className="uk-form-icon uk-form-icon-flip"></a>}
+                                            {Number(maxQuantity) > 0 && isActive &&
+                                              <>
+                                                {Number(selectedQuantity) === 1 && <a className="uk-form-icon"></a>}
+                                                {Number(selectedQuantity) > 1 && <a className="uk-form-icon" onClick={() => toggleQuantity(false)} uk-icon="icon: minus"></a>}
+                                                {Number(selectedQuantity) < Number(maxQuantity) && <a className="uk-form-icon uk-form-icon-flip" onClick={() => toggleQuantity(true)} uk-icon="icon: plus"></a>}
+                                                {Number(selectedQuantity) === Number(maxQuantity) && <a className="uk-form-icon uk-form-icon-flip"></a>}
+                                              </>
+                                            }
+
                                             <input className="uk-input uk-text-center"
                                               onChange={(e) => onChangeQuantity(e.currentTarget.value)}
                                               onBlur={(e) => onBlurQuantity(e.currentTarget.value)}
                                               type="number"
+                                              disabled={Number(maxQuantity) === 0 || !isActive}
                                               value={selectedQuantity} />
                                           </div>
                                         </div>
@@ -270,20 +280,28 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
                                     </div>
                                     <div className={`${checkForDefaultSize(pSize) ? 'single-size-cart-button' : ''}`}>
                                       <button
-                                        disabled={Number(maxQuantity) === 0}
+                                        disabled={Number(maxQuantity) === 0 || !isActive}
                                         className="uk-button uk-button-primary tm-product-add-button tm-shine js-add-to-cart"
                                         onClick={() => addToCart()}>
-                                        add to cart
-                                        </button>
+                                        {Number(maxQuantity) === 0 || !isActive ? 'out of stock' : 'add to cart'}
+                                      </button>
                                     </div>
                                   </div>
                                 </div>
                                 <div>
                                   {
-                                    props.productCategoryName.toLowerCase() === 'footwear' && 
-                                    <a uk-toggle="target: #product-size-model" className="uk-margin-xsmall-right uk-notification-message-danger"><span uk-icon="file-text"></span> Size Chart </a>
+                                    props.productCategoryName.toLowerCase() === 'footwear'&&
+                                    <a uk-toggle="target: #product-footwear-size-model" className="uk-margin-xsmall-right uk-notification-message-danger"><span uk-icon="file-text"></span> Size Chart </a>
                                   }
-                                  
+                                  {
+                                    props.subCategory.toString() === '1' &&
+                                    <a uk-toggle="target: #product-bra-size-model" className="uk-margin-xsmall-right uk-notification-message-danger"><span uk-icon="file-text"></span> Size Chart </a>
+                                  }
+                                  {
+                                    props.subCategory.toString() === '3' &&
+                                    <a uk-toggle="target: #product-camisole-size-model" className="uk-margin-xsmall-right uk-notification-message-danger"><span uk-icon="file-text"></span> Size Chart </a>
+                                  }
+
                                 </div>
                               </div>
                             </div>
@@ -343,20 +361,63 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
           </div>
         </div>
       </section>
-      <div id="product-size-model" uk-modal="true">
-        <div className="uk-modal-dialog uk-modal-body uk-margin-auto-vertical size-chart-width">
-          <button className="uk-modal-close-default" type="button" uk-close="true"></button>
-          {
-            props.productCategoryName.toLowerCase() === 'footwear' &&
-            <>
-              <img className="uk-visible@s" src="/footwear_size_chart.jpg" alt="footwear-size-chart" />
-              <img className="uk-hidden@s" src="/footwear_size_chart_mobile_1.jpg" alt="footwear-size-chart" />
-              <img className="uk-hidden@s" src="/footwear_size_chart_mobile_2.jpg" alt="footwear-size-chart" />
-            </>
-          }
+      {
+        props.subCategory.toString() === '1' &&
+        <div id="product-bra-size-model" uk-modal="true">
+          <div className='uk-modal-dialog uk-modal-body uk-margin-auto-vertical size-chart-width lingerie-modal-big'>
+            <button className="uk-modal-close-default" type="button" uk-close="true"></button>
 
+                <ul className="uk-subnav uk-subnav-pill" uk-switcher="true">
+                  <li><a onClick={() => setShowInch(false)}>cm</a></li>
+                  <li><a onClick={() => setShowInch(true)}>in</a></li>
+                </ul>
+                {
+                  showInch ?
+                    <>
+                      <img className="uk-hidden@s" src="/mobile-bra-in-measure.jpg" alt="mobile-bra-in-measure" />
+                      <img className="uk-visible@s" src="/big-bra-in-measure-combo.jpg" alt="big-bra-in-measure-combo" />
+                    </>
+                    : <>
+                      <img className="uk-hidden@s" src="/mobile-bra-cm-measure.jpg" alt="mobile-bra-cm-measure" />
+                      <img className="uk-visible@s" src="/big-bra-cm-measure-combo.jpg" alt="big-bra-cm-measure-combo" />
+                    </>
+
+                }
+
+                <img className="uk-hidden@s" src="/mobile-bra-measure.jpg" alt="mobile-bra-measure" />
+
+          </div>
         </div>
-      </div>
+      }
+      {
+        props.productCategoryName.toLowerCase() === 'footwear' &&
+        <div id="product-footwear-size-model" uk-modal="true">
+          <div className='uk-modal-dialog uk-modal-body uk-margin-auto-vertical size-chart-width'>
+            <button className="uk-modal-close-default" type="button" uk-close="true"></button>
+          
+                <img className="uk-visible@s" src="/footwear_size_chart.jpg" alt="footwear-size-chart" />
+                <img className="uk-hidden@s" src="/footwear_size_chart_mobile_1.jpg" alt="footwear-size-chart" />
+                <img className="uk-hidden@s" src="/footwear_size_chart_mobile_2.jpg" alt="footwear-size-chart" />
+              
+
+          </div>
+        </div>
+      }
+      {
+        props.subCategory.toString() === '3' &&
+        <div id="product-camisole-size-model" uk-modal="true">
+          <div className='uk-modal-dialog uk-modal-body uk-margin-auto-vertical size-chart-width'>
+            <button className="uk-modal-close-default" type="button" uk-close="true"></button>
+          
+                <img className="uk-visible@s" src="/big-camisole.jpg" alt="footwear-size-chart" />
+                <img className="uk-hidden@s" src="/mobile-camisole-size-measure.jpg" alt="footwear-size-chart" />
+                <img className="uk-hidden@s" src="/mobile-camisole-measure.jpg" alt="footwear-size-chart" />
+              
+
+          </div>
+        </div>
+      }
+
     </main>
   )
 }

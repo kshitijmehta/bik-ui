@@ -13,14 +13,15 @@ const SubCategories: Record<string, number> = {
   'Lingerie': 1,
   'Footwear': 2,
   'Bindi': 3,
-  'Home Essential': 8
+  'Home Essential': 8,
+  'Cosmetics': 9
 }
 
 /**
  * Allow return for 
- * Footwear and HomeDecore
+ * Footwear and Home Essential
  */
-const AllowReturn = ['2','3'];
+const AllowReturn = ['2','8'];
 
 export {
   SubProducts,

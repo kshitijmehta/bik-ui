@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { CustomerOrders, getCustomerOrders, customerProductReturn, defaulOrderReturn } from 'reducers/Order';
 import { useSelector, useDispatch } from 'react-redux';
+import jsPDF from 'jspdf';
+
 import { AppState, UserLocation, getShippers, UserInformation } from 'reducers';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { pageSize, serverImagePath, AllowReturn } from 'appConstants';
-import { Order, OrderItems, OrderShipper } from 'types';
+import { Invoice, Order, OrderItems, OrderShipper } from 'types';
 import { useHistory } from 'react-router-dom';
-import { getCurrencyIcon } from 'services';
+import { getCurrencyIcon, returnInvoiceHtml } from 'services';
 
 const Orders: React.FunctionComponent = () => {
 
@@ -67,7 +69,7 @@ const Orders: React.FunctionComponent = () => {
   }
 
   const checkReturnEligibilty = (deliveryDate: string, categoryId: string) => {
-    if(AllowReturn.indexOf(categoryId.toString()) > -1 ){
+    if (AllowReturn.indexOf(categoryId.toString()) > -1) {
       const dateDifference = (new Date()).getTime() - (new Date(deliveryDate)).getTime();
       const differenceInDays = dateDifference / (1000 * 3600 * 24);
       return Math.ceil(differenceInDays) <= 30;
@@ -77,13 +79,31 @@ const Orders: React.FunctionComponent = () => {
 
   const returnOrder = (orderDetailId?: string, reason?: string,
     orderNumber?: string, productName?: string) => {
-    if(selectedReason || reason){
+    if (selectedReason || reason) {
       setShowReturnError(false);
-      dispatch(customerProductReturn(Number(orderDetailId) || Number(returnOrderDetailId), 
-        reason||selectedReason,orderNumber || returnOrderNumber,productName || returnProductName, userData.data?.firstName));
+      dispatch(customerProductReturn(Number(orderDetailId) || Number(returnOrderDetailId),
+        reason || selectedReason, orderNumber || returnOrderNumber, productName || returnProductName, userData.data?.firstName));
     } else {
       setShowReturnError(true);
     }
+  }
+
+  const downloadInvoice = async (invoiceNumber: string, productName: string, quantity: string, totalAmount: string) => {
+    var doc = new jsPDF('l', 'px', 'a4', true)
+    const invoiceData: Invoice = {
+      clientName: userData.data?.firstName + ' ' + userData.data?.lastName,
+      invoiceDate: (new Date).toLocaleDateString("en-US"),
+      clientAddress: userData.data?.addressLineOne + ' ' + userData.data?.addressLineTwo + ' ' +
+        userData.data?.addressLineThree + ' ' + userData.data?.city + ' ' + userData.data?.state +
+        ' ' + userData.data?.pincode + ' ' + userData.data?.country,
+      invoiceNumber,
+      productName,
+      quantity,
+      totalAmount,
+      rate: Math.ceil(Number(totalAmount) / Number(quantity)).toString()
+    }
+    await doc.html(returnInvoiceHtml(invoiceData), { x: 10, y: 10 })
+    doc.save( invoiceNumber+".pdf")
   }
   return (
     <div className="uk-width-1-1 uk-width-expand@m">
@@ -160,8 +180,8 @@ const Orders: React.FunctionComponent = () => {
                                       order.orderItems[0].shipmentDetails?.paymentReturned === 'Yes' ?
                                         <li>Return Status: <span className="uk-label uk-label-success">Retured</span></li>
                                         : order.orderItems[0].shipmentDetails?.paymentReturned === 'No' ?
-                                        <li>Return Status: <span className="uk-label uk-label-danger">Declined</span></li>
-                                        : <li>Return Status: <span className="uk-label uk-label-warning">{order.orderItems[0].shipmentDetails?.returnStatus}</span></li>
+                                          <li>Return Status: <span className="uk-label uk-label-danger">Declined</span></li>
+                                          : <li>Return Status: <span className="uk-label uk-label-warning">{order.orderItems[0].shipmentDetails?.returnStatus}</span></li>
                                     }
                                   </ul>
                                   :
@@ -171,26 +191,27 @@ const Orders: React.FunctionComponent = () => {
                                       <li>Delivery Date: <span>{order.orderItems[0].shipmentDetails?.deliveryDate}</span></li>
                                       {
                                         checkReturnEligibilty(order.orderItems[0].shipmentDetails?.deliveryDate, order.orderItems[0].categoryId) &&
-                                        <li><button className="uk-button uk-button-primary uk-button-small" uk-toggle="target: #return-modal" 
-                                        onClick={() => {
-                                          setSelectedReason('');
-                                          dispatch(defaulOrderReturn());
-                                          setReturnOrderDetailId(order.orderItems[0].orderDetailId);
-                                          setReturnProductName(order.orderItems[0].productName);
-                                          setReturnOrderNumber(order.orderNumber);
-                                        }}>Return</button></li>
+                                        <li><button className="uk-button uk-button-primary uk-button-small" uk-toggle="target: #return-modal"
+                                          onClick={() => {
+                                            setSelectedReason('');
+                                            dispatch(defaulOrderReturn());
+                                            setReturnOrderDetailId(order.orderItems[0].orderDetailId);
+                                            setReturnProductName(order.orderItems[0].productName);
+                                            setReturnOrderNumber(order.orderNumber);
+                                          }}>Return</button></li>
                                       }
+                                      <li>Invoice : <a onClick={() => downloadInvoice(order.orderNumber,order.orderItems[0].productName,order.orderItems[0].quantity,order.orderItems[0].productPrice)}>Download</a></li>
                                     </ul>
                                     :
                                     <ul className="uk-list">
                                       <li>Status : {getShipmentLink(order.orderItems[0].shipmentDetails?.shipper, order.orderItems[0].shipmentDetails?.trackingNumber)}</li>
                                       <li>Shipment Date: <span>{order.orderItems[0].shipmentDetails?.shippingDate ? order.orderItems[0].shipmentDetails?.shippingDate : 'Awaited'}</span></li>
                                       <li>
-                                        <button className="uk-button uk-button-primary uk-button-small" 
+                                        <button className="uk-button uk-button-primary uk-button-small"
                                           disabled={orders._isLoading}
                                           {...(order.orderItems[0].shipmentDetails?.shippingDate && 'uk-toggle="target: #return-modal"')}
-                                          onClick={() => { 
-                                            if(order.orderItems[0].shipmentDetails?.shippingDate){
+                                          onClick={() => {
+                                            if (order.orderItems[0].shipmentDetails?.shippingDate) {
                                               setSelectedReason('');
                                               dispatch(defaulOrderReturn())
                                               setReturnOrderDetailId(order.orderItems[0].orderDetailId);
@@ -198,17 +219,17 @@ const Orders: React.FunctionComponent = () => {
                                               setReturnOrderNumber(order.orderNumber);
                                             } else {
                                               setSelectedReason('Order Canceled before shipping');
-                                               setReturnOrderDetailId(order.orderItems[0].orderDetailId);
-                                               setReturnProductName(order.orderItems[0].productName);
-                                               setReturnOrderNumber(order.orderNumber);
-                                               returnOrder(order.orderItems[0].orderDetailId,
-                                                'Order Canceled before shipping',order.orderNumber,order.orderItems[0].productName);
+                                              setReturnOrderDetailId(order.orderItems[0].orderDetailId);
+                                              setReturnProductName(order.orderItems[0].productName);
+                                              setReturnOrderNumber(order.orderNumber);
+                                              returnOrder(order.orderItems[0].orderDetailId,
+                                                'Order Canceled before shipping', order.orderNumber, order.orderItems[0].productName);
                                             }
-                                            
-                                        }}>
+
+                                          }}>
                                           {
-                                                        orders._isLoading &&  <img className="login-button-padding" src="/tail-spin.svg" />
-                                                      }
+                                            orders._isLoading && <img className="login-button-padding" src="/tail-spin.svg" />
+                                          }
                                           {order.orderItems[0].shipmentDetails?.shippingDate ? 'Return' : 'Cancel'}
                                         </button></li>
                                     </ul>
@@ -257,8 +278,8 @@ const Orders: React.FunctionComponent = () => {
                                                   orderItem.shipmentDetails?.paymentReturned === 'Yes' ?
                                                     <li>Return Status: <span className="uk-label uk-label-success">Retured</span></li>
                                                     : orderItem.shipmentDetails?.paymentReturned === 'No' ?
-                                                    <li>Return Status: <span className="uk-label uk-label-danger">Declined</span></li>
-                                                    : <li>Return Status: <span className="uk-label uk-label-warning">{orderItem.shipmentDetails?.returnStatus}</span></li>
+                                                      <li>Return Status: <span className="uk-label uk-label-danger">Declined</span></li>
+                                                      : <li>Return Status: <span className="uk-label uk-label-warning">{orderItem.shipmentDetails?.returnStatus}</span></li>
                                                 }
                                               </ul>
                                               :
@@ -269,14 +290,15 @@ const Orders: React.FunctionComponent = () => {
                                                   {
                                                     checkReturnEligibilty(orderItem.shipmentDetails?.deliveryDate, order.orderItems[0].categoryId) &&
                                                     <li><button className="uk-button uk-button-primary uk-button-small" uk-toggle="target: #return-modal"
-                                                    onClick={() => { 
-                                                      setSelectedReason('');
-                                                      dispatch(defaulOrderReturn());
-                                                      setReturnOrderDetailId(orderItem.orderDetailId);
-                                                      setReturnProductName(orderItem.productName);
-                                                      setReturnOrderNumber(order.orderNumber);
-                                                    }}>Return</button></li>
+                                                      onClick={() => {
+                                                        setSelectedReason('');
+                                                        dispatch(defaulOrderReturn());
+                                                        setReturnOrderDetailId(orderItem.orderDetailId);
+                                                        setReturnProductName(orderItem.productName);
+                                                        setReturnOrderNumber(order.orderNumber);
+                                                      }}>Return</button></li>
                                                   }
+                                                  <li>Invoice : <a onClick={() => downloadInvoice(order.orderNumber,orderItem.productName,orderItem.quantity,orderItem.productPrice)}>Download</a></li>
                                                 </ul>
                                                 :
                                                 <ul className="uk-list">
@@ -284,10 +306,10 @@ const Orders: React.FunctionComponent = () => {
                                                   <li>Shipment Date: <span>{orderItem.shipmentDetails?.shippingDate ? orderItem.shipmentDetails?.shippingDate : 'Awaited'}</span></li>
                                                   <li>
                                                     <button className="uk-button uk-button-primary uk-button-small"
-                                                    disabled={orders._isLoading}
-                                                    {...(orderItem.shipmentDetails?.shippingDate && 'uk-toggle="target: #return-modal"')}
+                                                      disabled={orders._isLoading}
+                                                      {...(orderItem.shipmentDetails?.shippingDate && 'uk-toggle="target: #return-modal"')}
                                                       onClick={() => {
-                                                        if(orderItem.shipmentDetails?.shippingDate){
+                                                        if (orderItem.shipmentDetails?.shippingDate) {
                                                           setSelectedReason('');
                                                           setReturnOrderDetailId(orderItem.orderDetailId);
                                                           setReturnProductName(orderItem.productName);
@@ -298,15 +320,15 @@ const Orders: React.FunctionComponent = () => {
                                                           setReturnOrderDetailId(orderItem.orderDetailId);
                                                           setReturnProductName(orderItem.productName);
                                                           setReturnOrderNumber(order.orderNumber);
-                                                          returnOrder(orderItem.orderDetailId,'Order Canceled before shipping',
-                                                          order.orderNumber,orderItem.productName);
+                                                          returnOrder(orderItem.orderDetailId, 'Order Canceled before shipping',
+                                                            order.orderNumber, orderItem.productName);
                                                         }
                                                       }
-                                                    }>
+                                                      }>
                                                       {
-                                                        orders._isLoading &&  <img className="login-button-padding" src="/tail-spin.svg" />
+                                                        orders._isLoading && <img className="login-button-padding" src="/tail-spin.svg" />
                                                       }
-                                                    {orderItem.shipmentDetails?.shippingDate ? 'Return' : 'Cancel'}</button></li>
+                                                      {orderItem.shipmentDetails?.shippingDate ? 'Return' : 'Cancel'}</button></li>
                                                 </ul>
                                           }
                                         </div>
@@ -350,7 +372,7 @@ const Orders: React.FunctionComponent = () => {
           </div>
           <p><span className="uk-badge">Note:</span> You confirm that the product is unused with the original tags intact.</p>
           {
-            showReturnError && 
+            showReturnError &&
             <p className="uk-text-danger">Please select one of the above reason.</p>
           }
           <p className="uk-text-right">

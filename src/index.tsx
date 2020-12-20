@@ -19,7 +19,7 @@ import { CustomerProductDetailsConstainer } from 'components/customer/ProductDet
 import { CustomerCartContainer } from 'components/customer/Cart';
 import { CheckoutContainer } from 'components/customer/Checkout';
 import { HomePageContainer } from 'components/customer/Home';
-import {About, ContactUs, ScrollToTop} from 'components/shared';
+import {About, ContactUs, ReturnPolicy, ScrollToTop} from 'components/shared';
 
 
 
@@ -59,6 +59,9 @@ const app = (
             </Route>
             <Route path="/about" exact>
               <About/>
+            </Route>
+            <Route path="/refundpolicy" exact>
+              <ReturnPolicy/>
             </Route>
           </Switch>
         <MainFooter />

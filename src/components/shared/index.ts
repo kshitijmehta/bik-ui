@@ -7,3 +7,4 @@ export * from './LoadingProductArticle';
 export * from './ScrollToTop';
 export * from './ContactUs';
 export * from './About';
+export * from './ReturnPolicy';

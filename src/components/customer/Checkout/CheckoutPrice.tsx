@@ -225,7 +225,11 @@ const CheckoutPrice: React.FunctionComponent<Props> = (props: Props) => {
       orderId: cartOrderId,
       orderNumber: checkout.data && checkout.data.receipt || '',
       addressId: userData.data && userData.data.addressId || '',
-      couponId: couponData && couponData[0] && couponData[0].couponId
+      couponId: couponData && couponData[0] && couponData[0].couponId,
+      userAddress: userData.data?.addressLineOne + ' ' + userData.data?.addressLineTwo + ' ' +
+      userData.data?.addressLineThree + ' ' + userData.data?.city + ' ' + userData.data?.state +
+      ' ' + userData.data?.pincode + ' ' + userData.data?.country,
+      userName: userData.data?.firstName + ' ' + userData.data?.lastName
     }));
   }
   const proceedWithPayment = () => {
@@ -260,7 +264,11 @@ const CheckoutPrice: React.FunctionComponent<Props> = (props: Props) => {
       otp: enteredOTP,
       orderId: cartOrderId,
       addressId: userData.data && userData.data.addressId || '',
-      couponId: couponData && couponData[0] && couponData[0].couponId
+      couponId: couponData && couponData[0] && couponData[0].couponId,
+      userAddress: userData.data?.addressLineOne + ' ' + userData.data?.addressLineTwo + ' ' +
+      userData.data?.addressLineThree + ' ' + userData.data?.city + ' ' + userData.data?.state +
+      ' ' + userData.data?.pincode + ' ' + userData.data?.country,
+      userName: userData.data?.firstName + ' ' + userData.data?.lastName
     }));
     setPaymentMessage("Please don't close this window while we process your payment.");
     setPaymentSuccess(false);

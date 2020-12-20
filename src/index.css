@@ -8567,3 +8567,22 @@ width: 100%;
 .align-center{
   text-align: center;
 }
+
+.align-right{
+text-align: right;
+}
+
+.download-margin {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+/* @media (max-width:639px) {
+  .lingerie-modal-big\@s {
+      width: 90% !important
+  }
+} */
+
+.lingerie-modal-big {
+  width: 90% !important
+}

@@ -11,10 +11,6 @@ const HomeAboutUs: React.FunctionComponent = () => {
               We are the Bindi tycoon of North India. We supply Bindi to all over India. Our catalog has the complete range of Bindi for every occasion. Apart from Bindi we also have a large collection of footwear,
               Homedecor, Accessories.
                                 </p>
-            <p>
-              We are in the market since 1947. The first shop was opened up at the heart of Delhi, Sadar Bazar. Everysince then our production has grown exponentially. Currently we are the biggest supplier of
-              Traditional wear in India
-                                </p>
 
           </section>
         </div>

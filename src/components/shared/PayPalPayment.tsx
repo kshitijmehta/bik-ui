@@ -43,9 +43,9 @@ const PayPalPayment : React.FunctionComponent<Props> = (props: Props) => {
       if (window.paypalButton) {
         window.paypalButton.close();
         delete window.paypalButton;
-        setTimeout(()=>{
-          history.go(0)
-        })
+        // setTimeout(()=>{
+        //   history.go(0)
+        // })
       }
       window.paypalButton = window.paypal.Buttons({
         createOrder: function () {
@@ -150,13 +150,17 @@ const PayPalPayment : React.FunctionComponent<Props> = (props: Props) => {
     dispatch(savePayPalOrder({
       paypalResponse: {
         orderData,
-        paymentData
+        paymentData,
       },
       orderId: props.cartOrderId,
       addressId: userData.data && userData.data.addressId || '',
       quantity: props.quantityCount,
       couponId: couponData && couponData[0] && couponData[0].couponId,
-      isStandard: props.isStandard
+      isStandard: props.isStandard,
+      userAddress: userData.data?.addressLineOne + ' ' + userData.data?.addressLineTwo + ' ' +
+      userData.data?.addressLineThree + ' ' + userData.data?.city + ' ' + userData.data?.state +
+      ' ' + userData.data?.pincode + ' ' + userData.data?.country,
+      userName: userData.data?.firstName + ' ' + userData.data?.lastName
     }))
   };
 

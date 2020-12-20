@@ -30,7 +30,7 @@ const CustomerProductDetailsConstainer: React.FunctionComponent = () => {
     name, description, productCategoryId,
     subCategory, quantity,
     priceINR, priceUSD, productId, productCategoryName,
-    sizeId, size, colourId, imageNames, imagePaths, productDetailId,
+    sizeId, size, colourId, imageNames, imagePaths, productDetailId, isActive
   } = useSelector<AppState, ProductItem>(state => state.product.singleData || {} as ProductItem);
   const cart = useSelector<AppState, Cart>(state => state.cart);
 
@@ -96,6 +96,8 @@ const CustomerProductDetailsConstainer: React.FunctionComponent = () => {
       imageName={imageNames && imageNames.split(',')[0] || ''}
       imagePath={imagePaths && imagePaths.split(',')[0] || ''}
       cartProductQuantity={cartProductQuantity}
+      isActive={isActive || false}
+      subCategory={subCategory || 0}
       /> 
     : <CustomerProductDetailsLoading/>
   )

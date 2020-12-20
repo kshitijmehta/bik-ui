@@ -1,5 +1,6 @@
-import { ProductSubCategory, ActiveProductCount, ProductSubcategoryProperty, ProductItem, OrderItems, ProductCountList, ActiveProductCountNew } from "types";
+import { ProductSubCategory, ActiveProductCount, ProductSubcategoryProperty, ProductItem, OrderItems, ProductCountList, ActiveProductCountNew, ProductColor, ProductSize, ProductCoupon, Order, OrderShipper, User, Invoice } from "types";
 import { SubCategory, Size } from "reducers";
+import { type } from "os";
 
 const getSubCategoryFromId = (id: Number) => {
   switch (id) {
@@ -9,8 +10,10 @@ const getSubCategoryFromId = (id: Number) => {
       return "Footwear";
     case 3:
       return "Bindi";
-    case 4:
-      return "Handicraft";
+    case 8:
+      return "Home Essential";
+    case 9:
+      return "Cosmetics";
   }
 };
 
@@ -177,6 +180,204 @@ const getPaypalTransactionId = (payaplResponse: any) =>{
     }
   }
   return transactionId;
+};
+
+const convertArrayOfObjectsToCSV = (array : ProductColor[] | ProductSize[] | ProductCoupon[] | ProductSubCategory[] | Order[] | OrderShipper[] | User[]) => {
+  let result: any;
+
+  const columnDelimiter = ',';
+  const lineDelimiter = '\n';
+  let keys = Object.keys(array[0]);
+
+  result = '';
+  result += keys.join(columnDelimiter);
+  result += lineDelimiter;
+
+  array.forEach((item: any) => {
+    let ctr = 0;
+    keys.forEach(key => {
+      if (ctr > 0) result += columnDelimiter;
+
+      result += item[key];
+      
+      ctr++;
+    });
+    result += lineDelimiter;
+  });
+
+  return result;
+}
+
+const downloadCSV = (array: ProductColor[] | ProductSize[] | ProductCoupon[] | ProductSubCategory[] | Order[] | OrderShipper[] | User[]) => {
+  const link = document.createElement('a');
+  let csv = convertArrayOfObjectsToCSV(array);
+  if (csv == null) return;
+
+  const filename = 'basickartOrders.csv';
+
+  if (!csv.match(/^data:text\/csv/i)) {
+    csv = `data:text/csv;charset=utf-8,${csv}`;
+  }
+
+  link.setAttribute('href', encodeURI(csv));
+  link.setAttribute('download', filename);
+  link.click();
+  link.remove();
+}
+
+const returnInvoiceHtml = ({clientName,invoiceDate,clientAddress,invoiceNumber,productName,quantity,totalAmount, rate} : Invoice) => {
+  return `
+  <!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Document</title>
+</head>
+<body style="padding-left: 20px;">
+<table style="border:1px solid #999999;" width="600px" border="0" cellpadding="0" cellspacing="0" class="tb">
+  <tbody>
+    <tr>
+      <td height="35" colspan="4" align="center" class="txt" style="border-bottom:1px solid #ddd; color:#e271a9; font-weight:800; font-family: 'Muli', sans-serif;">BasicKart</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td colspan="2"><table width="600px" border="0" cellspacing="0" cellpadding="0">
+        <tbody>
+          <tr>
+            <td height="49" valign="bottom" style=" font-size:20px; color:#e271a9; font-weight:800; font-family: 'Muli', sans-serif;">Tax Invoice</td>
+            </tr>
+          <tr>
+            <td style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;" >GSTIN : 07CKLPB3987JIZP</td>
+            </tr>
+          <!--<tr>
+            <td style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">Pan No : AA444111FFFF</td>
+            </tr> -->
+          <tr>
+            <td style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">Office : B - 1/32, GROUND FLOOR, MAIN ROAD, N.E.A. KAROL BAGH,,<br> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DELHI, NORTH DELHI, DELHI, 110005</td>
+            </tr>
+          <tr>
+            <td style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">Email : support@basickart.com</td>
+            </tr>
+        </tbody>
+      </table></td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td height="20" colspan="4">&nbsp;</td>
+    </tr>
+    <tr>
+      <td width="30px">&nbsp;</td>
+      <td colspan="2"><table width="600px" border="0" cellpadding="0" cellspacing="0" class="tb1">
+        <tbody>
+          <tr>
+            <td><table style="border:1px solid #999999;" width="600px" border="0" cellspacing="0" cellpadding="0">
+              <tbody>
+                <tr>
+                  <td width="100px" height="25"><strong><span style=" font-size:12px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">Client Name </span></strong></td>
+                  <td width="280px"><span style=" font-size:12px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">${clientName}</span></td>
+                  <td width="120px"><strong><span style=" font-size:12px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">Invoice Date</span></strong></td>
+                  <td width="120px"><span style=" font-size:12px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">${invoiceDate}</span></td>
+                </tr>
+                <tr>
+                  <td height="25"><strong><span style=" font-size:12px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">Address</span></strong></td>
+                  <td><span style=" font-size:12px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">${clientAddress}</span></td>
+                  <td><strong><span style=" font-size:12px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">Invoice Number</span></strong></td>
+                  <td><span style=" font-size:12px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">${invoiceNumber}</span></td>
+                </tr>
+                <tr>
+                  <!--<td height="25"><strong><span style=" font-size:12px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">GSTIN</span></strong></td>
+                  <td><span style=" font-size:12px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">0748MJKKLLL***</span></td>-->
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                </tr>
+              </tbody>
+            </table></td>
+          </tr>
+          <tr>
+            <td height="55" style="border-top:1px solid #999999;">&nbsp;</td>
+          </tr>
+          <tr>
+            <td><table style="border:1px solid #999999;" width="600px" border="1" cellpadding="0" cellspacing="0" class="tb2">
+              <tbody>
+                <tr style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">
+                  <td width="50px" height="30" align="center"><strong>S.N</strong></td>
+                  <td width="350px" align="center"><strong>Description </strong></td>
+                  <td width="30px" align="center"><strong>Qty </strong></td>
+                  <td width="50px" align="center"><strong>Rate </strong></td>
+                  <td width="50px" align="center"><strong>Amount</strong></td>
+                </tr>
+                <tr style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">
+                  <td height="30" align="center">1.</td>
+                  <td align="center">${productName}</td>
+                  <td align="center">${quantity}</td>
+                  <td align="center">${rate}</td>
+                  <td align="center">${totalAmount}</td>
+                </tr>
+           <!--     <tr style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">
+                  <td height="30" align="center">&nbsp;</td>
+                  <td align="center">&nbsp;</td>
+                  <td align="center">&nbsp;</td>
+                  <td align="center"><strong>TOTAL</strong></td>
+                  <td align="center">${totalAmount}</td>
+                </tr> -->
+              </tbody>
+            </table></td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td><table width="600px" border="1" cellpadding="0" cellspacing="0" class="tb2">
+              <tbody>
+                <tr style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">
+                  <td width="55px" height="48" align="center">&nbsp;</td>
+                  <td width="369px" align="center">&nbsp;</td>
+                  <td align="center">Final Amount <br>(Tax Included) :</td>
+                  <td width="52px" align="center">${totalAmount}</td>
+                </tr>
+                <!--<tr style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">
+                  <td height="31" align="center">&nbsp;</td>
+                  <td align="center">&nbsp;</td>
+                  <td align="center"><strong>Grand Total</strong></td>
+                  <td align="center">&nbsp;</td>-->
+                </tr>
+              </tbody>
+            </table></td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+        </tbody>
+      </table></td>
+      <td width="50px">&nbsp;</td>
+    </tr>
+    <tr>
+      <td colspan="4">&nbsp;</td>
+    </tr>
+    <tr>
+      <td height="32">&nbsp;</td>
+      <td style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;" width="300px" height="32"><strong>Date : ${invoiceDate}</strong></td>
+      <td style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;" width="300px" align="right"><strong>For : Online Reciept</strong></td>
+      <td height="32">&nbsp;</td>
+    </tr>
+    <tr>
+      <td colspan="4">&nbsp;</td>
+    </tr>
+    <tr>
+      <td height="72">&nbsp;</td>
+      <td>&nbsp;</td>
+      <td style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;" align="right" valign="bottom"><strong>It is a computer generated invoice and hence does not require any signature note.
+</strong></td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td colspan="4">&nbsp;</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
+  `
 }
 
 export {
@@ -191,5 +392,8 @@ export {
   countHighlightProducts,
   getIconForAdminOrder,
   getPaypalTransactionId,
-  createActiveProductCountList
+  createActiveProductCountList,
+  convertArrayOfObjectsToCSV,
+  downloadCSV,
+  returnInvoiceHtml
 }
