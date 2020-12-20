@@ -24,7 +24,9 @@ interface Order{
   razorpayPaymentId?: string,
   paypalResponse?: Object,
   standardShipping?: boolean,
-  orderItems: OrderItems[]
+  orderItems: OrderItems[],
+  couponDiscount?: string,
+  userDiscount?: string,
 }
 
 export {

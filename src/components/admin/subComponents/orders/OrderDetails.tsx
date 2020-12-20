@@ -5,7 +5,7 @@ import { AppState, getShippers, Shipper, Shipment, updateOrderAdmin } from 'redu
 import { serverImagePath } from 'appConstants';
 import { useHistory } from 'react-router-dom';
 import { NotificationContainer } from 'components/shared';
-import { getPaypalTransactionId } from 'services';
+import { calculateUserDiscount, getPaypalTransactionId } from 'services';
 
 
 const OrderDetails: React.FunctionComponent = () => {
@@ -66,6 +66,17 @@ const OrderDetails: React.FunctionComponent = () => {
         customerName: stateData.userDetails?.firstName
       }, isTrackingChanged))
   }
+
+  const userOrderDiscountPrice = (totalPrice: string, quantity: string, userDiscount?: string, couponDiscount?: string)=> {
+    let mainTotal = Number(totalPrice) * Number(quantity);
+    if(userDiscount){
+      mainTotal = Number(calculateUserDiscount(userDiscount,mainTotal.toString()))
+    } 
+    if(couponDiscount){
+      mainTotal = Number(calculateUserDiscount(couponDiscount,mainTotal.toString()))
+    }
+    return mainTotal
+  }
   return (
     <form className="uk-width-1-1 uk-width-expand@m">
       <div className="uk-card uk-card-default uk-card-small tm-ignore-container">
@@ -98,6 +109,18 @@ const OrderDetails: React.FunctionComponent = () => {
                     <label>
                       <div className="uk-form-label">Payment Mode</div>
                       <span className="uk-text-small">{stateData.paymentMode}</span>
+                    </label>
+                  </div>
+                  <div>
+                    <label>
+                      <div className="uk-form-label">Applied User Discount</div>
+                      <span className="uk-text-small">{stateData.userDiscount || 0}%</span>
+                    </label>
+                  </div>
+                  <div>
+                    <label>
+                      <div className="uk-form-label">Applied Coupon Discount</div>
+                      <span className="uk-text-small">{stateData.couponDiscount || 0}%</span>
                     </label>
                   </div>
                   <div>
@@ -145,7 +168,7 @@ const OrderDetails: React.FunctionComponent = () => {
                     </div>
                     <div>
                       <label>
-                        <div className="uk-form-label">Discount</div>
+                        <div className="uk-form-label">Current Discount</div>
                         <span className="uk-text-small">{stateData.userDetails.discount || 0}%</span>
                       </label>
                     </div>
@@ -243,7 +266,11 @@ const OrderDetails: React.FunctionComponent = () => {
                             <div>
                               <label>
                                 <div className="uk-form-label">Price</div>
-                                <span className="uk-text-small">{product.currency.toString() !== '1' ? '$' : '₹'}{product.productPrice}</span>
+                                <span className="uk-text-small">
+                                  {product.quantity} X {product.productPrice} =  {product.currency.toString() !== '1' ? '$' : '₹'}
+                                  {Number(product.productPrice) * Number(product.quantity)}
+                                  {/* {userOrderDiscountPrice(product.productPrice,product.quantity,stateData.userDiscount, stateData.couponDiscount)} */}
+                                </span>
                               </label>
                             </div>
                           </div>

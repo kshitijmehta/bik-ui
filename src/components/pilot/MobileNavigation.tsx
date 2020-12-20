@@ -7,7 +7,8 @@ import { filterSubcategories } from 'services';
 import { ProductSubCategory } from 'types';
 
 interface Props{
-  mobileNavigationRef: RefObject<HTMLButtonElement>
+  mobileNavigationRef: RefObject<HTMLButtonElement>;
+  searchProduct: (searchText: string, doRedirect?: boolean) => void
 }
 
 const MobileNavigation: React.FunctionComponent<Props> = (props: Props) => {
@@ -19,20 +20,23 @@ const MobileNavigation: React.FunctionComponent<Props> = (props: Props) => {
     history.push('/product/' + categoryPath.toLowerCase() + (subcategoryPath ? '/' + subcategoryPath.toLowerCase() : ''));
     props.mobileNavigationRef.current?.click();
   }
-
+  const {
+    searchProduct
+  } = props;
   const getCategoryAndSubCategory = () => {
+
     return Object.keys(SubCategories).map((key: string, index: number) => {
       return (
         <li className="uk-parent" key={index}>
-          <a onClick={(e) => e.preventDefault()}>{key}</a>
+          <a onClick={(e) => {e.preventDefault();searchProduct('',false)}}>{key}</a>
           <ul className="uk-nav-sub uk-list-divider">
             {
               filterSubcategories(subCategories, Number(SubCategories[key])).map((subcategory: ProductSubCategory, index: number) => {
-                return <li key={index}><a onClick={(e) => navigateTo(e, key, subcategory.code)}>{subcategory.code}</a></li>
+                return <li key={index}><a onClick={(e) => {navigateTo(e, key, subcategory.code);searchProduct('',false)}}>{subcategory.code}</a></li>
               })
             }
             <li className="uk-text-center">
-                    <a onClick={(e) => navigateTo(e, key)} className="uk-link-muted uk-text-uppercase tm-link-to-all"><span>entire ranage</span><span uk-icon="icon: chevron-right; ratio: .75;"></span></a>
+                    <a onClick={(e) => {navigateTo(e, key);searchProduct('',false)}} className="uk-link-muted uk-text-uppercase tm-link-to-all"><span>entire ranage</span><span uk-icon="icon: chevron-right; ratio: .75;"></span></a>
                   </li>
           </ul>
         </li>
@@ -46,7 +50,7 @@ const MobileNavigation: React.FunctionComponent<Props> = (props: Props) => {
         <div className="uk-card uk-card-default uk-card-small tm-shadow-remove">
           <header className="uk-card-header uk-flex uk-flex-middle">
             <div>
-              <a className="uk-link-muted uk-text-bold" onClick={(e) => e.preventDefault()}>Basic Kart</a>
+              <a className="uk-link-muted uk-text-bold" onClick={(e) => {e.preventDefault();searchProduct('',false)}}>Basic Kart</a>
               {/* <div className="uk-text-xsmall uk-text-muted" style={{ marginTop: "-2px" }}>
                 <div>Basic Kart</div>
               </div> */}
@@ -68,8 +72,8 @@ const MobileNavigation: React.FunctionComponent<Props> = (props: Props) => {
                 </ul>
               </li> */}
               {getCategoryAndSubCategory()}
-              <li><a onClick={()=> {history.push('/about');props.mobileNavigationRef.current?.click()}}>About</a></li>
-              <li><a onClick={()=> {history.push('/contactus'); props.mobileNavigationRef.current?.click()}}>Contact</a></li>
+              <li><a onClick={()=> {history.push('/about');props.mobileNavigationRef.current?.click();searchProduct('',false)}}>About</a></li>
+              <li><a onClick={()=> {history.push('/contactus'); props.mobileNavigationRef.current?.click();searchProduct('',false)}}>Contact</a></li>
             </ul>
           </nav>
           {/* <nav className="uk-card-body">

@@ -47,7 +47,7 @@ const Navigation: React.FunctionComponent = () => {
     },400)
   },[cart.data])
 
-  const searchProduct = (searchText: string) => {
+  const searchProduct = (searchText: string, doRedirect = true) => {
     
       if(searchText === ''){
         setEnteredSearchText('');
@@ -70,7 +70,9 @@ const Navigation: React.FunctionComponent = () => {
         searchText: searchText
       }));
       dispatch(getCustomerProducts(0, pageSize, search.categoryId || 0, search.subCategoryId || [], search.colourId || [], search.sizeId || [], search.startPrice || '', search.endPrice||'', userLocation.data || 'IN', searchText || '' , true));
-      history.push('/product/search')
+      if(doRedirect){
+        history.push('/product/search')
+      }
     }
     
   }
@@ -82,7 +84,7 @@ const Navigation: React.FunctionComponent = () => {
     return Object.keys(SubCategories).map((key: string, index: number) => {
       return (
         <li key={index}>
-          <a onClick={(e) => navigateTo(e,key)}>{key}<span className="uk-margin-xsmall-left" uk-icon="icon: chevron-down; ratio: .75;"></span></a>
+          <a onClick={(e) => {navigateTo(e,key);searchProduct('', false)}}>{key}<span className="uk-margin-xsmall-left" uk-icon="icon: chevron-down; ratio: .75;"></span></a>
           <div
             className="uk-navbar-dropdown uk-margin-remove uk-padding-remove-vertical"
             uk-drop="pos: bottom-justify;delay-show: 125;delay-hide: 50;duration: 75;boundary: .tm-navbar-container;boundary-align: true;pos: bottom-justify;flip: x"
@@ -91,7 +93,7 @@ const Navigation: React.FunctionComponent = () => {
               <ul className="uk-nav uk-nav-default uk-column-1-3">
                 {
                   filterSubcategories(subCategories, Number(SubCategories[key])).map((subcategory: ProductSubCategory, index: number) => {
-                    return <li key={index}><a onClick={(e) => navigateTo(e,key,subcategory.code)}>{subcategory.code}</a></li>
+                    return <li key={index}><a onClick={(e) => {navigateTo(e,key,subcategory.code);searchProduct('',false)}}>{subcategory.code}</a></li>
                   })
                 }
               </ul>
@@ -109,22 +111,22 @@ const Navigation: React.FunctionComponent = () => {
   };
   return (
     <header>
-      <MobileNavigation mobileNavigationRef={mobileNavigationRef}/>
+      <MobileNavigation mobileNavigationRef={mobileNavigationRef} searchProduct={searchProduct}/>
       <div className="uk-navbar-container tm-navbar-container" uk-sticky="cls-active: tm-navbar-container-fixed">
         <div className="uk-container" uk-navbar="true">
           <div className="uk-navbar-left">
             <button ref={mobileNavigationRef} className="uk-navbar-toggle uk-hidden@m" uk-toggle="target: #nav-offcanvas" uk-navbar-toggle-icon="true"></button>
-            <a className="uk-navbar-item uk-logo" onClick={() => history.push('/')}><img src="/logo.png" width="67" alt="Logo" /></a>
+            <a className="uk-navbar-item uk-logo" onClick={() => {history.push('/'); searchProduct('',false)}}><img src="/logo.png" width="67" alt="Logo" /></a>
             <nav className="uk-visible@m">
               <ul className="uk-navbar-nav">
                 {
                   getCategoryAndSubCategory()
                 }
-                <li><a onClick={()=> history.push('/about')}>About</a></li>
-                <li><a onClick={()=> history.push('/contactus')}>Contact</a></li>
+                <li><a onClick={()=> {history.push('/about');searchProduct('',false)}}>About</a></li>
+                <li><a onClick={()=> {history.push('/contactus');searchProduct('',false)}}>Contact</a></li>
                 {
                   userData.data?.isAdmin && 
-                  <li><a onClick={()=>history.push('/admin')}>Admin</a></li>
+                  <li><a onClick={()=>{history.push('/admin');searchProduct('',false)}}>Admin</a></li>
                 }
                
               </ul>

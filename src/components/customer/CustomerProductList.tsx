@@ -110,7 +110,7 @@ const CustomerProductList: React.FunctionComponent<Props> = (props: Props) => {
         sizeId:  [],
         startPrice: '',
         subCategoryId:  [],
-        searchText: search.searchText || ''
+        searchText: ''
       }));
     }
   },[]);

@@ -8,7 +8,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { pageSize, serverImagePath, AllowReturn } from 'appConstants';
 import { Invoice, Order, OrderItems, OrderShipper } from 'types';
 import { useHistory } from 'react-router-dom';
-import { getCurrencyIcon, returnInvoiceHtml } from 'services';
+import { calculateUserDiscount, getCurrencyIcon, returnInvoiceHtml } from 'services';
 
 const Orders: React.FunctionComponent = () => {
 
@@ -88,7 +88,7 @@ const Orders: React.FunctionComponent = () => {
     }
   }
 
-  const downloadInvoice = async (invoiceNumber: string, productName: string, quantity: string, totalAmount: string) => {
+  const downloadInvoice = async (invoiceNumber: string, productName: string, quantity: string, totalAmount: string, userDiscount?: string, couponDiscount?: string) => {
     var doc = new jsPDF('l', 'px', 'a4', true)
     const invoiceData: Invoice = {
       clientName: userData.data?.firstName + ' ' + userData.data?.lastName,
@@ -99,11 +99,22 @@ const Orders: React.FunctionComponent = () => {
       invoiceNumber,
       productName,
       quantity,
-      totalAmount,
-      rate: Math.ceil(Number(totalAmount) / Number(quantity)).toString()
+      totalAmount: (userOrderDiscountPrice(totalAmount,quantity, userDiscount, couponDiscount)).toString(),
+      rate: Math.ceil(((userOrderDiscountPrice(totalAmount,quantity, userDiscount, couponDiscount))) / Number(quantity)).toString()
     }
     await doc.html(returnInvoiceHtml(invoiceData), { x: 10, y: 10 })
     doc.save( invoiceNumber+".pdf")
+  }
+
+  const userOrderDiscountPrice = (totalPrice: string, quantity: string, userDiscount?: string, couponDiscount?: string)=> {
+    let mainTotal = Number(totalPrice) * Number(quantity);
+    if(userDiscount){
+      mainTotal = Number(calculateUserDiscount(userDiscount,mainTotal.toString()))
+    } 
+    if(couponDiscount){
+      mainTotal = Number(calculateUserDiscount(couponDiscount,mainTotal.toString()))
+    }
+    return mainTotal
   }
   return (
     <div className="uk-width-1-1 uk-width-expand@m">
@@ -166,7 +177,8 @@ const Orders: React.FunctionComponent = () => {
                               <ul className="uk-list">
                                 <li>Product : <a onClick={() => history.push('/productDetails/' + order.orderItems[0].productId)}>{order.orderItems[0].productName}</a></li>
                                 <li>Quantity: {order.orderItems[0].quantity}</li>
-                                <li>Price: {getCurrencyIcon(userLocation.data || 'IN')} {order.orderItems[0].productPrice}</li>
+                                <li>Price: {getCurrencyIcon(userLocation.data || 'IN')} 
+                                {' ' + userOrderDiscountPrice(order.orderItems[0].productPrice, order.orderItems[0].quantity, order.userDiscount, order.couponDiscount)}</li>
                               </ul>
                             </div>
                           </div>
@@ -200,7 +212,7 @@ const Orders: React.FunctionComponent = () => {
                                             setReturnOrderNumber(order.orderNumber);
                                           }}>Return</button></li>
                                       }
-                                      <li>Invoice : <a onClick={() => downloadInvoice(order.orderNumber,order.orderItems[0].productName,order.orderItems[0].quantity,order.orderItems[0].productPrice)}>Download</a></li>
+                                      <li>Invoice : <a onClick={() => downloadInvoice(order.orderNumber,order.orderItems[0].productName,order.orderItems[0].quantity,order.orderItems[0].productPrice, order.userDiscount, order.couponDiscount)}>Download</a></li>
                                     </ul>
                                     :
                                     <ul className="uk-list">
@@ -264,7 +276,8 @@ const Orders: React.FunctionComponent = () => {
                                           <ul className="uk-list">
                                             <li>Product : <a onClick={() => history.push('/productDetails/' + orderItem.productId)}>{orderItem.productName}</a></li>
                                             <li>Quantity: {orderItem.quantity}</li>
-                                            <li>Price: {getCurrencyIcon(userLocation.data || 'IN')} {orderItem.productPrice}</li>
+                                            <li>Price: {getCurrencyIcon(userLocation.data || 'IN')} 
+                                            {' ' +userOrderDiscountPrice(orderItem.productPrice, orderItem.quantity, order.userDiscount, order.couponDiscount)}</li>
                                           </ul>
                                         </div>
                                       </div>
@@ -298,7 +311,7 @@ const Orders: React.FunctionComponent = () => {
                                                         setReturnOrderNumber(order.orderNumber);
                                                       }}>Return</button></li>
                                                   }
-                                                  <li>Invoice : <a onClick={() => downloadInvoice(order.orderNumber,orderItem.productName,orderItem.quantity,orderItem.productPrice)}>Download</a></li>
+                                                  <li>Invoice : <a onClick={() => downloadInvoice(order.orderNumber,orderItem.productName,orderItem.quantity,orderItem.productPrice, order.userDiscount, order.couponDiscount)}>Download</a></li>
                                                 </ul>
                                                 :
                                                 <ul className="uk-list">
