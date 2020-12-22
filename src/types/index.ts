@@ -17,3 +17,4 @@ export * from './CustomerShippment';
 export * from './SelectedFilters';
 export * from './AdminOrderCsv';
 export * from './Invoice';
+export * from './ContactUs';

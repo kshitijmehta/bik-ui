@@ -42,9 +42,9 @@ const app = (
             <Route path="/admin/:product?/:productId?" exact>
               <MainContainer />
             </Route>
-            <Route path="/product/:product/:filterOn?" exact>
-              <CustomerContainer />
-            </Route>
+            <Route path="/product/:product/:filterOn?" component={CustomerContainer} exact/>
+              {/* <CustomerContainer /> */}
+            {/* </Route> */}
             <Route path="/productDetails/:queryProductId" exact>
               <CustomerProductDetailsConstainer />
             </Route>

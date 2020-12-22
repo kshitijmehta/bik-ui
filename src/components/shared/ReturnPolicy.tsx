@@ -21,7 +21,7 @@ const ReturnPolicy: React.FunctionComponent = () => {
                   <div className="uk-article-body">
                     <h2 className="uk-text-center">Exchange / Return Policy</h2>
                     <p>
-                      Our return policy lasts 10 days from the date of purchase.
+                      Our return policy lasts 10 days from the date of delivery.
                       <br />
                       <br />
                       To complete your return, Please log into your Basickart account and raise a return request in your order summary page.
@@ -33,13 +33,16 @@ const ReturnPolicy: React.FunctionComponent = () => {
                       To be eligible for a return, your item must be:
                       <ul>
                         <li>
-                          Unused and in the same condition that you received it
+                        Unused and in the same condition that you received it
                         </li>
                         <li>
-                          In the original packaging
+                        In the original packaging
                         </li>
                         <li>
-                          Any item not in its original condition is damaged or missing parts for reasons not due to our error will not be exchanged
+                        Any item not in its original condition is damaged or missing parts for reasons not due to our error will not be exchanged.
+                        </li>
+                        <li>
+                        Items such as lingerie, bindi, cosmetics are not returnable.
                         </li>
                       </ul>
 
@@ -50,17 +53,17 @@ const ReturnPolicy: React.FunctionComponent = () => {
                       Once your return is received, we will inspect the product.
                     <br />
                       <br />
-                    If its approved, then your refund will be initiated to your original payment method. A notification will be sent to you confirming the same.In case of cash on delivery our team will contact you and we will reverse the payment as per your directions.
+                      If its approved, then your refund will be initiated to your original payment method. A notification will be sent to you confirming the same.In case of cash on delivery our team will contact you and we will reverse the payment as per your directions.
                     <br /><br />
                     In case of rejection, We will notify you via your registered email or mobile no. You can contact us back for any further communication.
                       </p>
                     <h2 className="uk-text-center">Cancellations </h2>
                     <p>
-                      You can cancel your orders before it is shipped by clicking on CANCEL ITEM
-                      or contacting us, the full invoice amount will be refunded to your original payment method. Once the item is shipped it cannot be cancelled.
+                    You can cancel your orders before it is shipped by clicking on CANCEL ITEM
+                    or contacting us, the full invoice amount will be refunded to your original payment method. Once the item is shipped it cannot be cancelled.
 
                     <br /><br />
-                      For International returns buyer will have to pay for return postage and once we receive the product at our warehouse after inspection we will refund the payment through original payment method.
+                    For International returns buyer will have to pay for return postage and once we receive the product at our warehouse after inspection we will refund the payment through original payment method.
                       </p>
                   </div>
                 </article>

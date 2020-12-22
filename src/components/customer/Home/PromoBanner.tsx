@@ -10,7 +10,7 @@ const PromoBanner: React.FunctionComponent = () => {
         <h2 className="uk-text-center"></h2>
         <div className="uk-child-width-1-2@m tm-ignore-container promo-banner-no-padding" uk-grid="true">
           <div>
-            <div className="uk-card uk-card-default uk-card-hover">
+            <div className="uk-card uk-card-hover">
             <div className="uk-card-media-top">
               <a onClick={() => history.push('/product/lingerie')}>
                 <img src="/lingerie_promo.jpg" alt="promo-lingerie" />
@@ -45,12 +45,14 @@ const PromoBanner: React.FunctionComponent = () => {
               </div>
             </div>
           </div>
+        </div>
+        <div className="uk-child-width-1-1@m tm-ignore-container promo-banner-no-padding" uk-grid="true">
           <div>
             <div className="uk-card uk-card-hover">
-              <div className="uk-card-media-top">
-                <a onClick={() => history.push('/product/cosmetics')}>
-                  <img src="/cosmetic_promo.jpg" alt="promo-cosmetic" />
-                </a>
+            <div className="uk-card-media-top">
+              <a onClick={() => history.push('/product/cosmetics')}>
+                <img src="/cosmetic_promo.jpg" alt="promo-cosmetic" />
+              </a>
               </div>
             </div>
           </div>

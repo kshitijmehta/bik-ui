@@ -34,6 +34,9 @@ const CustomerContainer: React.FunctionComponent = () => {
   const search = useSelector<AppState, Search>(state => state.search.data || {} as Search);
   const preSelectedFilter = useSelector<AppState, PreSelectedFilters>(state => state.preSelectedFilters);
   let querySearch = useLocation().search; 
+  
+  const [ locationKeys, setLocationKeys ] = useState([''])
+  
   useEffect(() => {
     dispatch(getSubCategory());
     dispatch(getSize());
@@ -45,6 +48,27 @@ const CustomerContainer: React.FunctionComponent = () => {
   //     dispatch(defaultPreSelectedFitler());
   //   }
   // })
+
+// Code added to fix back/forward issue for 
+// product list page
+  useEffect(() => {
+    return history.listen(location => {
+      if (history.action === 'PUSH' && location.key) {
+        setLocationKeys([location.key])
+      }
+      if (history.action === 'POP' && location.key) {
+        if (locationKeys[1] === location.key) {
+          setLocationKeys(([ _, ...keys ]) => keys)
+          history.goForward();
+        } else {
+          setLocationKeys((keys) => [ location.key || '', ...keys ])
+          history.goBack();
+        }
+      }
+    })
+  }, [ locationKeys, ])
+
+
 
   useEffect(() => {
     dispatch(setDefaulState());

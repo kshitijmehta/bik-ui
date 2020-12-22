@@ -23,6 +23,7 @@ import { searchReducer, SearchAction, Search } from './Search';
 import { CustomerShippment, customerShippmentReducer, CustomerShippmentAction } from './CustomerShippment';
 import { PreSelectedFilterActions, PreSelectedFilters, PreSelectedFiltersReducer } from './PreSelectedFilters';
 import { AdminOrderCsv, AdminOrderCsvAction, adminOrderCsvReducer } from './AdminOrderCsv';
+import { ContactUs, ContactUsAction, contactUsReducer } from './ContactUs';
 
 
 export type AppState = {
@@ -48,6 +49,7 @@ export type AppState = {
   customerShippment: CustomerShippment;
   preSelectedFilters: PreSelectedFilters;
   adminOrderCsv: AdminOrderCsv;
+  contactUs: ContactUs
 }
 
 const reducers = {
@@ -73,6 +75,7 @@ const reducers = {
   customerShippment: customerShippmentReducer,
   preSelectedFilters: PreSelectedFiltersReducer,
   adminOrderCsv: adminOrderCsvReducer,
+  contactUs: contactUsReducer,
 };
 
 interface AppActions {
@@ -96,6 +99,7 @@ interface AppActions {
   customerShippment: CustomerShippmentAction;
   preSelectedFilters: PreSelectedFilterActions;
   adminOrderCsv: AdminOrderCsvAction;
+  contactUs: ContactUsAction;
 }
 
 declare global {
@@ -134,3 +138,4 @@ export * from './LatestProducts';
 export * from './CustomerShippment';
 export * from './PreSelectedFilters';
 export * from './AdminOrderCsv';
+export * from './ContactUs';

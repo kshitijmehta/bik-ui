@@ -123,7 +123,7 @@ const Navigation: React.FunctionComponent = () => {
                   getCategoryAndSubCategory()
                 }
                 <li><a onClick={()=> {history.push('/about');searchProduct('',false)}}>About</a></li>
-                <li><a onClick={()=> {history.push('/contactus');searchProduct('',false)}}>Contact</a></li>
+                <li><a onClick={()=> {history.push('/contactus');searchProduct('',false)}}>Contact Us</a></li>
                 {
                   userData.data?.isAdmin && 
                   <li><a onClick={()=>{history.push('/admin');searchProduct('',false)}}>Admin</a></li>
