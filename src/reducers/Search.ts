@@ -25,6 +25,7 @@ enum Actions{
   LOADING_SEARCH= 'LOADING_SEARCH',
   SET_SEARCH= 'SET_SEARCH',
   ERROR_SEARCH= 'ERROR_SEARCH',
+  SEARCH_DEFAULT = 'SEARCH_DEFAULT'
 };
 
 const loadingSearch= (data: ProductSearch) => ({
@@ -42,12 +43,16 @@ const errorSearch= (message: string) => ({
   message,
 });
 
+const searchDefault= () => ({
+  type: Actions.SEARCH_DEFAULT
+});
+
 const initialState = {
   _isSuccess: false,
   _isLoading: false,
   _isError: false,
   message: '',
-  data:{}
+  data:{} as ProductSearch
 } as Search
 
 const searchReducer = (state= initialState, action: SearchAction): Search => {
@@ -69,6 +74,18 @@ const searchReducer = (state= initialState, action: SearchAction): Search => {
         message: action.message,
         data: action.data
       }
+    case Actions.SEARCH_DEFAULT:
+      return {
+        ...state,
+        _isSuccess: true,
+        _isError: false,
+        _isLoading: false,
+        message: action.message,
+        data: {
+          ...state.data,
+          searchText:''
+        } as ProductSearch
+      }
     case Actions.ERROR_SEARCH:
       return {
         ...state,
@@ -86,5 +103,6 @@ const searchReducer = (state= initialState, action: SearchAction): Search => {
 
 export {
   searchReducer,
-  setSearch
+  setSearch,
+  searchDefault
 }

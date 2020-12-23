@@ -7,7 +7,7 @@ import { SubCategories, pageSize } from 'appConstants';
 import { filterSubcategories } from 'services';
 import { ProductSubCategory, Search } from 'types';
 import { MobileNavigation, SideCart } from '.';
-import { setSearch } from 'reducers/Search';
+import { searchDefault, setSearch } from 'reducers/Search';
 
 
 
@@ -84,7 +84,7 @@ const Navigation: React.FunctionComponent = () => {
     return Object.keys(SubCategories).map((key: string, index: number) => {
       return (
         <li key={index}>
-          <a onClick={(e) => {navigateTo(e,key);searchProduct('', false)}}>{key}<span className="uk-margin-xsmall-left" uk-icon="icon: chevron-down; ratio: .75;"></span></a>
+          <a onClick={(e) => {navigateTo(e,key);dispatch(searchDefault());setEnteredSearchText('')}}>{key}<span className="uk-margin-xsmall-left" uk-icon="icon: chevron-down; ratio: .75;"></span></a>
           <div
             className="uk-navbar-dropdown uk-margin-remove uk-padding-remove-vertical"
             uk-drop="pos: bottom-justify;delay-show: 125;delay-hide: 50;duration: 75;boundary: .tm-navbar-container;boundary-align: true;pos: bottom-justify;flip: x"
@@ -93,7 +93,7 @@ const Navigation: React.FunctionComponent = () => {
               <ul className="uk-nav uk-nav-default uk-column-1-3">
                 {
                   filterSubcategories(subCategories, Number(SubCategories[key])).map((subcategory: ProductSubCategory, index: number) => {
-                    return <li key={index}><a onClick={(e) => {navigateTo(e,key,subcategory.code);searchProduct('',false)}}>{subcategory.code}</a></li>
+                    return <li key={index}><a onClick={(e) => {navigateTo(e,key,subcategory.code);dispatch(searchDefault());setEnteredSearchText('')}}>{subcategory.code}</a></li>
                   })
                 }
               </ul>
@@ -111,7 +111,7 @@ const Navigation: React.FunctionComponent = () => {
   };
   return (
     <header>
-      <MobileNavigation mobileNavigationRef={mobileNavigationRef} searchProduct={searchProduct}/>
+      <MobileNavigation mobileNavigationRef={mobileNavigationRef} setEnteredSearchText={setEnteredSearchText}/>
       <div className="uk-navbar-container tm-navbar-container" uk-sticky="cls-active: tm-navbar-container-fixed">
         <div className="uk-container" uk-navbar="true">
           <div className="uk-navbar-left">
