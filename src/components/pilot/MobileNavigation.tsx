@@ -38,7 +38,7 @@ const MobileNavigation: React.FunctionComponent<Props> = (props: Props) => {
               })
             }
             <li className="uk-text-center">
-                    <a onClick={(e) => {navigateTo(e, key);setEnteredSearchText('');dispatch(searchDefault())}} className="uk-link-muted uk-text-uppercase tm-link-to-all"><span>entire ranage</span><span uk-icon="icon: chevron-right; ratio: .75;"></span></a>
+                    <a onClick={(e) => {navigateTo(e, key);setEnteredSearchText('');dispatch(searchDefault())}} className="uk-link-muted uk-text-uppercase tm-link-to-all"><span>entire range</span><span uk-icon="icon: chevron-right; ratio: .75;"></span></a>
                   </li>
           </ul>
         </li>
