@@ -253,8 +253,8 @@ const OrderDetails: React.FunctionComponent = () => {
 
                             <div className="uk-divider-vertical">
                               <label>
-                                <div className="uk-form-label">Name</div>
-                                <span className="uk-text-small">{product.productName}</span>
+                                <div className="uk-form-label">Name-(Size)</div>
+                                <span className="uk-text-small">{product.productName} - ({product.size})</span>
                               </label>
                             </div>
                             <div className="uk-divider-vertical">

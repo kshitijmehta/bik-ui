@@ -12,6 +12,7 @@ interface OrderItems{
   productImage: string,
   categoryId: string,
   shipmentDetails?: OrderUpdateAdmin,
+  size?: string,
 }
 
 interface Order{
