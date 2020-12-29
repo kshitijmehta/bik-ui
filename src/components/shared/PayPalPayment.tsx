@@ -15,6 +15,7 @@ interface Props {
   paymentMode: string;
   setContainerIsCard: Dispatch<SetStateAction<boolean>>;
   cartOrderId:number;
+  setNoAddressError: Dispatch<SetStateAction<boolean>>;
 }
 const PayPalPayment : React.FunctionComponent<Props> = (props: Props) => {
 
@@ -73,7 +74,14 @@ const PayPalPayment : React.FunctionComponent<Props> = (props: Props) => {
           window.paypalOrderId = '';
           fundingType(d.fundingSource);
           togglePaymenModal('d');
+          if(userData.data?.addressId){
           await dispatch(getPayPalOrder(props.cartTotalPrice.toString(), props.cartTotalWithShipping.toString(),props.cartOrderId,couponData && couponData[0] && couponData[0].couponId))
+          }else {
+            props.setNoAddressError(true);
+            setTimeout(() => {
+              props.setNoAddressError(false);
+            },5000)
+          }
         },
         onError: function(data: any){
           console.log('error')
@@ -83,7 +91,7 @@ const PayPalPayment : React.FunctionComponent<Props> = (props: Props) => {
       window.paypalButton.render('#paypal-button-container')
     }
     
-  },[props.cartTotalPrice,props.cartTotalWithShipping]);
+  },[props.cartTotalPrice,props.cartTotalWithShipping,userData.data?.addressId]);
 
   useEffect(()=> {
     if(checkout._priceChanged && props.paymentMode === 'paypal') {

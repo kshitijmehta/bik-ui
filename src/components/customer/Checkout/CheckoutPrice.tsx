@@ -245,7 +245,7 @@ const CheckoutPrice: React.FunctionComponent<Props> = (props: Props) => {
       setNoAddressError(true);
       setTimeout(() => {
         setNoAddressError(false);
-      },3000) 
+      },5000) 
     }
   }
 
@@ -394,7 +394,8 @@ const CheckoutPrice: React.FunctionComponent<Props> = (props: Props) => {
                 isStandard={props.shippingType === 'standard'}
                 paymentMode={props.paymentMode}
                 setContainerIsCard={setContainerIsCard}
-                cartOrderId={cartOrderId} />
+                cartOrderId={cartOrderId}
+                setNoAddressError={setNoAddressError} />
             }
             {
               noAddressError && 
