@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from "react-infinite-scroll-component";
 import queryString from 'query-string';
@@ -7,7 +7,7 @@ import { getCustomerProducts, Product, setDefaulState } from 'reducers/Product';
 import { AppState, SubCategory, Size, Colour, addUpdateCart, Cart, UserLocation, PreSelectedFilters, setPreSelectedFilter } from 'reducers';
 import { serverImagePath, pageSize } from 'appConstants';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { ProductItem, CustomerCart, Search } from 'types';
+import { ProductItem, CustomerCart, Search, SelectedFilters } from 'types';
 import { calculateUserDiscount, getCurrencyIcon, showINRUSD } from 'services';
 import { LoadingProductArticle } from 'components/shared';
 import { setSearch } from 'reducers/Search';
@@ -35,7 +35,7 @@ const CustomerProductList: React.FunctionComponent<Props> = (props: Props) => {
   const userLocation = useSelector<AppState, UserLocation>(state => state.userLocation);
   const userData = useSelector((state: AppState) => state.user);
   const search = useSelector<AppState, Search>(state => state.search.data || {} as Search);
-  const preSelectedFilter = useSelector<AppState, PreSelectedFilters>(state => state.preSelectedFilters);
+  const preSelectedFilter = useSelector<AppState, SelectedFilters>(state => state.preSelectedFilters.data || {scrollTill: '0'} as SelectedFilters);
 
 
   // useEffect(() => {
@@ -49,7 +49,7 @@ const CustomerProductList: React.FunctionComponent<Props> = (props: Props) => {
   useEffect(() => {
     if(!products._isLoading && props.categoryId.length >0  && !subCategories._isLoading && !productSize._isLoading && !productColour._isLoading){
       dispatch(setDefaulState());
-      dispatch(getCustomerProducts(0, pageSize, props.categoryId, props.subCategoryId || [], 
+      dispatch(getCustomerProducts( 0, Number(preSelectedFilter.scrollTill) + pageSize, props.categoryId, props.subCategoryId || [], 
         props.colourId || [], props.sizeId || [], props.startPrice || '', props.endPrice||'', 
         userLocation.data || 'IN',
         search.searchText || queryString.parse(window.location.search.split('?')[1])['searchText']?.toString() || '' 
@@ -137,6 +137,18 @@ const CustomerProductList: React.FunctionComponent<Props> = (props: Props) => {
   }, [products._hasMoreProducts]);
 
 
+  useEffect(() => {
+    if(!products._isLoading){
+      if(preSelectedFilter.lastViewedProductId){
+        const lastViewdProduct = document.getElementById(preSelectedFilter.lastViewedProductId);
+        if(lastViewdProduct){
+          lastViewdProduct.scrollIntoView({behavior: "smooth", block: "center"});
+          dispatch(setPreSelectedFilter('lastViewedProductId',''));
+        }
+      }
+    }
+  },[products._isLoading])
+
   const stateData = products.data;
 
   const addToCart = (product: ProductItem)=> {
@@ -209,10 +221,15 @@ const CustomerProductList: React.FunctionComponent<Props> = (props: Props) => {
                     {
                        stateData && stateData.length > 0 ? stateData.map((product, index) => {
                         return (
-                          <article className="tm-product-card" key={index}>
+                          <article className="tm-product-card" key={index} id ={product.productId}>
                             <div className="tm-product-card-media">
                               <div className="tm-ratio tm-ratio-1-1">
-                                <a className="tm-media-box" onClick={()=> history.push('/productDetails/'+ product.productId)}>
+                                <a className="tm-media-box" onClick={()=> {
+                                    dispatch(setPreSelectedFilter('lastViewedProductId',product.productId.toString() || ''));
+                                    dispatch(setPreSelectedFilter('scrollTill',stateData.length.toString() || '0'));
+                                    dispatch(setDefaulState());
+                                    history.push('/productDetails/'+ product.productId)}
+                                  }>
                                   
                                   <figure className="tm-media-box-wrap"><img src={serverImagePath + product.imagePaths} alt={product.imageNames}/></figure>
                                 </a>
@@ -221,7 +238,12 @@ const CustomerProductList: React.FunctionComponent<Props> = (props: Props) => {
                             <div className="tm-product-card-body">
                               <div className="tm-product-card-info">
                                 <div className="uk-text-meta uk-margin-xsmall-bottom">{product.productCategoryName}</div>
-                                <h3 className="tm-product-card-title"><a className="uk-link-heading" onClick={()=> history.push('/productDetails/'+ product.productId)}>{product.name}</a></h3>
+                                <h3 className="tm-product-card-title"><a className="uk-link-heading" onClick={()=> {
+                                    dispatch(setPreSelectedFilter('lastViewedProductId',product.productId.toString() || ''));
+                                    dispatch(setPreSelectedFilter('scrollTill',stateData.length.toString() || '0'));
+                                    dispatch(setDefaulState());
+                                    history.push('/productDetails/'+ product.productId)}}>
+                                      {product.name}</a></h3>
                               </div>
                               <div className="tm-product-card-shop">
                                 <div className="tm-product-card-prices">

@@ -6,6 +6,8 @@ interface SelectedFilters {
   endPrice: string;
   subcategoryname : string;
   searchText : string;
+  scrollTill?: string;
+  lastViewedProductId?: string;
 }
 
 export {

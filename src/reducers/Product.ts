@@ -278,7 +278,7 @@ const getCustomerProducts = (
 
     if (response.status === HttpStatusCode.OK) {
       const res = response.data as ProductResponse;
-      const _hasMoreProducts = res.data && res.data.length === pageSize || false;
+      const _hasMoreProducts = res.data && res.data.length === pageSize || (offset === 0 && limit > pageSize)   || false;
       if(freshData){
         dispatch(setProducts(res.data || [], _hasMoreProducts))
       }else {

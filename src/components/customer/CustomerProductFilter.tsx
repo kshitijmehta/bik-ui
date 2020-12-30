@@ -9,7 +9,7 @@ import { pageSize } from 'appConstants';
 import { setDefaulState } from 'reducers/Product';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import queryString from 'query-string';
-import { setSearch } from 'reducers/Search';
+import { Search, setSearch } from 'reducers/Search';
 // import { getCustomerProducts } from 'reducers/Product';
 
 
@@ -31,6 +31,7 @@ const CustomerProductFilter: React.FunctionComponent<Props> = (props: Props) => 
   const dispatch = useDispatch();
   const { product } = useParams();
   const preSelectedFilter = useSelector<AppState, PreSelectedFilters>(state => state.preSelectedFilters);
+  const search = useSelector<AppState, Search>(state => state.search || {} as Search);
   const [filterColourId, setFilterColourId] = useState<number[]>([]);
   const [filterSizeId, setFilterSizeId] = useState<number[]>([]);
   const [filterSubCategory, setFilterSubCategory] = useState<number[]>([]);
@@ -132,6 +133,13 @@ const CustomerProductFilter: React.FunctionComponent<Props> = (props: Props) => 
     props.setEndPrice('');
   }
 
+  useEffect(() => {
+    if(search._navigationReset){
+      restFilter()
+    }
+
+  },[search._navigationReset])
+
   const convertQueryParamsToNumber = (query: string | undefined) => {
     if(query){
       return query.split(',').map((id) => Number(id));
@@ -163,7 +171,9 @@ const CustomerProductFilter: React.FunctionComponent<Props> = (props: Props) => 
       startPrice:startPriceFilter,
       endPrice:endPriceFilter,
       subcategoryname: product.toString().toLowerCase(),
-      searchText: filterPrams['searchText']?.toString() || ''
+      searchText: filterPrams['searchText']?.toString() || '',
+      scrollTill: preSelectedFilter.data?.scrollTill || '0',
+      lastViewedProductId: preSelectedFilter.data?.lastViewedProductId || '',
     }))
     props.setColourId([...colourFilter]);
     props.setSizeId([...sizeFilter]);

@@ -17,6 +17,7 @@ export interface Search {
   readonly _isLoading: boolean;
   readonly _isError: boolean;
   readonly _isSuccess: boolean;
+  readonly _navigationReset?: boolean;
   readonly message?: string;
   readonly data?: ProductSearch;
 };
@@ -51,6 +52,7 @@ const initialState = {
   _isSuccess: false,
   _isLoading: false,
   _isError: false,
+  _navigationReset: false,
   message: '',
   data:{} as ProductSearch
 } as Search
@@ -63,6 +65,7 @@ const searchReducer = (state= initialState, action: SearchAction): Search => {
         _isSuccess: false,
         _isError: false,
         _isLoading: true,
+        _navigationReset: false,
         data: action.data,
       }
     case Actions.SET_SEARCH:
@@ -71,6 +74,7 @@ const searchReducer = (state= initialState, action: SearchAction): Search => {
         _isSuccess: true,
         _isError: false,
         _isLoading: false,
+        _navigationReset: false,
         message: action.message,
         data: action.data
       }
@@ -80,6 +84,7 @@ const searchReducer = (state= initialState, action: SearchAction): Search => {
         _isSuccess: true,
         _isError: false,
         _isLoading: false,
+        _navigationReset: true,
         message: action.message,
         data: {
           ...state.data,
@@ -92,6 +97,7 @@ const searchReducer = (state= initialState, action: SearchAction): Search => {
         _isSuccess: false,
         _isError: true,
         _isLoading: false,
+        _navigationReset: false,
         message: action.message,
       }
     default:

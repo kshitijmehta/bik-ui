@@ -23,6 +23,8 @@ const initialState = {
     endPrice:'',
     subcategoryname: '',
     searchText:'',
+    scrollTill: '0',
+    lastViewedProductId: '',
   } as SelectedFilters
 } as PreSelectedFilters;
 
@@ -84,6 +86,8 @@ const PreSelectedFiltersReducer = (state= initialState, actions: PreSelectedFilt
           endPrice:'',
           subcategoryname: '',
           searchText:'',
+          scrollTill: '0',
+          lastViewedProductId: '',
         } as SelectedFilters
       }
     default:
