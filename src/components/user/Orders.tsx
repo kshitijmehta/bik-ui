@@ -62,10 +62,16 @@ const Orders: React.FunctionComponent = () => {
     if (shipper && trackingNumber) {
       const shipperInfo = shipperData.filter(({ shipperId }) => shipperId === shipper);
       if (shipperInfo[0]) {
-        return <a target="_blank" href={shipperInfo[0].trackingLink + trackingNumber}>Track Package</a>
+        return (
+          <>
+            <li>Shipper Link: <a target="blank" href={shipperInfo[0].trackingLink} className="uk-text-capitalize">{shipperInfo[0].shipperName}</a></li>
+            <li>Tracking Number: <span>{trackingNumber}</span></li>
+          </>
+        )
+        // return <a target="_blank" href={shipperInfo[0].trackingLink + trackingNumber}>Track Package</a>
       }
     }
-    return 'Order Recived'
+    return <li>Status: <span>Order Recived</span></li>
   }
 
   const checkReturnEligibilty = (deliveryDate: string, categoryId: string) => {
@@ -216,7 +222,8 @@ const Orders: React.FunctionComponent = () => {
                                     </ul>
                                     :
                                     <ul className="uk-list">
-                                      <li>Status : {getShipmentLink(order.orderItems[0].shipmentDetails?.shipper, order.orderItems[0].shipmentDetails?.trackingNumber)}</li>
+                                      {getShipmentLink(order.orderItems[0].shipmentDetails?.shipper, order.orderItems[0].shipmentDetails?.trackingNumber)}
+                                      {/* <li>Status : {getShipmentLink(order.orderItems[0].shipmentDetails?.shipper, order.orderItems[0].shipmentDetails?.trackingNumber)}</li> */}
                                       <li>Shipment Date: <span>{order.orderItems[0].shipmentDetails?.shippingDate ? order.orderItems[0].shipmentDetails?.shippingDate : 'Awaited'}</span></li>
                                       <li>
                                         <button className="uk-button uk-button-primary uk-button-small"
@@ -315,7 +322,8 @@ const Orders: React.FunctionComponent = () => {
                                                 </ul>
                                                 :
                                                 <ul className="uk-list">
-                                                  <li>Status : {getShipmentLink(orderItem.shipmentDetails?.shipper, orderItem.shipmentDetails?.trackingNumber)}</li>
+                                                  {getShipmentLink(order.orderItems[0].shipmentDetails?.shipper, order.orderItems[0].shipmentDetails?.trackingNumber)}
+                                                  {/* <li>Status : {getShipmentLink(orderItem.shipmentDetails?.shipper, orderItem.shipmentDetails?.trackingNumber)}</li> */}
                                                   <li>Shipment Date: <span>{orderItem.shipmentDetails?.shippingDate ? orderItem.shipmentDetails?.shippingDate : 'Awaited'}</span></li>
                                                   <li>
                                                     <button className="uk-button uk-button-primary uk-button-small"
