@@ -322,7 +322,7 @@ const Orders: React.FunctionComponent = () => {
                                                 </ul>
                                                 :
                                                 <ul className="uk-list">
-                                                  {getShipmentLink(order.orderItems[0].shipmentDetails?.shipper, order.orderItems[0].shipmentDetails?.trackingNumber)}
+                                                  {getShipmentLink(orderItem.shipmentDetails?.shipper, orderItem.shipmentDetails?.trackingNumber)}
                                                   {/* <li>Status : {getShipmentLink(orderItem.shipmentDetails?.shipper, orderItem.shipmentDetails?.trackingNumber)}</li> */}
                                                   <li>Shipment Date: <span>{orderItem.shipmentDetails?.shippingDate ? orderItem.shipmentDetails?.shippingDate : 'Awaited'}</span></li>
                                                   <li>
