@@ -1,4 +1,4 @@
-const apiServerHost = 'https://api.basickart.com/';
+const apiServerHost = 'https://basickart.com/v1/';
 
 const scaledServerImagePath = apiServerHost + 'images/scaledImages/';
 const originalServerImagePath = apiServerHost + 'images/unscaledImages/'
