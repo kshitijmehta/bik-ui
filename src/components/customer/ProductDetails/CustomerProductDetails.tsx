@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getProduct, setDefaulState } from 'reducers/Product';
 import { AppState, addUpdateCart, Cart, UserLocation } from 'reducers';
 import { ProductItem, CustomerCart } from 'types';
-import { serverImagePath } from 'appConstants';
+import { scaledServerImagePath } from 'appConstants';
 import { CustomerProductDetailsLoading } from '.';
 import { calculateUserDiscount, getCurrencyIcon, showINRUSD } from 'services';
 import { QuickProductList } from 'components/shared';

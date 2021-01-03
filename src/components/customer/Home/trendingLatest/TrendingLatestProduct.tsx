@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState, UserLocation, Cart, addUpdateCart } from 'reducers';
 import { ProductItem, CustomerCart } from 'types';
-import { serverImagePath } from 'appConstants';
+import { scaledServerImagePath } from 'appConstants';
 import { getCurrencyIcon, calculateUserDiscount, showINRUSD } from 'services';
 import { LoadingProductArticle } from 'components/shared';
 
@@ -63,7 +63,7 @@ const TrendingLatestProducts: React.FunctionComponent<Props> = (props: Props) =>
               <div className="tm-product-card-media">
                 <div className='tm-ratio tm-ratio-1-1'>
                   <a className="tm-media-box" onClick={() => {history.push('/productDetails/' + product.productId) }}>
-                    <figure className="tm-media-box-wrap"><img src={serverImagePath + product.imagePaths} alt={product.imageNames} /></figure>
+                    <figure className="tm-media-box-wrap"><img src={scaledServerImagePath + product.imagePaths} alt={product.imageNames} /></figure>
                   </a>
                 </div>
               </div>

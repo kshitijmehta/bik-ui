@@ -5,7 +5,7 @@ import queryString from 'query-string';
 
 import { getCustomerProducts, Product, setDefaulState } from 'reducers/Product';
 import { AppState, SubCategory, Size, Colour, addUpdateCart, Cart, UserLocation, PreSelectedFilters, setPreSelectedFilter } from 'reducers';
-import { serverImagePath, pageSize } from 'appConstants';
+import { scaledServerImagePath, pageSize } from 'appConstants';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { ProductItem, CustomerCart, Search, SelectedFilters } from 'types';
 import { calculateUserDiscount, getCurrencyIcon, showINRUSD } from 'services';
@@ -231,7 +231,7 @@ const CustomerProductList: React.FunctionComponent<Props> = (props: Props) => {
                                     history.push('/productDetails/'+ product.productId)}
                                   }>
                                   
-                                  <figure className="tm-media-box-wrap"><img src={serverImagePath + product.imagePaths} alt={product.imageNames}/></figure>
+                                  <figure className="tm-media-box-wrap"><img src={scaledServerImagePath + product.imagePaths} alt={product.imageNames}/></figure>
                                 </a>
                               </div>
                             </div>

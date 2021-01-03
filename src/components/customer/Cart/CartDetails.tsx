@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getCart, AppState, Cart, deleteCartItem, addUpdateCart, UserLocation, validateCoupon, Coupon, updateCartQuantity } from 'reducers';
-import { serverImagePath } from 'appConstants';
+import { scaledServerImagePath } from 'appConstants';
 import { CustomerCart } from 'types';
 import { useHistory } from 'react-router-dom';
 import { getCurrencyIcon } from 'services';
@@ -160,7 +160,7 @@ const CartDetails: React.FunctionComponent = () => {
                     <div className="uk-width-1-3">
                       <div className="tm-ratio tm-ratio-4-3">
                         <a className="tm-media-box" onClick={() => history.push('/productDetails/' + cartItem.productId)}>
-                          <figure className="tm-media-box-wrap"><img src={serverImagePath + cartItem.productImagePath} alt='Apple MacBook Pro 15" Touch Bar MPTU2LL/A 256GB (Silver)' /></figure>
+                          <figure className="tm-media-box-wrap"><img src={scaledServerImagePath + cartItem.productImagePath} alt={cartItem.productImagePath}/></figure>
                         </a>
                       </div>
                     </div>

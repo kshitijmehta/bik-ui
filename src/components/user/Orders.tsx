@@ -5,7 +5,7 @@ import jsPDF from 'jspdf';
 
 import { AppState, UserLocation, getShippers, UserInformation } from 'reducers';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { pageSize, serverImagePath, AllowReturn } from 'appConstants';
+import { pageSize, scaledServerImagePath, AllowReturn } from 'appConstants';
 import { Invoice, Order, OrderItems, OrderShipper } from 'types';
 import { useHistory } from 'react-router-dom';
 import { calculateUserDiscount, getCurrencyIcon, returnInvoiceHtml } from 'services';
@@ -173,7 +173,7 @@ const Orders: React.FunctionComponent = () => {
                           <div className="uk-card-media-left">
                             <div className="tm-ratio tm-ratio-16-9">
                               <a className="tm-media-box" onClick={() => history.push('/productDetails/' + order.orderItems[0].productId)}>
-                                <figure className="tm-media-box-wrap"><img src={serverImagePath + order.orderItems[0].productImage} alt={order.orderItems[0].productImage} /> </figure>
+                                <figure className="tm-media-box-wrap"><img src={scaledServerImagePath + order.orderItems[0].productImage} alt={order.orderItems[0].productImage} /> </figure>
                               </a>
                             </div>
                           </div>
@@ -274,7 +274,7 @@ const Orders: React.FunctionComponent = () => {
                                       <div className="uk-card-media-left">
                                         <div className="tm-ratio tm-ratio-16-9">
                                           <a className="tm-media-box" onClick={() => history.push('/productDetails/' + orderItem.productId)}>
-                                            <figure className="tm-media-box-wrap"><img src={serverImagePath + orderItem.productImage} alt={orderItem.productImage} /> </figure>
+                                            <figure className="tm-media-box-wrap"><img src={scaledServerImagePath + orderItem.productImage} alt={orderItem.productImage} /> </figure>
                                           </a>
                                         </div>
                                       </div>

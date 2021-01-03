@@ -1,7 +1,7 @@
 import React from 'react';
 import { ProductItem, CustomerCart } from 'types';
 import { useHistory } from 'react-router-dom';
-import { serverImagePath } from 'appConstants';
+import { scaledServerImagePath } from 'appConstants';
 import { getCurrencyIcon, calculateUserDiscount, showINRUSD } from 'services';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState, UserLocation, Cart, addUpdateCart } from 'reducers';
@@ -72,7 +72,7 @@ const QuickProductList: React.FunctionComponent<Props> = (props: Props) => {
                         <div className="tm-product-card-media">
                           <div className="tm-ratio tm-ratio-4-3">
                             <a className="tm-media-box" onClick={() => {window.scrollTo({top:0, behavior:'smooth'}); history.push('/productDetails/' + product.productId)}}>
-                              <figure className="tm-media-box-wrap"><img src={serverImagePath + product.imagePaths} alt={product.imageNames} /></figure>
+                              <figure className="tm-media-box-wrap"><img src={scaledServerImagePath + product.imagePaths} alt={product.imageNames} /></figure>
                             </a>
                           </div>
                         </div>

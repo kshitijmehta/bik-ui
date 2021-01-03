@@ -1,6 +1,6 @@
 import React, { RefObject, useEffect, useState } from 'react';
 import { CustomerCart, ProductCoupon } from 'types';
-import { serverImagePath } from 'appConstants';
+import { scaledServerImagePath } from 'appConstants';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteCartItem, AppState, UserLocation } from 'reducers';
@@ -77,7 +77,7 @@ const SideCart: React.FunctionComponent<Props> = (props: Props) => {
                           <div className="uk-width-1-4">
                             <div className="tm-ratio tm-ratio-4-3">
                               <a className="tm-media-box" onClick={() => {history.push('/productDetails/' + cart.productId); sideCartRef.current?.click()}}>
-                                <figure className="tm-media-box-wrap"><img src={serverImagePath + cart.productImagePath} alt={cart.productImage} /></figure>
+                                <figure className="tm-media-box-wrap"><img src={scaledServerImagePath + cart.productImagePath} alt={cart.productImage} /></figure>
                               </a>
                             </div>
                           </div>
@@ -114,7 +114,7 @@ const SideCart: React.FunctionComponent<Props> = (props: Props) => {
                       <div className="uk-width-1-4">
                         <div className="tm-ratio tm-ratio-4-3">
                           {/* <a className="tm-media-box">
-                            <figure className="tm-media-box-wrap"><img src={serverImagePath + cart.productImagePath} alt={cart.productImage} /></figure>
+                            <figure className="tm-media-box-wrap"><img src={scaledServerImagePath + cart.productImagePath} alt={cart.productImage} /></figure>
                           </a> */}
                         </div>
                       </div>

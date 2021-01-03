@@ -1,6 +1,6 @@
 import React from 'react';
 import { AdminProductList } from 'components/admin/AdminProductList';
-import { serverImagePath, SubProducts } from 'appConstants';
+import { scaledServerImagePath, SubProducts } from 'appConstants';
 import { ProductItem } from 'types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
@@ -151,7 +151,7 @@ const ExpandableComponent: React.FunctionComponent<any> = ({ data }) => {
               <div className="tm-product-card-media">
                 <div className="tm-ratio tm-ratio-16-9">
                   <div className="tm-media-box">
-                  <figure className="tm-media-box-wrap"><img src={serverImagePath + listSingleImage} alt={listSingleImage} /></figure>
+                  <figure className="tm-media-box-wrap"><img src={scaledServerImagePath + listSingleImage} alt={listSingleImage} /></figure>
                   </div>
                 </div>
               </div>

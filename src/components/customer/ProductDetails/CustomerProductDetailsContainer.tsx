@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getProduct } from 'reducers/Product';
 import { AppState, Cart, getRelatedProduct } from 'reducers';
 import { ProductItem } from 'types';
-import { serverImagePath } from 'appConstants';
+import { originalServerImagePath, scaledServerImagePath } from 'appConstants';
 import { CustomerProductDetails } from './CustomerProductDetails';
 import { CustomerProductDetailsLoading } from './CustomerProductDetailsLoading';
 
@@ -41,8 +41,8 @@ const CustomerProductDetailsConstainer: React.FunctionComponent = () => {
   
         setMainSlider(imagePath.map((path: string, index: number) => {
           return <li key={index}>
-            <a className="uk-card-body tm-media-box tm-media-box-zoom" href={serverImagePath + path}>
-              <figure className="tm-media-box-wrap"><img src={serverImagePath + path} alt={imageName[index]} /></figure>
+            <a className="uk-card-body tm-media-box tm-media-box-zoom" href={originalServerImagePath + path}>
+              <figure className="tm-media-box-wrap"><img src={scaledServerImagePath + path} alt={imageName[index]} /></figure>
             </a>
           </li>
         }))
@@ -52,7 +52,7 @@ const CustomerProductDetailsConstainer: React.FunctionComponent = () => {
             <div className="tm-ratio tm-ratio-1-1">
               <a className="tm-media-box tm-media-box-frame" href="#">
                 <figure className="tm-media-box-wrap">
-                  <img src={serverImagePath + path} alt={imageName[index]} />
+                  <img src={scaledServerImagePath + path} alt={imageName[index]} />
                 </figure>
               </a>
             </div>

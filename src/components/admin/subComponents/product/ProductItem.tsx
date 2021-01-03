@@ -8,7 +8,7 @@ import {
   Colour, Product, addUpdateProduct, setDefaulState, getProduct
 } from 'reducers';
 import { ProductSubCategory, ProductSize, ProductItem as ProductItemType, sizeColourQuantityComboObject } from 'types';
-import { serverImagePath, SubCategories } from 'appConstants';
+import { scaledServerImagePath, SubCategories } from 'appConstants';
 import { filterSubcategories } from 'services';
 import { useHistory } from 'react-router-dom';
 
@@ -169,7 +169,7 @@ const ProductItem: React.FunctionComponent = () => {
 
       return filePaths.map((path: string, index: number) => {
         return <div key={index} className="uk-inline product-uploader-container">
-          <img key={index} src={serverImagePath + path} alt={fileNames[index]} />
+          <img key={index} src={scaledServerImagePath + path} alt={fileNames[index]} />
           <div className="uk-overlay-primary uk-position-cover">
             <div className="uk-position-center">
               <span uk-icon="icon: close" onClick={() => removeCurrentImage(fileNames[index], path)} />

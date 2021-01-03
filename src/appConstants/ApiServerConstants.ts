@@ -1,8 +1,10 @@
 const apiServerHost = 'https://api.basickart.com/';
 
-const serverImagePath = apiServerHost + 'scaledImages/'
+const scaledServerImagePath = apiServerHost + 'images/scaledImages/';
+const originalServerImagePath = apiServerHost + 'images/unscaledImages/'
 
 export {
   apiServerHost,
-  serverImagePath
+  scaledServerImagePath,
+  originalServerImagePath
 }

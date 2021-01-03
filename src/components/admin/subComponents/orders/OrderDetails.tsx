@@ -2,7 +2,7 @@ import React, { useEffect, useState, Fragment } from 'react';
 import { Order, OrderUpdateAdmin } from 'types';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState, getShippers, Shipper, Shipment, updateOrderAdmin } from 'reducers';
-import { serverImagePath } from 'appConstants';
+import { scaledServerImagePath } from 'appConstants';
 import { useHistory } from 'react-router-dom';
 import { NotificationContainer } from 'components/shared';
 import { calculateUserDiscount, getPaypalTransactionId } from 'services';
@@ -244,10 +244,10 @@ const OrderDetails: React.FunctionComponent = () => {
                                 <div className="uk-form-label">Product Image</div>
                                 <div className="tm-ratio tm-ratio-16-9">
                                   <a className="tm-media-box" onClick={() => history.push('/productDetails/' + product.productId)}>
-                                    <figure className="tm-media-box-wrap"><img src={serverImagePath + product.productImage} alt={product.productImage} /></figure>
+                                    <figure className="tm-media-box-wrap"><img src={scaledServerImagePath + product.productImage} alt={product.productImage} /></figure>
                                   </a>
                                 </div>
-                                {/* <img src={serverImagePath + product.productImage} alt={product.productImage} /> */}
+                                {/* <img src={scaledServerImagePath + product.productImage} alt={product.productImage} /> */}
                               </label>
                             </div>
 
