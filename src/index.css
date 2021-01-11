@@ -8586,3 +8586,23 @@ text-align: right;
 .lingerie-modal-big {
   width: 90% !important
 }
+
+.admin-single-invoice {
+  margin-left: 20px;
+}
+
+.admin-complete-invoice {
+  cursor: pointer;
+}
+
+.admin-complete-invoice :hover {
+  color: #ff4dc4;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.shop-policy {
+  text-align: justify !important
+}

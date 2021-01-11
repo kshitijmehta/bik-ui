@@ -3,12 +3,21 @@ interface Invoice {
  readonly invoiceDate: string,
  readonly clientAddress: string,
  readonly invoiceNumber: string,
- readonly productName: string,
- readonly quantity: string,
- readonly totalAmount: string,
- readonly rate: string,
+ readonly userDiscount?: string,
+ readonly couponDiscount?: string,
+ readonly productList: InvoiceItems[],
+ readonly isInternaltionalOrder: boolean,
+ readonly isInternaltionalOrderStandard: boolean,
+}
+
+interface InvoiceItems {
+  readonly productName: string,
+  readonly quantity: string,
+  readonly productPrice: string,
+  readonly quantity: string,
 }
 
 export {
-  Invoice
+  Invoice,
+  InvoiceItems
 }

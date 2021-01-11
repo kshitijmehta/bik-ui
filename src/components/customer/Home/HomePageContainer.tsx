@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getTrendingProduct, getLatestProduct, AppState } from 'reducers';
 import { SubBanner } from './SubBanner';
 import { Banner } from './Banner';
-import { TrendingLatestContainer } from './trendingLatest';
 import { PromoBanner } from './PromoBanner';
 import { FooterBanner } from '.';
 
@@ -22,7 +21,6 @@ const HomePageContainer: React.FunctionComponent = () => {
       <Banner/>
       <SubBanner/>
       <PromoBanner/>
-      <TrendingLatestContainer/>
       <FooterBanner/>
     </main>
   )

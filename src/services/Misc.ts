@@ -1,6 +1,7 @@
-import { ProductSubCategory, ActiveProductCount, ProductSubcategoryProperty, ProductItem, OrderItems, ProductCountList, ActiveProductCountNew, ProductColor, ProductSize, ProductCoupon, Order, OrderShipper, User, Invoice } from "types";
+import { ProductSubCategory, ActiveProductCount, ProductSubcategoryProperty, ProductItem, OrderItems, ProductCountList, ActiveProductCountNew, ProductColor, ProductSize, ProductCoupon, Order, OrderShipper, User, Invoice, InvoiceItems } from "types";
 import { SubCategory, Size } from "reducers";
 import { type } from "os";
+import { number } from "prop-types";
 
 const getSubCategoryFromId = (id: Number) => {
   switch (id) {
@@ -36,7 +37,7 @@ const calculateUserDiscount = (discount: string, price: string) => {
 };
 
 const calculateUserDiscountPrice = (discount: string, price: string) => {
-  return Math.ceil(Number(price) * (Number(discount)) / 100).toString();
+  return Math.floor(Number(price) * (Number(discount)) / 100).toString();
 };
 
 const getCurrencyIcon = (currency: string) => {
@@ -225,7 +226,25 @@ const downloadCSV = (array: ProductColor[] | ProductSize[] | ProductCoupon[] | P
   link.remove();
 }
 
-const returnInvoiceHtml = ({clientName,invoiceDate,clientAddress,invoiceNumber,productName,quantity,totalAmount, rate} : Invoice) => {
+const returnInvoiceHtml = ({clientName,invoiceDate,clientAddress,invoiceNumber, productList,userDiscount, couponDiscount, isInternaltionalOrder, isInternaltionalOrderStandard} : Invoice) => {
+  let totalCalculatedAmount = 0;
+  let shippingCost = 0;
+  let totalQuantity = 0;
+  let totalCalculatedAmountBeforeDiscount = 0;
+  productList.forEach((product: InvoiceItems) => {
+    totalCalculatedAmount += Number(product.productPrice) * Number(product.quantity)
+    totalQuantity += Number(product.quantity)
+  });
+  totalCalculatedAmountBeforeDiscount = totalCalculatedAmount;
+  totalCalculatedAmount = userOrderDiscountPrice(totalCalculatedAmount.toString(),'1', userDiscount, couponDiscount);
+  if(isInternaltionalOrder){
+    if(isInternaltionalOrderStandard){
+      shippingCost = 10 + ((totalQuantity -1) * 6)
+    } else {
+      shippingCost = 18 + ((totalQuantity -1) * 10)
+    }
+  }
+  totalCalculatedAmount += shippingCost;
   return `
   <!doctype html>
 <html>
@@ -306,19 +325,28 @@ const returnInvoiceHtml = ({clientName,invoiceDate,clientAddress,invoiceNumber,p
                   <td width="50px" align="center"><strong>Rate </strong></td>
                   <td width="50px" align="center"><strong>Amount</strong></td>
                 </tr>
-                <tr style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">
-                  <td height="30" align="center">1.</td>
-                  <td align="center">${productName}</td>
-                  <td align="center">${quantity}</td>
-                  <td align="center">${rate}</td>
-                  <td align="center">${totalAmount}</td>
-                </tr>
+                ${
+                  productList.map((product: any, index: number) => {
+                    return (
+                      `
+                      <tr style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">
+                        <td height="30" align="center">${index + 1}</td>
+                        <td align="center">${product.productName}</td>
+                        <td align="center">${product.quantity}</td>
+                        <td align="center">${Math.ceil(product.productPrice)}</td>
+                        <td align="center">${Number(product.quantity) * Math.ceil(product.productPrice)}</td>
+              
+                      </tr>
+                      `
+                    )
+                  })
+                }
            <!--     <tr style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">
                   <td height="30" align="center">&nbsp;</td>
                   <td align="center">&nbsp;</td>
                   <td align="center">&nbsp;</td>
                   <td align="center"><strong>TOTAL</strong></td>
-                  <td align="center">${totalAmount}</td>
+                  <td align="center">${totalCalculatedAmount}</td>
                 </tr> -->
               </tbody>
             </table></td>
@@ -329,11 +357,44 @@ const returnInvoiceHtml = ({clientName,invoiceDate,clientAddress,invoiceNumber,p
           <tr>
             <td><table width="600px" border="1" cellpadding="0" cellspacing="0" class="tb2">
               <tbody>
+              ${
+                userDiscount && 
+                `
+                <tr style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">
+                  <td width="55px" height="48" align="center">&nbsp;</td>
+                  <td width="369px" align="center">Customer Discount</td>
+                  <td align="center">${userDiscount}%</td>
+                  <td width="52px" align="center"> - ${calculateUserDiscountPrice(userDiscount,totalCalculatedAmountBeforeDiscount.toString())}</td>
+                </tr>
+                `
+              }
+              ${
+                couponDiscount ? 
+                `
+                <tr style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">
+                  <td width="55px" height="48" align="center">&nbsp;</td>
+                  <td width="369px" align="center">Coupon Discount</td>
+                  <td align="center">${couponDiscount}%</td>
+                  <td width="52px" align="center"> - ${calculateUserDiscountPrice(couponDiscount, (totalCalculatedAmountBeforeDiscount - Number(calculateUserDiscountPrice(userDiscount || '0',totalCalculatedAmountBeforeDiscount.toString()))).toString())}</td>
+                </tr>
+                ` : ''
+              }
+              ${
+                isInternaltionalOrder ?
+                `
+                <tr style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">
+                  <td width="55px" height="48" align="center">&nbsp;</td>
+                  <td width="369px" align="center">Shipping Cost</td>
+                  <td align="center"></td>
+                  <td width="52px" align="center"> + ${shippingCost}</td>
+                </tr>
+                ` : ''
+              }
                 <tr style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">
                   <td width="55px" height="48" align="center">&nbsp;</td>
                   <td width="369px" align="center">&nbsp;</td>
                   <td align="center">Final Amount <br>(Tax Included) :</td>
-                  <td width="52px" align="center">${totalAmount}</td>
+                  <td width="52px" align="center">${totalCalculatedAmount}</td>
                 </tr>
                 <!--<tr style=" font-size:13px; color:#000; padding:5px; font-family: 'Muli', sans-serif;">
                   <td height="31" align="center">&nbsp;</td>
@@ -380,6 +441,17 @@ const returnInvoiceHtml = ({clientName,invoiceDate,clientAddress,invoiceNumber,p
   `
 }
 
+const userOrderDiscountPrice = (totalPrice: string, quantity: string, userDiscount?: string, couponDiscount?: string)=> {
+  let mainTotal = Number(totalPrice) * Number(quantity);
+  if(userDiscount){
+    mainTotal = Number(calculateUserDiscount(userDiscount,mainTotal.toString()))
+  } 
+  if(couponDiscount){
+    mainTotal = Number(calculateUserDiscount(couponDiscount,mainTotal.toString()))
+  }
+  return mainTotal
+}
+
 export {
   getSubCategoryFromId,
   filterSubcategories,
@@ -395,5 +467,6 @@ export {
   createActiveProductCountList,
   convertArrayOfObjectsToCSV,
   downloadCSV,
-  returnInvoiceHtml
+  returnInvoiceHtml,
+  userOrderDiscountPrice
 }

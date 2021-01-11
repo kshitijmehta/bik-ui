@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getProduct, setDefaulState } from 'reducers/Product';
 import { AppState, addUpdateCart, Cart, UserLocation } from 'reducers';
 import { ProductItem, CustomerCart } from 'types';
-import { scaledServerImagePath } from 'appConstants';
+import { AllowReturn, scaledServerImagePath } from 'appConstants';
 import { CustomerProductDetailsLoading } from '.';
 import { calculateUserDiscount, getCurrencyIcon, showINRUSD } from 'services';
 import { QuickProductList } from 'components/shared';
@@ -190,7 +190,7 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
                       <div className="uk-width-1-1 uk-width-expand@m">
                         <div className="uk-grid-collapse uk-child-width-1-1" uk-slideshow="finite: true; ratio: 4:3;" uk-grid="true">
                           <div>
-                            <ul className="uk-slideshow-items" uk-lightbox="true">
+                            <ul className="uk-slideshow-items" uk-lightbox="animation: slide; pause-on-hover: true">
                               {
                                 props.mainSlider
                               }
@@ -301,8 +301,12 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
                                     props.subCategory.toString() === '3' &&
                                     <a uk-toggle="target: #product-camisole-size-model" className="uk-margin-xsmall-right uk-notification-message-danger"><span uk-icon="file-text"></span> Size Chart </a>
                                   }
-
                                 </div>
+                                {
+                                  AllowReturn.indexOf(props.subCategory.toString()) === -1 &&
+                                  <span className="uk-text-small">This item is non-returnable</span>
+                                }
+                                
                               </div>
                             </div>
                           </div>
@@ -314,7 +318,7 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
                                     {/* <span className="uk-margin-xsmall-right" uk-icon="chevron-right"></span> */}
                                     <div>
                                       <div className="uk-text-bolder">Product Details</div>
-                                      <div className="uk-text-small uk-text-muted">
+                                      <div className="uk-text-small">
                                         {props.description}
                                       </div>
                                     </div>

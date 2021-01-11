@@ -1,11 +1,12 @@
 import React, { useEffect, useState, Fragment } from 'react';
-import { Order, OrderUpdateAdmin } from 'types';
+import { Invoice, InvoiceItems, Order, OrderUpdateAdmin } from 'types';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState, getShippers, Shipper, Shipment, updateOrderAdmin } from 'reducers';
 import { scaledServerImagePath } from 'appConstants';
 import { useHistory } from 'react-router-dom';
 import { NotificationContainer } from 'components/shared';
-import { calculateUserDiscount, getPaypalTransactionId } from 'services';
+import { calculateUserDiscount, getPaypalTransactionId, returnInvoiceHtml, userOrderDiscountPrice } from 'services';
+import jsPDF from 'jspdf';
 
 
 const OrderDetails: React.FunctionComponent = () => {
@@ -14,6 +15,8 @@ const OrderDetails: React.FunctionComponent = () => {
   // const [productItemCount, setProductItemCount] = useState(0);
   const [adminShipmentData, setAdminShipmentData] = useState<OrderUpdateAdmin[]>([]);
   const [orginalTrackingLink, setOrginalTrackingLink] = useState<string[]>([]);
+  const [sameShippingData, setSameShippingData] = useState<number[]>([]);
+  const [sameShippingEmail, setSameShippingEmail] = useState<boolean[]>([]);
   const stateData = useSelector<AppState, Order>(state => state.customerOrders.singleData || {} as Order);
   const shippers = useSelector<AppState, Shipper>(state => state.shipper || {} as Shipper);
   const shipmentStatus = useSelector<AppState, Shipment>(state => state.shipment);
@@ -37,6 +40,7 @@ const OrderDetails: React.FunctionComponent = () => {
       });
       setAdminShipmentData(tempShipmentData);
       setOrginalTrackingLink(tempTrackingLink);
+      setSameShippingEmail(Array(stateData.orderItems.length).fill(true));
     }
   }, [stateData]);
 
@@ -46,37 +50,82 @@ const OrderDetails: React.FunctionComponent = () => {
 
   const updateShipmentData = (index: number, key: string, value: string) => {
     let shipmentDataCopy = [...adminShipmentData];
-    const shipmentDataToUpdate = shipmentDataCopy.splice(index, 1);
-    const updatedShipmentData = { ...shipmentDataToUpdate[0], [key]: value };
-    shipmentDataCopy.splice(index, 0, updatedShipmentData)
+    if (sameShippingData.indexOf(index) > -1 && sameShippingData.length > 1) {
+      sameShippingData.forEach((i) => {
+        const shipmentDataToUpdate = shipmentDataCopy.splice(i, 1);
+        const updatedShipmentData = { ...shipmentDataToUpdate[0], [key]: value };
+        shipmentDataCopy.splice(i, 0, updatedShipmentData);
+      });
+    } else {
+      const shipmentDataToUpdate = shipmentDataCopy.splice(index, 1);
+      const updatedShipmentData = { ...shipmentDataToUpdate[0], [key]: value };
+      shipmentDataCopy.splice(index, 0, updatedShipmentData);
+    }
     setAdminShipmentData(shipmentDataCopy);
   };
 
   const updateOrderStatus = (index: number) => {
     const isTrackingChanged = adminShipmentData[index].trackingNumber !== orginalTrackingLink[index];
-    if(isTrackingChanged){
+    if (isTrackingChanged) {
       let orginalTrackingLinkCopy = [...orginalTrackingLink];
       orginalTrackingLinkCopy[index] = adminShipmentData[index].trackingNumber || '';
       setOrginalTrackingLink(orginalTrackingLinkCopy);
     }
     dispatch(updateOrderAdmin(
-      {...adminShipmentData[index], 
+      {
+        ...adminShipmentData[index],
         orderNumber: stateData.orderNumber,
         customerEmail: stateData.userDetails?.emailAddress,
         customerName: stateData.userDetails?.firstName
-      }, isTrackingChanged))
+      }, (isTrackingChanged && sameShippingEmail[index])))
   }
 
-  const userOrderDiscountPrice = (totalPrice: string, quantity: string, userDiscount?: string, couponDiscount?: string)=> {
-    let mainTotal = Number(totalPrice) * Number(quantity);
-    if(userDiscount){
-      mainTotal = Number(calculateUserDiscount(userDiscount,mainTotal.toString()))
-    } 
-    if(couponDiscount){
-      mainTotal = Number(calculateUserDiscount(couponDiscount,mainTotal.toString()))
+  const downloadInvoice = async (invoiceNumber: string, productList: InvoiceItems[], userDiscount?: string, couponDiscount?: string) => {
+    var doc = new jsPDF('l', 'px', 'a4', true)
+    const invoiceData: Invoice = {
+      clientName: stateData.userDetails?.firstName + ' ' + stateData.userDetails?.lastName,
+      invoiceDate: (new Date).toLocaleDateString("en-US"),
+      clientAddress: stateData.userDetails?.addressLineOne + ' ' + stateData.userDetails?.addressLineTwo + ' ' +
+        stateData.userDetails?.addressLineThree + ' ' + stateData.userDetails?.city + ' ' + stateData.userDetails?.state +
+        ' ' + stateData.userDetails?.pincode + ' ' + stateData.userDetails?.country,
+      invoiceNumber,
+      productList,
+      userDiscount,
+      couponDiscount,
+      isInternaltionalOrder: stateData.paymentMode ? stateData.paymentMode.toLowerCase() === 'paypal' : false,
+      isInternaltionalOrderStandard: stateData.standardShipping || false
     }
-    return mainTotal
+    await doc.html(returnInvoiceHtml(invoiceData), { x: 10, y: 10 })
+    doc.save(invoiceNumber + ".pdf")
   }
+
+  const selectItem = (index: number) => {
+    let tempSameShippingData = [];
+    if (sameShippingData.indexOf(index) > -1) {
+      tempSameShippingData = sameShippingData.filter((i) => i !== index);
+    } else {
+      tempSameShippingData = [...sameShippingData, index];
+    }
+    setSameShippingData(tempSameShippingData);
+    let tempSameShippingEmail = Array(stateData.orderItems.length).fill(true);
+    tempSameShippingData.forEach((val, index) => {
+      if (index !== 0) {
+        tempSameShippingEmail[val] = false;
+      }
+    });
+    setSameShippingEmail([...tempSameShippingEmail]);
+  }
+
+  // const userOrderDiscountPrice = (totalPrice: string, quantity: string, userDiscount?: string, couponDiscount?: string)=> {
+  //   let mainTotal = Number(totalPrice) * Number(quantity);
+  //   if(userDiscount){
+  //     mainTotal = Number(calculateUserDiscount(userDiscount,mainTotal.toString()))
+  //   } 
+  //   if(couponDiscount){
+  //     mainTotal = Number(calculateUserDiscount(couponDiscount,mainTotal.toString()))
+  //   }
+  //   return mainTotal
+  // }
   return (
     <form className="uk-width-1-1 uk-width-expand@m">
       <div className="uk-card uk-card-default uk-card-small tm-ignore-container">
@@ -127,6 +176,20 @@ const OrderDetails: React.FunctionComponent = () => {
                     <label>
                       <div className="uk-form-label">Payment Transaction Id</div>
                       <span className="uk-text-small">{stateData.paymentMode && stateData.paymentMode.toLowerCase() === 'paypal' ? getPaypalTransactionId(stateData.paypalResponse) : stateData.razorpayPaymentId}</span>
+                    </label>
+                  </div>
+                  <div>
+                    <label>
+                      <div className="uk-form-label">Invoice</div>
+                      <span className="admin-complete-invoice" uk-icon="icon: cloud-download"
+                        onClick={(e) => {
+                          downloadInvoice(
+                            stateData.orderNumber,
+                            stateData.orderItems,
+                            stateData.userDiscount,
+                            stateData.couponDiscount,
+                          ); e.preventDefault()
+                        }}></span>
                     </label>
                   </div>
                   {
@@ -238,6 +301,14 @@ const OrderDetails: React.FunctionComponent = () => {
                     stateData.orderItems.map((product, index) => {
                       return (
                         <Fragment key={index}>
+                          <div className="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                            <label className="cursor-pointer">
+                              <input className="uk-checkbox" type="checkbox"
+                                checked={sameShippingData.indexOf(index) > -1}
+                                onChange={() => selectItem(index)} />
+                              Item #{index + 1}
+                            </label>
+                          </div>
                           <div className="uk-grid-small uk-child-width-1-1 uk-child-width-1-4@s" uk-grid="true">
                             <div className="uk-divider-vertical">
                               <label>
@@ -318,7 +389,7 @@ const OrderDetails: React.FunctionComponent = () => {
                               </label>
                             </div>
                           </div>
-                          <div uk-grid="true" className="uk-grid-small uk-child-width-1-1 uk-child-width-1-2@s" >
+                          <div uk-grid="true" className="uk-grid-small uk-child-width-1-1 uk-child-width-1-4@s" >
                             <div className="uk-divider-vertical">
                               <label>
                                 <div className="uk-form-label">Return Status</div>
@@ -346,6 +417,33 @@ const OrderDetails: React.FunctionComponent = () => {
                                 </select>
                               </label>
                             </div>
+                            <div>
+                              <label className="cursor-pointer">
+                                <div className="uk-form-label">Send Email</div>
+                                <input className="uk-checkbox" type="checkbox"
+                                  checked={sameShippingEmail[index]}
+                                  onChange={() => {
+                                    sameShippingEmail[index] = !sameShippingEmail[index];
+                                    setSameShippingEmail([...sameShippingEmail]);
+                                  }}
+                                />
+
+                              </label>
+                            </div>
+                            <div>
+                              <label>
+                                <div className="uk-form-label">Invoice</div>
+                                <span className="admin-complete-invoice" uk-icon="icon: cloud-download"
+                                  onClick={(e) => {
+                                    downloadInvoice(
+                                      stateData.orderNumber + product.orderDetailId,
+                                      [product],
+                                      stateData.userDiscount,
+                                      stateData.couponDiscount,
+                                    ); e.preventDefault()
+                                  }}></span>
+                              </label>
+                            </div>
                             {/* <div>
                             </div> */}
 
@@ -369,6 +467,7 @@ const OrderDetails: React.FunctionComponent = () => {
                                     Submit
                                 </button>
                               </label>
+                              
                             </div>
                           </div>
                           <div className="uk-divider-order-items"></div>

@@ -60,7 +60,7 @@ const app = (
             <Route path="/about" exact>
               <About/>
             </Route>
-            <Route path="/refundpolicy" exact>
+            <Route path="/shoppolicy" exact>
               <ReturnPolicy/>
             </Route>
           </Switch>

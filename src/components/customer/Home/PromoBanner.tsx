@@ -1,6 +1,7 @@
 import { LoadingProductArticle } from 'components/shared';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { LatestContainer, TrendingContainer } from './trendingLatest';
 
 const PromoBanner: React.FunctionComponent = () => {
   const history = useHistory();
@@ -28,6 +29,19 @@ const PromoBanner: React.FunctionComponent = () => {
             </div>
           </div>
         </div>
+        <TrendingContainer/>
+        <div className="uk-child-width-1-1@m tm-ignore-container promo-banner-no-padding" uk-grid="true">
+          <div>
+            <div className="uk-card uk-card-hover">
+            <div className="uk-card-media-top">
+              <a onClick={() => history.push('/product/cosmetics')}>
+                <img src="/cosmetic_promo.jpg" alt="promo-cosmetic" />
+              </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <LatestContainer/>
         <div className="uk-child-width-1-2@m tm-ignore-container promo-banner-no-padding" uk-grid="true">
           <div>
             <div className="uk-card uk-card-hover">
@@ -42,17 +56,6 @@ const PromoBanner: React.FunctionComponent = () => {
                 <a onClick={() => history.push('/product/home essential')}>
                   <img src="/home_essential_promo.jpg" alt="promo-home-essential" />
                 </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="uk-child-width-1-1@m tm-ignore-container promo-banner-no-padding" uk-grid="true">
-          <div>
-            <div className="uk-card uk-card-hover">
-            <div className="uk-card-media-top">
-              <a onClick={() => history.push('/product/cosmetics')}>
-                <img src="/cosmetic_promo.jpg" alt="promo-cosmetic" />
-              </a>
               </div>
             </div>
           </div>

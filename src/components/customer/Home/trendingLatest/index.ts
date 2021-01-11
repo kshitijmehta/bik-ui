@@ -1,2 +1,3 @@
 export * from './TrendingLatestProduct';
-export * from './TrendingLatestContainer';
+export * from './TrendingContainer';
+export * from './LastestContainer';

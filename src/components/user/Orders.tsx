@@ -6,9 +6,9 @@ import jsPDF from 'jspdf';
 import { AppState, UserLocation, getShippers, UserInformation } from 'reducers';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { pageSize, scaledServerImagePath, AllowReturn } from 'appConstants';
-import { Invoice, Order, OrderItems, OrderShipper } from 'types';
+import { Invoice, InvoiceItems, Order, OrderItems, OrderShipper } from 'types';
 import { useHistory } from 'react-router-dom';
-import { calculateUserDiscount, getCurrencyIcon, returnInvoiceHtml } from 'services';
+import { calculateUserDiscount, getCurrencyIcon, returnInvoiceHtml, userOrderDiscountPrice } from 'services';
 
 const Orders: React.FunctionComponent = () => {
 
@@ -94,7 +94,7 @@ const Orders: React.FunctionComponent = () => {
     }
   }
 
-  const downloadInvoice = async (invoiceNumber: string, productName: string, quantity: string, totalAmount: string, userDiscount?: string, couponDiscount?: string) => {
+  const downloadInvoice = async (invoiceNumber: string, productList: InvoiceItems[], userDiscount?: string, couponDiscount?: string, paymentMode?: string, isInternaltionalOrderStandard?: boolean) => {
     var doc = new jsPDF('l', 'px', 'a4', true)
     const invoiceData: Invoice = {
       clientName: userData.data?.firstName + ' ' + userData.data?.lastName,
@@ -103,25 +103,26 @@ const Orders: React.FunctionComponent = () => {
         userData.data?.addressLineThree + ' ' + userData.data?.city + ' ' + userData.data?.state +
         ' ' + userData.data?.pincode + ' ' + userData.data?.country,
       invoiceNumber,
-      productName,
-      quantity,
-      totalAmount: (userOrderDiscountPrice(totalAmount,quantity, userDiscount, couponDiscount)).toString(),
-      rate: Math.ceil(((userOrderDiscountPrice(totalAmount,quantity, userDiscount, couponDiscount))) / Number(quantity)).toString()
+      productList,
+      userDiscount,
+      couponDiscount,
+      isInternaltionalOrder: paymentMode ? paymentMode.toLowerCase() === 'paypal' : false,
+      isInternaltionalOrderStandard: isInternaltionalOrderStandard || false
     }
     await doc.html(returnInvoiceHtml(invoiceData), { x: 10, y: 10 })
     doc.save( invoiceNumber+".pdf")
   }
 
-  const userOrderDiscountPrice = (totalPrice: string, quantity: string, userDiscount?: string, couponDiscount?: string)=> {
-    let mainTotal = Number(totalPrice) * Number(quantity);
-    if(userDiscount){
-      mainTotal = Number(calculateUserDiscount(userDiscount,mainTotal.toString()))
-    } 
-    if(couponDiscount){
-      mainTotal = Number(calculateUserDiscount(couponDiscount,mainTotal.toString()))
-    }
-    return mainTotal
-  }
+  // const userOrderDiscountPrice = (totalPrice: string, quantity: string, userDiscount?: string, couponDiscount?: string)=> {
+  //   let mainTotal = Number(totalPrice) * Number(quantity);
+  //   if(userDiscount){
+  //     mainTotal = Number(calculateUserDiscount(userDiscount,mainTotal.toString()))
+  //   } 
+  //   if(couponDiscount){
+  //     mainTotal = Number(calculateUserDiscount(couponDiscount,mainTotal.toString()))
+  //   }
+  //   return mainTotal
+  // }
   return (
     <div className="uk-width-1-1 uk-width-expand@m">
       <div className="uk-card  uk-card-small tm-ignore-container">
@@ -162,7 +163,22 @@ const Orders: React.FunctionComponent = () => {
                               <h3 className="uk-card-title uk-margin-remove-bottom">#{order.orderNumber}</h3>
                               <p className="uk-text-meta uk-margin-remove-top"><time>Ordered on {order.paymentDate.split(' ')[0]}</time></p>
                             </div>
-                            <p className="uk-text-normal uk-margin-remove-top uk-float-right"><time>Order Cost: {getCurrencyIcon(userLocation.data || 'IN')} {order.totalPrice}</time></p>
+                            <div className="uk-float-right">
+                            <p className="uk-text-normal uk-margin-remove-top uk-float-right uk-margin-remove-bottom"><time>Order Cost: {getCurrencyIcon(userLocation.data || 'IN')} {order.totalPrice}</time></p>
+                            {
+                              (order.userDiscount || order.couponDiscount) && 
+                              <p className="uk-text-meta uk-margin-remove-top">
+                              <time>
+                                Discount Included: {
+                                order.userDiscount && order.couponDiscount ? 
+                                  order.userDiscount + '% + ' + order.couponDiscount +'%' : 
+                                  order.userDiscount ? order.userDiscount + '%' :
+                                  order.couponDiscount ? order.couponDiscount + '%' : ''}
+                              </time>
+                            </p>
+                            }
+                            
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -184,7 +200,9 @@ const Orders: React.FunctionComponent = () => {
                                 <li>Product : <a onClick={() => history.push('/productDetails/' + order.orderItems[0].productId)}>{order.orderItems[0].productName}</a></li>
                                 <li>Quantity: {order.orderItems[0].quantity}</li>
                                 <li>Price: {getCurrencyIcon(userLocation.data || 'IN')} 
-                                {' ' + userOrderDiscountPrice(order.orderItems[0].productPrice, order.orderItems[0].quantity, order.userDiscount, order.couponDiscount)}</li>
+                                {/* {' ' + userOrderDiscountPrice(order.orderItems[0].productPrice, order.orderItems[0].quantity, order.userDiscount, order.couponDiscount)} */}
+                                {Math.ceil(Number(order.orderItems[0].productPrice))}
+                                </li>
                               </ul>
                             </div>
                           </div>
@@ -218,7 +236,7 @@ const Orders: React.FunctionComponent = () => {
                                             setReturnOrderNumber(order.orderNumber);
                                           }}>Return</button></li>
                                       }
-                                      <li>Invoice : <a onClick={() => downloadInvoice(order.orderNumber,order.orderItems[0].productName,order.orderItems[0].quantity,order.orderItems[0].productPrice, order.userDiscount, order.couponDiscount)}>Download</a></li>
+                                      <li>Invoice : <a onClick={() => downloadInvoice(order.orderNumber + order.orderItems[0].orderDetailId,[order.orderItems[0]], order.userDiscount, order.couponDiscount, order.paymentMode, order.standardShipping)}>Download</a></li>
                                     </ul>
                                     :
                                     <ul className="uk-list">
@@ -284,7 +302,9 @@ const Orders: React.FunctionComponent = () => {
                                             <li>Product : <a onClick={() => history.push('/productDetails/' + orderItem.productId)}>{orderItem.productName}</a></li>
                                             <li>Quantity: {orderItem.quantity}</li>
                                             <li>Price: {getCurrencyIcon(userLocation.data || 'IN')} 
-                                            {' ' +userOrderDiscountPrice(orderItem.productPrice, orderItem.quantity, order.userDiscount, order.couponDiscount)}</li>
+                                            {/* {' ' +userOrderDiscountPrice(orderItem.productPrice, orderItem.quantity, order.userDiscount, order.couponDiscount)} */}
+                                            {Math.ceil(Number(orderItem.productPrice))}
+                                            </li>
                                           </ul>
                                         </div>
                                       </div>
@@ -318,7 +338,7 @@ const Orders: React.FunctionComponent = () => {
                                                         setReturnOrderNumber(order.orderNumber);
                                                       }}>Return</button></li>
                                                   }
-                                                  <li>Invoice : <a onClick={() => downloadInvoice(order.orderNumber,orderItem.productName,orderItem.quantity,orderItem.productPrice, order.userDiscount, order.couponDiscount)}>Download</a></li>
+                                                  <li>Invoice : <a onClick={() => downloadInvoice(order.orderNumber + orderItem.orderDetailId,[orderItem], order.userDiscount, order.couponDiscount,order.paymentMode, order.standardShipping)}>Download</a></li>
                                                 </ul>
                                                 :
                                                 <ul className="uk-list">
