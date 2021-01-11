@@ -303,7 +303,7 @@ const CustomerProductDetails: React.FunctionComponent<Props> = (props: Props) =>
                                   }
                                 </div>
                                 {
-                                  AllowReturn.indexOf(props.subCategory.toString()) === -1 &&
+                                  !(props.productCategoryName.toLowerCase() === 'footwear' || props.productCategoryName.toLowerCase() === 'home essential') &&
                                   <span className="uk-text-small">This item is non-returnable</span>
                                 }
                                 
