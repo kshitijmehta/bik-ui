@@ -2,7 +2,7 @@ import React from 'react';
 
 const Banner: React.FunctionComponent = () => {
   return (
-    <section className="uk-position-relative uk-visible-toggle uk-light" uk-slideshow="ratio: 8.2:3; min-height:175;autoplay: true;autoplay-interval: 3000">
+    <section className="uk-position-relative uk-visible-toggle uk-light" uk-slideshow="animation: scale;ratio: 8.2:3; min-height:175;autoplay: true;autoplay-interval: 3000">
       <ul className="uk-slideshow-items">
         <li style={{ backgroundColor: "#0b0a12" }}>
           <a>

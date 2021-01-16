@@ -222,7 +222,7 @@ const CustomerProductList: React.FunctionComponent<Props> = (props: Props) => {
                        stateData && stateData.length > 0 ? stateData.map((product, index) => {
                         return (
                           <article className="tm-product-card" key={index} id ={product.productId}>
-                            <div className="tm-product-card-media">
+                            <div className="tm-product-card-media product-list-media">
                               <div className="tm-ratio tm-ratio-1-1">
                                 <a className="tm-media-box" onClick={()=> {
                                     dispatch(setPreSelectedFilter('lastViewedProductId',product.productId.toString() || ''));
@@ -237,13 +237,13 @@ const CustomerProductList: React.FunctionComponent<Props> = (props: Props) => {
                             </div>
                             <div className="tm-product-card-body">
                               <div className="tm-product-card-info">
-                                <div className="uk-text-meta uk-margin-xsmall-bottom">{product.productCategoryName}</div>
-                                <h3 className="tm-product-card-title"><a className="uk-link-heading" onClick={()=> {
+                                {/* <div className="uk-text-meta uk-margin-xsmall-bottom">{product.productCategoryName}</div> */}
+                                <p className="tm-product-card-title"><a className="uk-link-heading" onClick={()=> {
                                     dispatch(setPreSelectedFilter('lastViewedProductId',product.productId.toString() || ''));
                                     dispatch(setPreSelectedFilter('scrollTill',stateData.length.toString() || '0'));
                                     dispatch(setDefaulState());
                                     history.push('/productDetails/'+ product.productId)}}>
-                                      {product.name}</a></h3>
+                                      {product.name}</a></p>
                               </div>
                               <div className="tm-product-card-shop">
                                 <div className="tm-product-card-prices">
