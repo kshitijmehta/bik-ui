@@ -69,8 +69,9 @@ const TrendingLatestProducts: React.FunctionComponent<Props> = (props: Props) =>
               </div>
               <div className="tm-product-card-body">
                 <div className="tm-product-card-info">
-                  <div className="uk-text-meta uk-margin-xsmall-bottom">{product.productCategoryName}</div>
-                  <h3 className="tm-product-card-title"><a className="uk-link-heading" onClick={() => history.push('/productDetails/' + product.productId)}>{product.name}</a></h3>
+                  {/* <div className="uk-text-meta uk-margin-xsmall-bottom">{product.productCategoryName}</div>
+                  <h3 className="tm-product-card-title"><a className="uk-link-heading" onClick={() => history.push('/productDetails/' + product.productId)}>{product.name}</a></h3> */}
+                  <p className="tm-product-card-title"><a className="uk-link-heading" onClick={() => history.push('/productDetails/' + product.productId)}>{product.name}</a></p>
                 </div>
                 <div className="tm-product-card-shop">
                   <div className="tm-product-card-prices">

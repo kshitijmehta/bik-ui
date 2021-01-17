@@ -70,7 +70,7 @@ const QuickProductList: React.FunctionComponent<Props> = (props: Props) => {
                     return (
                       <article key={index} className="tm-product-card">
                         <div className="tm-product-card-media">
-                          <div className="tm-ratio tm-ratio-4-3">
+                          <div className="tm-ratio tm-ratio-1-1">
                             <a className="tm-media-box" onClick={() => {window.scrollTo({top:0, behavior:'smooth'}); history.push('/productDetails/' + product.productId)}}>
                               <figure className="tm-media-box-wrap"><img src={scaledServerImagePath + product.imagePaths} alt={product.imageNames} /></figure>
                             </a>
@@ -78,8 +78,9 @@ const QuickProductList: React.FunctionComponent<Props> = (props: Props) => {
                         </div>
                         <div className="tm-product-card-body">
                           <div className="tm-product-card-info">
-                            <div className="uk-text-meta uk-margin-xsmall-bottom">{product.productCategoryName}</div>
-                            <h3 className="tm-product-card-title"><a className="uk-link-heading" onClick={() => history.push('/productDetails/' + product.productId)}>{product.name}</a></h3>
+                            {/* <div className="uk-text-meta uk-margin-xsmall-bottom">{product.productCategoryName}</div>
+                            <h3 className="tm-product-card-title"><a className="uk-link-heading" onClick={() => history.push('/productDetails/' + product.productId)}>{product.name}</a></h3> */}
+                            <p className="tm-product-card-title"><a className="uk-link-heading" onClick={() => history.push('/productDetails/' + product.productId)}>{product.name}</a></p>
                           </div>
                           <div className="tm-product-card-shop">
                             <div className="tm-product-card-prices">
