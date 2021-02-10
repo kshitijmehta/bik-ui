@@ -71,7 +71,7 @@ const Orders: React.FunctionComponent = () => {
         // return <a target="_blank" href={shipperInfo[0].trackingLink + trackingNumber}>Track Package</a>
       }
     }
-    return <li>Status: <span>Order Recived</span></li>
+    return <li>Status: <span>Order Received</span></li>
   }
 
   const checkReturnEligibilty = (deliveryDate: string, categoryId: string) => {
