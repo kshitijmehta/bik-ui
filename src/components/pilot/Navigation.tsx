@@ -84,7 +84,7 @@ const Navigation: React.FunctionComponent = () => {
     return Object.keys(SubCategories).map((key: string, index: number) => {
       return (
         <li key={index}>
-          <a onClick={(e) => {navigateTo(e,key);dispatch(searchDefault());setEnteredSearchText('')}}>{key}<span className="uk-margin-xsmall-left" uk-icon="icon: chevron-down; ratio: .75;"></span></a>
+          <a className="desktop-nav-padding" onClick={(e) => {navigateTo(e,key);dispatch(searchDefault());setEnteredSearchText('')}}>{key}<span className="uk-margin-xsmall-left" uk-icon="icon: chevron-down; ratio: .75;"></span></a>
           <div
             className="uk-navbar-dropdown uk-margin-remove uk-padding-remove-vertical"
             uk-drop="pos: bottom-justify;delay-show: 125;delay-hide: 50;duration: 75;boundary: .tm-navbar-container;boundary-align: true;pos: bottom-justify;flip: x"

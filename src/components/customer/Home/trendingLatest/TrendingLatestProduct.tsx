@@ -59,7 +59,7 @@ const TrendingLatestProducts: React.FunctionComponent<Props> = (props: Props) =>
         props.productList.length > 0 ?
         props.productList.map((product) => {
           return (
-            <article key={product.productId} className="tm-product-card">
+            <article uk-scrollspy="cls: product-list-animation; repeat: true" key={product.productId} className="tm-product-card">
               <div className="tm-product-card-media">
                 <div className='tm-ratio tm-ratio-1-1'>
                   <a className="tm-media-box" onClick={() => {history.push('/productDetails/' + product.productId) }}>

@@ -15,6 +15,8 @@ const getSubCategoryFromId = (id: Number) => {
       return "Home Essential";
     case 9:
       return "Cosmetics";
+    case 10:
+      return "Fashion Accessories";
   }
 };
 

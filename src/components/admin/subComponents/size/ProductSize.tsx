@@ -51,6 +51,7 @@ const ProductSize: React.FunctionComponent = () => {
                           <option key='3' value={3}>Bindi</option>
                           <option key='4' value={8}>Home Essential</option>
                           <option key='5' value={9}>Cosmetics</option>
+                          <option key='6' value={10}>Fashion Accessories</option>
                         </select>
                       {
                         sizeFormik.touched.productCategory && sizeFormik.errors.productCategory ? (

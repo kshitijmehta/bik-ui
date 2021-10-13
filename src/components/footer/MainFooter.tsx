@@ -6,7 +6,7 @@ const MainFooter: React.FunctionComponent = () => {
   const history = useHistory();
   return (
     <footer>
-      <section className="uk-section uk-section-secondary uk-section-small uk-light">
+      <section id="main-footer" className="uk-section uk-section-secondary uk-section-small uk-light">
         <div className="uk-container">
           <div className="uk-grid-medium uk-child-width-1-1 uk-child-width-1-4@m" uk-grid="true">
             <div>
@@ -28,6 +28,7 @@ const MainFooter: React.FunctionComponent = () => {
                     <li><a onClick={() => history.push('/product/bindi')}>Bindi</a></li>
                     <li><a onClick={() => history.push('/product/home essential')}>Home Essential</a></li>
                     <li><a onClick={() => history.push('/product/cosmetics')}>Cosmetics</a></li>
+                    <li><a onClick={() => history.push('/product/fashion accessories')}>Fashion Accessories</a></li>
                   </ul>
                 </div>
                 <div>

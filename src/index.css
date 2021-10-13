@@ -8717,3 +8717,68 @@ text-align: right;
   }
 }
 
+@media (max-width: 767px) {
+  #mobile-banner{
+    display: block !important;
+  }
+
+  #regular-banner{
+    display: none !important;
+  }
+}
+
+
+@media (min-width: 768px) {
+  #mobile-banner{
+    display: none !important;
+  }
+
+  #regular-banner{
+    display: block !important;
+  }
+}
+
+
+#main-footer{
+  background-image: url('/footer-bg.png');
+}
+
+.padding-three{
+  padding: 3px;
+}
+
+@keyframes slideFromBottom {
+  0% {
+    transform: translatey(10%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+#trend {
+  /* This section calls the slideFromBottom animation we defined above */
+  animation: 1s ease-in 0s 1 slideFromBottom;
+}
+
+.trends {
+  /* This section calls the slideFromBottom animation we defined above */
+  animation: 0.5s ease-in 0s 1 slideFromBottom;
+}
+
+@keyframes slideFromBottomProduct {
+  0% {
+    transform: translatey(30%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+.product-list-animation {
+  /* This section calls the slideFromBottom animation we defined above */
+  animation: 0.5s ease-out 0s 1 slideFromBottomProduct;
+}
+
+.desktop-nav-padding{
+  padding: 0 10px !important;
+}

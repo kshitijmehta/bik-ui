@@ -6,11 +6,12 @@ import { LatestContainer, TrendingContainer } from './trendingLatest';
 const PromoBanner: React.FunctionComponent = () => {
   const history = useHistory();
   return (
-    <section className="uk-section uk-section-small">
+    <section  id="regular-banner"  className="uk-section uk-section-small">
       <div className="uk-container">
         <h2 className="uk-text-center"></h2>
-        <div className="uk-child-width-1-2@m tm-ignore-container promo-banner-no-padding" uk-grid="true">
-          <div>
+        <TrendingContainer />
+        <div className="uk-child-width-1-2 tm-ignore-container promo-banner-no-padding" uk-grid="true">
+          <div uk-parallax="opacity: 0.4,1; y: 100,0; viewport: 0.3">
             <div className="uk-card uk-card-hover">
               <div className="uk-card-media-top">
                 <a onClick={() => history.push('/product/footwear')}>
@@ -19,7 +20,7 @@ const PromoBanner: React.FunctionComponent = () => {
               </div>
             </div>
           </div>
-          <div>
+          <div uk-parallax="opacity: 0.4,1; y: 100,0; viewport: 0.3">
             <div className="uk-card uk-card-hover">
               <div className="uk-card-media-top">
                 <a onClick={() => history.push('/product/lingerie')}>
@@ -29,15 +30,15 @@ const PromoBanner: React.FunctionComponent = () => {
             </div>
           </div>
         </div>
-        <div className="uk-child-width-1-2@m tm-ignore-container promo-banner-no-padding" uk-grid="true">
-          <div>
+        <div className="uk-child-width-1-2 tm-ignore-container promo-banner-no-padding" uk-grid="true">
+          <div uk-parallax="opacity: 0.4,1; y: 100,0; viewport: 0.3">
             <div className="uk-card uk-card-hover">
               <a onClick={() => history.push('/product/bindi')}>
                 <img src="/bindi_promo.jpg" alt="promo-bindi" />
               </a>
             </div>
           </div>
-          <div>
+          <div uk-parallax="opacity: 0.4,1; y: 100,0; viewport: 0.3">
             <div className="uk-card uk-card-hover">
               <div className="uk-card-media-top">
                 <a onClick={() => history.push('/product/home essential')}>
@@ -58,21 +59,21 @@ const PromoBanner: React.FunctionComponent = () => {
             </div>
           </div>
         </div> */}
-        <TrendingContainer />
+        
 
-        <div className="uk-child-width-1-2@m tm-ignore-container promo-banner-no-padding" uk-grid="true">
-          <div>
+        <div className="uk-child-width-1-2 tm-ignore-container promo-banner-no-padding" uk-grid="true">
+          <div uk-parallax="opacity: 0.4,1; y: 100,0; viewport: 0.3">
             <div className="uk-card uk-card-hover">
               <a onClick={() => history.push('/product/cosmetics')}>
                 <img src="/cosmetic_promo_2.jpg" alt="cosmetic_promo" />
               </a>
             </div>
           </div>
-          <div>
+          <div uk-parallax="opacity: 0.4,1; y: 100,0; viewport: 0.3">
             <div className="uk-card uk-card-hover">
               <div className="uk-card-media-top">
-                <a onClick={() => history.push('/product/footwear/heel')}>
-                  <img src="/heel_promo.jpg" alt="heel_promo" />
+                <a onClick={() => history.push('/product/fashion accessories')}>
+                  <img src="/desktop-fashion-accessories.jpg" alt="fashion-accessories" />
                 </a>
               </div>
             </div>
