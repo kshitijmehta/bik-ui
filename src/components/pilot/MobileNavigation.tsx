@@ -29,6 +29,7 @@ const MobileNavigation: React.FunctionComponent<Props> = (props: Props) => {
 
     return Object.keys(SubCategories).map((key: string, index: number) => {
       return (
+        SubCategories[key] != 1 &&
         <li className="uk-parent" key={index}>
           <a onClick={(e) => {e.preventDefault();setEnteredSearchText('');dispatch(searchDefault())}}>{key}</a>
           <ul className="uk-nav-sub uk-list-divider">
