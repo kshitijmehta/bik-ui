@@ -22,7 +22,7 @@
     "csv-writer": "^1.6.0",
     "formik": "^2.1.4",
     "history": "^4.10.1",
-    "html2pdf.js": "^0.9.2",
+    "html2pdf.js": "^0.10.1",
     "jspdf": "^2.2.0",
     "prop-types": "^15.7.2",
     "query-string": "^6.13.7",
